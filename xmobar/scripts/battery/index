@@ -1,0 +1,79 @@
+#!/bin/bash
+
+LEVEL_FILE="$HOME/.config/xmobar/scripts/battery/state/level"
+SHOW_TIME_FILE="$HOME/.config/xmobar/scripts/battery/state/show_time"
+
+
+# If file doesn't exist, start from 0
+[[ -f "$LEVEL_FILE" ]] || echo 0 > "$LEVEL_FILE"
+[[ -f "$SHOW_TIME_FILE" ]] || echo 0 > "$SHOW_TIME_FILE"
+
+
+info=$(acpi -b)
+state=$(echo "$info" | awk -F'[,: ]+' '{print $3}')
+level=$(echo "$info" | awk -F'[,% ]+' '{print $4}')
+time=$(echo "$info" | awk '{for(i=1;i<=NF;i++){if($i~/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/) print $i}}')
+
+thresholds=(10 33 66 85 95)
+icons=("󰢟" "󱊤" "󱊥" "󱊦" "󰂅")
+
+showtime=$(cat "$SHOW_TIME_FILE")
+
+if [ "$1" == "show_time" ]; then
+  if [[ "$showtime" == 0 ]]; then
+      echo 1 > "$SHOW_TIME_FILE"
+  else
+      echo 0 > "$SHOW_TIME_FILE"
+  fi
+fi
+
+if [[ "$state" == "Full" ]]; then
+  echo ""
+  exit
+fi
+
+if [[ "$state" == "Charging" ]]; then
+
+    usable_icons=()
+    for i in "${!thresholds[@]}"; do
+        if [[ "$level" -le "${thresholds[$i]}" ]]; then
+            usable_icons+=("${icons[$i]}")
+        fi
+    done
+
+    # Safety fallback
+    [[ ${#usable_icons[@]} -eq 0 ]] && usable_icons=("${icons[thresholds[@]-1]}")
+
+    idx=$(cat "$LEVEL_FILE")
+    idx=$(( (idx + 1) % ${#usable_icons[@]} ))
+    echo "$idx" > "$LEVEL_FILE"
+
+    timercolor="#84f098"
+    icon="${usable_icons[$idx]}  <fc=$timercolor>${level}󰏰</fc>"
+    [[ $showtime == 1 ]] && icon="$icon  <fc=$timercolor> $time </fc>"
+    echo "$icon"
+    exit
+fi
+
+# Otherwise output normal code
+if [[ "$state" == "Discharging" ]]; then
+  thresholds=(10 33 66)
+  icons=("󰂎" "󱊡" "󱊢" "󱊣")
+  timercolors=("#d94141" "#f58989" "#e6c15c" "#84f098")
+
+  icon="${icons[-1]}  ${level}󰏰"
+  timercolor=${timercolors[-1]}
+  for i in "${!thresholds[@]}"; do
+    if (( level < thresholds[i] )); then
+      icon="${icons[i]}  ${level}󰏰"
+      timercolor=${timercolors[i]}
+      break
+    fi
+  done
+else
+    icon="󰂃"
+fi
+
+[[ $showtime == 1 ]] && icon="$icon <fc=$timercolor> $time </fc>"
+
+echo "<fc=#ffffff>$icon</fc>"

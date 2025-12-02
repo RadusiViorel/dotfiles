@@ -1,0 +1,84 @@
+#!/bin/bash
+
+if ! command -v bluetoothctl >/dev/null 2>&1; then
+  echo "Warning: bluetoothctl is not installed or not in PATH."
+  exit 1
+fi
+
+LABEL_FILE="$HOME/.config/xmobar/scripts/bluetooth/state/label"
+if [ ! -f "$LABEL_FILE" ]; then
+  echo -1 > "$LABEL_FILE"
+fi
+
+currentIndex=$(cat "$LABEL_FILE")
+
+state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
+
+thresholds=(10 33 66)
+timercolors=("#d94141" "#f58989" "#e6c15c" "#84f098")
+
+mapfile -t connectedDevices < <(
+  bluetoothctl devices Connected | sed 's/^Device [A-F0-9:]* //'
+)
+
+if ! command -v bluetuith >/dev/null 2>&1; then
+  echo "Warning: bluetuith is not installed or not in PATH."
+fi
+case "$1" in
+    open)
+        command -v bluetuith >/dev/null 2>&1 && alacritty -e bluetuith >/dev/null
+        ;;
+    toggle)
+        toggle=$((1 - state))
+        bluetoothctl power $([ "$toggle" -eq 1 ] && echo "on" || echo "off") >/dev/null
+        ;;
+    reset)
+        echo -1 > "$LABEL_FILE"
+        ;;
+    cycle_up)
+        echo $(( (currentIndex + 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"
+        ;;
+    cycle_down)
+        echo $(( (currentIndex - 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"
+        ;;
+    *)
+        # default action, e.g., show icon/label
+        ;;
+esac
+
+if [ $currentIndex == -1 ]; then
+  connectedCount=$(bluetoothctl devices Connected | wc -l)
+  label="  ${connectedCount} devices"
+  if [ "$connectedCount" -eq 1 ]; then
+    label="  ${connectedCount} device"
+  elif [ "$connectedCount" -eq 0 ]; then
+    label=""
+  fi
+else
+  percentage=$(upower --dump | awk -v name="${connectedDevices[$currentIndex]}" '
+      /^ *model:/ {
+          # rebuild the model name after the colon
+          $1=""; sub(/^ +/, "", $0)
+          if ($0 == name) found=1
+      }
+      found && /percentage:/ {
+          gsub("%","",$2)
+          print $2
+          exit
+      }
+  ')
+
+  color=${timercolors[-1]}
+  for i in "${!thresholds[@]}"; do
+    if (( percentage < thresholds[i] )); then
+      color=${timercolors[i]}
+      break
+    fi
+  done
+  label="  <fc=${color}>$((currentIndex + 1))/${#connectedDevices[@]} ${connectedDevices[$currentIndex]} $percentage󰏰</fc>"
+fi
+
+icons=("󰂲" "󰂰")
+colors=("#A9A9A9" ${color:-#ffffff})
+
+echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>"

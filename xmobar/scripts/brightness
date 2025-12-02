@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if ! command -v brightnessctl >/dev/null 2>&1; then
+  echo "Warning: brightnessctl is not installed or not in PATH."
+  exit 1
+fi
+
+BL_DIR="/sys/class/backlight/intel_backlight"  # your backlight folder
+cur=$(cat "$BL_DIR/brightness")
+max=$(cat "$BL_DIR/max_brightness")
+
+# Optional: control mode
+step=${2:-3}
+if [ "$1" = "up" ]; then
+  brightnessctl set +"${step}"% >/dev/null
+elif [ "$1" = "down" ]; then
+  brightnessctl set "${step}"%- >/dev/null
+fi
+
+percent=$((100 * cur / max))
+
+thresholds=(13 30 40 50 60 70 80 90)
+icons=(󰪞 󰪟 󰪠 󰪡 󰪢 󰪣 󰪤 󰪥 )
+
+icon=${icons[-1]}
+for i in "${!thresholds[@]}"; do
+  if (( percent < thresholds[i] )); then
+    icon="${icons[i]}"
+    break
+  fi
+done
+
+echo "<fc=#ffffff>$icon  $percent%</fc>"

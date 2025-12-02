@@ -1,0 +1,17 @@
+resolver : ghc-9.6.7
+local-bin-path : /home/radusiviorel/.local/bin
+
+packages :
+   - .
+
+extra-deps :
+   - xmonad-0.18.0
+   - xmonad-contrib-0.18.1
+   - X11-1.10.3
+   - X11-xft-0.3.4
+   - random-1.3.1
+   - utf8-string-1.0.2
+   - data-default-class-0.2.0.0
+   - data-default-0.8.0.1
+   - splitmix-0.1.3.1
+   - setlocale-1.0.0.10

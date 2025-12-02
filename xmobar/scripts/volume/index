@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# xbps-install libspa-bluetooth -- bluetooth support for audio
+
+# Get default sink
+SINK=$(pactl info | awk '/Default Sink:/ {print $3}')
+
+# Get volume percentage (first channel)
+VOL=$(pactl get-sink-volume "$SINK" | awk '{print $5}' | head -n1 | tr -d '%')
+
+# Get mute status
+MUTE=$(pactl get-sink-mute "$SINK" | awk '{print $2}')  # yes/no
+
+SINK
+
+echo $SINK
+echo $VOLpactl list short sinks
+
+echo $MUTE
+
+
+exit
+
+if ! command -v bluetoothctl >/dev/null 2>&1; then
+  echo "Warning: bluetoothctl is not installed or not in PATH."
+  exit 1
+fi
+
+LABEL_FILE="$HOME/.config/xmobar/scripts/bluetooth/state/label"
+if [ ! -f "$LABEL_FILE" ]; then
+  echo -1 > "$LABEL_FILE"
+fi
+
+currentIndex=$(cat "$LABEL_FILE")
+
+state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
+
+mapfile -t connectedDevices < <(
+  bluetoothctl devices Connected | sed 's/^Device [A-F0-9:]* //'
+)
+
+if ! command -v bluetuith >/dev/null 2>&1; then
+  echo "Warning: bluetuith is not installed or not in PATH."
+fi
+case "$1" in
+    open)
+        command -v bluetuith >/dev/null 2>&1 && $TERM -e bluetuith >/dev/null
+        ;;
+    toggle)
+        toggle=$((1 - state))
+        bluetoothctl power $([ "$toggle" -eq 1 ] && echo "on" || echo "off") >/dev/null
+        ;;
+    reset)
+        echo -1 > "$LABEL_FILE"
+        ;;
+    cycle_up)
+        echo $(( (currentIndex + 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"
+        ;;
+    cycle_down)
+        echo $(( (currentIndex - 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"
+        ;;
+    *)
+        # default action, e.g., show icon/label
+        ;;
+esac
+
+if [ $currentIndex == -1 ]; then
+  connectedCount=$(bluetoothctl devices Connected | wc -l)
+  label="  ${connectedCount} devices"
+  if [ "$connectedCount" -eq 1 ]; then
+    label="  ${connectedCount} device"
+  elif [ "$connectedCount" -eq 0 ]; then
+    label=""
+  fi
+else
+  label="  ${connectedDevices[$currentIndex]} $((currentIndex + 1))/${#connectedDevices[@]}"
+fi
+
+icons=("󰂲" "󰂰")
+colors=("#A9A9A9" "#1E90FF")
+
+echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>"
