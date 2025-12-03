@@ -102,10 +102,11 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf = M.fromList $
 
     -- Launch applications
-    [ ((leader, xK_Return), spawn $ terminal conf)
+    [ ((leader                , xK_Return), spawn $ terminal conf)
+    , ((leader .|. controlMask, xK_Return), spawn "rofi -show drun")
+
     , ((leader, xK_e), spawn "nemo")
     , ((leader, xK_b), spawn "falkon")
-    , ((leader, xK_space), spawn "rofi -show drun")
 
     -- Kill window
     , ((leader, xK_q), kill)
@@ -132,7 +133,7 @@ myKeys conf = M.fromList $
     ++
     [ ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 6%-")
     , ((0, xF86XK_MonBrightnessUp),   spawn "brightnessctl set +6%")
-    , ((0 .|. shiftMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 5%")
+    , ((0 .|. shiftMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 1%")
     , ((0 .|. shiftMask, xF86XK_MonBrightnessUp),   spawn "brightnessctl set 100%")
     ]
 
