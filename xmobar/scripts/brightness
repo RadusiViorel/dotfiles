@@ -30,4 +30,4 @@ for i in "${!thresholds[@]}"; do
   fi
 done
 
-echo "<fc=#ffffff>$icon  $percent%</fc>"
+echo "<fc=#ffffff>$icon  $percent󰏰</fc>"

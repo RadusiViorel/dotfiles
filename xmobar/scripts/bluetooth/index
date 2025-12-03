@@ -79,6 +79,6 @@ else
 fi
 
 icons=("󰂲" "󰂰")
-colors=("#A9A9A9" ${color:-#ffffff})
+colors=("#696969" ${color:-#ffffff})
 
 echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>"

@@ -1,82 +1,167 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-# Get default sink
-SINK=$(pactl info | awk '/Default Sink:/ {print $3}')
+STEP=3  # volume step
+MAX_VOLUME=125
+ICON_SPEAKER="󰓃"
+ICON_HEADPHONES="󰋋"
+ICON_BT="<fc=#87c6e6></fc> 󰋋"
+ICON_MUTED="󰝟"
+OVERFLOW_COLOR="#f58989"
 
-# Get volume percentage (first channel)
-VOL=$(pactl get-sink-volume "$SINK" | awk '{print $5}' | head -n1 | tr -d '%')
+# ------------------------------
 
-# Get mute status
-MUTE=$(pactl get-sink-mute "$SINK" | awk '{print $2}')  # yes/no
+default_sink() {
+    pactl get-default-sink
+}
 
-SINK
+get_volume() {
+  pactl get-sink-volume "$(default_sink)" | awk 'NR==1 {print $5}' | tr -d '%'
+}
 
-echo $SINK
-echo $VOLpactl list short sinks
+is_muted() {
+    pactl get-sink-mute "$(default_sink)" | grep -q "yes"
+}
 
-echo $MUTE
+get_sink_icon() {
+    local sink active_port
+    sink=$(pactl get-default-sink)
+    active_port=$(pactl list sinks | awk -v s="$sink" '
+        $0 ~ "Name: "s {found=1}
+        found && /Active Port:/ {
+            gsub(/.*: /, "", $0)
+            print $0
+            exit
+        }')
+
+    case "$active_port" in
+        *speaker* ) echo $ICON_SPEAKER ;;      # speakers
+        *headphone* ) echo $ICON_HEADPHONES ;; # wired headphones
+        *headset* ) echo $ICON_BT ;;           # headset
+        * ) echo "" ;;                        # fallback
+    esac
+}
+
+cycle_output_sound() {
+    mapfile -t pairs < <(
+        pactl list sinks | awk '
+            /Name:/ {sink=$2}
+            /Ports:/ {show=1; next}
+            show==1 && $0 ~ /^[[:space:]]*[a-zA-Z0-9_-]+: / {
+                split($1, a, ":")
+                print sink " " a[1]
+            }
+            show==1 && NF==0 {show=0}
+        '
+    )
+
+    current_port=$(pactl list sinks |
+          awk -v tgt="$current_sink" '
+              $2 == tgt {found=1}
+              found && /Active Port:/ {print $3; exit}
+          '
+      )
+
+    current_pair="$(default_sink) $current_port"
+
+    next_index=0
+    for i in "${!pairs[@]}"; do
+        if [[ "${pairs[$i]}" == "$current_pair" ]]; then
+            next_index=$(( (i + 1) % ${#pairs[@]} ))
+            break
+        fi
+    done
+
+    next_sink=$(echo "${pairs[$next_index]}" | awk '{print $1}')
+    next_port=$(echo "${pairs[$next_index]}" | awk '{print $2}')
+
+    vol=$(get_volume)
+    pactl set-default-sink "$next_sink"
+    pactl set-sink-port    "$next_sink" "$next_port"
+    pactl set-sink-volume  "$next_sink" "$(vol)%"
+}
+
+volume_jump() {
+
+  if is_muted; then
+    pactl set-sink-mute "$(default_sink)" toggle
+    pactl set-sink-volume "$(default_sink)" 25%
+    return
+  fi
+
+  vol=$(get_volume)
+  if (( vol < 25 )); then
+    pactl set-sink-volume "$(default_sink)" 25%
+  elif (( vol < 50 )); then
+    pactl set-sink-volume "$(default_sink)" 50%
+  elif (( vol < 75 )); then
+    pactl set-sink-volume "$(default_sink)" 75%
+  elif (( vol < 100 )); then
+    pactl set-sink-volume "$(default_sink)" 100%
+  else
+    pactl set-sink-volume "$(default_sink)" 25%
+  fi
+}
+
+volume_up() {
+
+  if is_muted; then
+    pactl set-sink-mute "$(default_sink)" toggle
+  fi
+
+  if (( $(get_volume) >= MAX_VOLUME)); then
+    pactl set-sink-volume "$(default_sink)" ${MAX_VOLUME}%
+  else
+    pactl set-sink-volume "$(default_sink)" +${STEP}%
+  fi
+}
 
 
-exit
+volume_down() {
 
-if ! command -v bluetoothctl >/dev/null 2>&1; then
-  echo "Warning: bluetoothctl is not installed or not in PATH."
-  exit 1
-fi
+  if (( $(get_volume) <= 0 )); then
+    pactl set-sink-volume "$(default_sink)" 0%
+  else
+    pactl set-sink-volume "$(default_sink)" -${STEP}%
+  fi
+}
 
-LABEL_FILE="$HOME/.config/xmobar/scripts/bluetooth/state/label"
-if [ ! -f "$LABEL_FILE" ]; then
-  echo -1 > "$LABEL_FILE"
-fi
+mute() {
+  pactl set-sink-mute "$(default_sink)" toggle
+}
 
-currentIndex=$(cat "$LABEL_FILE")
-
-state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
-
-mapfile -t connectedDevices < <(
-  bluetoothctl devices Connected | sed 's/^Device [A-F0-9:]* //'
-)
-
-if ! command -v bluetuith >/dev/null 2>&1; then
-  echo "Warning: bluetuith is not installed or not in PATH."
-fi
 case "$1" in
-    open)
-        command -v bluetuith >/dev/null 2>&1 && $TERM -e bluetuith >/dev/null
-        ;;
-    toggle)
-        toggle=$((1 - state))
-        bluetoothctl power $([ "$toggle" -eq 1 ] && echo "on" || echo "off") >/dev/null
-        ;;
-    reset)
-        echo -1 > "$LABEL_FILE"
-        ;;
-    cycle_up)
-        echo $(( (currentIndex + 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"
-        ;;
-    cycle_down)
-        echo $(( (currentIndex - 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"
-        ;;
-    *)
-        # default action, e.g., show icon/label
-        ;;
+    volume_jump) volume_jump ;;
+    volume_up)   volume_up ;;
+    volume_down) volume_down ;;
+    toggle)      cycle_output_sound ;;
+    mute)        mute ;;
 esac
 
-if [ $currentIndex == -1 ]; then
-  connectedCount=$(bluetoothctl devices Connected | wc -l)
-  label="  ${connectedCount} devices"
-  if [ "$connectedCount" -eq 1 ]; then
-    label="  ${connectedCount} device"
-  elif [ "$connectedCount" -eq 0 ]; then
-    label=""
-  fi
-else
-  label="  ${connectedDevices[$currentIndex]} $((currentIndex + 1))/${#connectedDevices[@]}"
+
+if is_muted; then
+  echo "<fc=#696969>$ICON_MUTED</fc>"
+  exit
 fi
 
-icons=("󰂲" "󰂰")
-colors=("#A9A9A9" "#1E90FF")
+icon=$(get_sink_icon)
+vol=$(get_volume)
 
-echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>"
+thresholds=(0 20 40 75)
+sound_icons=("" "" "" "󰕾" "")
+
+sound_icon="${sound_icons[-1]}"
+ICON_VOLUME=""
+for i in "${!thresholds[@]}"; do
+  if (( vol <= thresholds[i] )); then
+    sound_icon="${sound_icons[i]}"
+    break
+  fi
+done
+
+output="$icon  $sound_icon  $vol󰏰"
+if (( vol > 100 )); then
+  echo "<fc=${OVERFLOW_COLOR}>$output</fc>"
+else
+  echo "$output"
+fi
