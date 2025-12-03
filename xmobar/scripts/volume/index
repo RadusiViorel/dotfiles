@@ -38,7 +38,7 @@ get_sink_icon() {
         *speaker* ) echo $ICON_SPEAKER ;;      # speakers
         *headphone* ) echo $ICON_HEADPHONES ;; # wired headphones
         *headset* ) echo $ICON_BT ;;           # headset
-        * ) echo "" ;;                        # fallback
+        * ) echo false ;;                        # fallback
     esac
 }
 
@@ -151,6 +151,12 @@ thresholds=(0 20 40 75)
 sound_icons=("" "" "" "󰕾" "")
 
 sound_icon="${sound_icons[-1]}"
+
+if ! icon; then
+  echo "<fc=${OVERFLOW_COLOR}>  󰖁</fc>"
+  exit
+fi
+
 ICON_VOLUME=""
 for i in "${!thresholds[@]}"; do
   if (( vol <= thresholds[i] )); then
