@@ -1,0 +1,12 @@
+#!/bin/bash
+
+COLOR="#e6c15c"
+
+if ! command -v xset >/dev/null 2>&1; then
+  echo "Warning: xset is not installed or not in PATH."
+  exit 1
+fi
+
+if xset q | grep "Caps Lock: *on" > /dev/null; then
+    echo "<fc=$COLOR> 󰪛 </fc>"
+fi
