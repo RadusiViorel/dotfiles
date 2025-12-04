@@ -5,7 +5,7 @@ STEP=3  # volume step
 MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
 ICON_HEADPHONES="󰋋"
-ICON_BT="<fc=#87c6e6></fc> 󰋋"
+ICON_BT="<fc=#87c6e6> </fc> 󰋋"
 ICON_MUTED=""
 OVERFLOW_COLOR="#f58989"
 MUTE_COLOR="#696969"

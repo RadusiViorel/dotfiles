@@ -131,10 +131,18 @@ myKeys conf = M.fromList $
 
     -- Brightness
     ++
-    [ ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 6%-")
-    , ((0, xF86XK_MonBrightnessUp),   spawn "brightnessctl set +6%")
-    , ((0 .|. shiftMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 1%")
+    [ ((0, xF86XK_MonBrightnessUp),   spawn "brightnessctl set +6%")
+    , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 6%-")
     , ((0 .|. shiftMask, xF86XK_MonBrightnessUp),   spawn "brightnessctl set 100%")
+    , ((0 .|. shiftMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 1%")
+    ]
+
+    -- Volume
+    ++
+    [ ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+    , ((0, xF86XK_AudioLowerVolume),   spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
+    , ((0 .|. shiftMask, xF86XK_AudioRaiseVolume),   spawn "pactl set-sink-volume @DEFAULT_SINK@  100%")
+    , ((0 .|. shiftMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@  0%")
     ]
 
     -- FullScreen

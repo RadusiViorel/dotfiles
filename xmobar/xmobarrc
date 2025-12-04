@@ -3,7 +3,7 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
   , border = TopB
   , bgColor = "black"
   , fgColor = "white"
-  , alpha = 255
+  , alpha = 155
   , position = TopW L 100
   , allDesktops = True
   , overrideRedirect = True
@@ -33,8 +33,9 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
     , Run Date "%a %Y-%m-%d %H:%M:%S" "date" 10
 
       -- XMonad/StdinReader
-    , Run StdinReader
+    , Run UnsafeStdinReader
   ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "%StdinReader% }{ <action=`$HOME/.config/xmobar/scripts/updates/index show` button=1> %updates% </action> <action=`$HOME/.config/xmobar/scripts/brightness up 3` button=4> <action=`$HOME/.config/xmobar/scripts/brightness down 3` button=5> %brightness% </action></action> | <action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_jump` button=1><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index mute` button=2><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index toggle` button=3><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_up` button=4><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_down` button=5> %volume% </action></action></action></action></action> | <action=`$HOME/.config/xmobar/scripts/bluetooth/index open` button=1><action=`$HOME/.config/xmobar/scripts/bluetooth/index toggle` button=2><action=`$HOME/.config/xmobar/scripts/bluetooth/index reset` button=3><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_up` button=4><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_down` button=5> %bluetooth% </action></action></action></action></action> | %wlp1s0b1% | <action=`$HOME/.config/xmobar/scripts/battery/index show_time` button=1> %battery% </action> |  <fc=#ee9a00>%date%</fc> | %locks%" }
+  , template = "%UnsafeStdinReader% }{ <action=`$HOME/.config/xmobar/scripts/updates/index show` button=1> %updates% </action> <action=`$HOME/.config/xmobar/scripts/brightness up 3` button=4> <action=`$HOME/.config/xmobar/scripts/brightness down 3` button=5> %brightness% </action></action> | <action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_jump` button=1><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index mute` button=2><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index toggle` button=3><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_up` button=4><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_down` button=5> %volume% </action></action></action></action></action> | <action=`$HOME/.config/xmobar/scripts/bluetooth/index open` button=1><action=`$HOME/.config/xmobar/scripts/bluetooth/index toggle` button=2><action=`$HOME/.config/xmobar/scripts/bluetooth/index reset` button=3><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_up` button=4><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_down` button=5> %bluetooth% </action></action></action></action></action> | %wlp1s0b1% | <action=`$HOME/.config/xmobar/scripts/battery/index show_time` button=1> %battery% </action> |  <fc=#ee9a00>%date%</fc> | %locks%"
+  }
