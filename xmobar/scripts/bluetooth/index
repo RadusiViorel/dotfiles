@@ -14,8 +14,9 @@ currentIndex=$(cat "$LABEL_FILE")
 
 state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
 
-thresholds=(10 33 66)
 outputColor="#ffffff"
+disabledColor="#696969"
+thresholds=(10 33 66)
 timercolors=("#d94141" "#f58989" "#e6c15c" "#84f098")
 
 mapfile -t connectedDevices < <(
@@ -28,7 +29,6 @@ fi
 
 if [ ${#connectedDevices[@]} -eq 0 ]; then
   echo -1 > "$LABEL_FILE"
-  exit 0
 fi
 
 case "$1" in
@@ -77,6 +77,6 @@ else
 fi
 
 icons=("󰂲" "󰂰")
-colors=("#696969" ${outputColor})
+colors=(${disabledColor} ${outputColor})
 
 echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>"

@@ -6,8 +6,9 @@ MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
 ICON_HEADPHONES="󰋋"
 ICON_BT="<fc=#87c6e6></fc> 󰋋"
-ICON_MUTED="󰝟"
+ICON_MUTED=""
 OVERFLOW_COLOR="#f58989"
+MUTE_COLOR="#696969"
 
 # ------------------------------
 
@@ -75,10 +76,11 @@ cycle_output_sound() {
     next_sink=$(echo "${pairs[$next_index]}" | awk '{print $1}')
     next_port=$(echo "${pairs[$next_index]}" | awk '{print $2}')
 
-    vol=$(get_volume)
+    #vol=$(get_volume)
     pactl set-default-sink "$next_sink"
     pactl set-sink-port    "$next_sink" "$next_port"
-    pactl set-sink-volume  "$next_sink" "$(vol)%"
+    #pactl set-sink-volume  "$next_sink" "$(vol)%"
+    pactl set-sink-volume  "$next_sink" "40%"
 }
 
 volume_jump() {
@@ -140,7 +142,7 @@ esac
 
 
 if is_muted; then
-  echo "<fc=#696969>$ICON_MUTED</fc>"
+  echo "<fc=${MUTE_COLOR}>$ICON_MUTED</fc>"
   exit
 fi
 
@@ -157,7 +159,6 @@ if (( icon == -1 )); then
   exit
 fi
 
-ICON_VOLUME=""
 for i in "${!thresholds[@]}"; do
   if (( vol <= thresholds[i] )); then
     sound_icon="${sound_icons[i]}"
@@ -165,7 +166,7 @@ for i in "${!thresholds[@]}"; do
   fi
 done
 
-output="$icon  $sound_icon  $vol󰏰"
+output="$sound_icon  $vol󰏰 <fc=${MUTE_COLOR}>󰜥</fc> $icon"
 if (( vol > 100 )); then
   echo "<fc=${OVERFLOW_COLOR}>$output</fc>"
 else

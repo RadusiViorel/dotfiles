@@ -1,13 +1,12 @@
 #!/bin/bash
 
+
 LEVEL_FILE="$HOME/.config/xmobar/scripts/battery/state/level"
 SHOW_TIME_FILE="$HOME/.config/xmobar/scripts/battery/state/show_time"
-
 
 # If file doesn't exist, start from 0
 [[ -f "$LEVEL_FILE" ]] || echo 0 > "$LEVEL_FILE"
 [[ -f "$SHOW_TIME_FILE" ]] || echo 0 > "$SHOW_TIME_FILE"
-
 
 info=$(acpi -b)
 state=$(echo "$info" | awk -F'[,: ]+' '{print $3}')
@@ -74,6 +73,9 @@ else
     icon="󰂃"
 fi
 
-[[ $showtime == 1 ]] && icon="$icon <fc=$timercolor> $time </fc>"
+[[ $level -le ${thresholds[1]} ]] && output="<fc=$timercolor>$icon</fc>" || output="<fc=#ffffff>$icon</fc>"
 
-echo "<fc=#ffffff>$icon</fc>"
+
+[[ $showtime == 1 ]] && output="$output <fc=$timercolor> $time </fc>"
+
+echo $output
