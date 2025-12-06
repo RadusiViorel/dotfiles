@@ -17,6 +17,7 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/brightness/index" [] "brightness" 3
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/bluetooth/index"  [] "bluetooth"  5
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/battery/index"    [] "battery"    10
+    , Run Com "/home/radusiviorel/.config/xmobar/scripts/calendar/index"   [] "calendar"   10
 
       -- CPU widget
  --   , Run Cpu [ "-t", "  <total>󰏰" , "-L", "20" , "-H", "75" , "--low", "#84f098" , "--normal", "#fffff" , "--high", "#d94141" ] 10
@@ -27,13 +28,10 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
       -- Swap widget
   --  , Run Swap [] 10
 
-      -- Date widget
-    , Run Date "%a %Y-%m-%d %H:%M:%S" "date" 10
-
       -- XMonad/StdinReader
     , Run StdinReader
   ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "%StdinReader% }{ %capslock%<action=`$HOME/.config/xmobar/scripts/updates/index show` button=1> %updates% </action><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_jump` button=1><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index mute` button=2><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index toggle` button=3><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_up` button=4><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_down` button=5> %volume% </action></action></action></action></action> | <action=`$HOME/.config/xmobar/scripts/brightness/index up 3` button=4> <action=`$HOME/.config/xmobar/scripts/brightness/index down 3` button=5> %brightness% </action></action> | <action=`$HOME/.config/xmobar/scripts/bluetooth/index open` button=1><action=`$HOME/.config/xmobar/scripts/bluetooth/index toggle` button=2><action=`$HOME/.config/xmobar/scripts/bluetooth/index reset` button=3><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_up` button=4><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_down` button=5> %bluetooth% </action></action></action></action></action> | %wlp1s0b1% | <action=`$HOME/.config/xmobar/scripts/battery/index show_time` button=1> %battery% </action> |  <fc=#ee9a00>%date%</fc>"
+  , template = "%StdinReader% }{ %capslock%<action=`$HOME/.config/xmobar/scripts/updates/index show` button=1> %updates% </action><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_jump` button=1><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index mute` button=2><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index toggle` button=3><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_up` button=4><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_down` button=5> %volume% </action></action></action></action></action><action=`$HOME/.config/xmobar/scripts/brightness/index up 3` button=4> <action=`$HOME/.config/xmobar/scripts/brightness/index down 3` button=5> %brightness% </action></action><action=`$HOME/.config/xmobar/scripts/bluetooth/index open` button=1><action=`$HOME/.config/xmobar/scripts/bluetooth/index toggle` button=2><action=`$HOME/.config/xmobar/scripts/bluetooth/index reset` button=3><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_up` button=4><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_down` button=5> %bluetooth% </action></action></action></action></action>%wlp1s0b1%<action=`$HOME/.config/xmobar/scripts/battery/index show_time` button=1> %battery% </action><action=`$HOME/.config/xmobar/scripts/calendar/index toggle` button=1><action=`$HOME/.config/xmobar/scripts/calendar/index show_calendar` button=3> %calendar% </action></action>"
   }

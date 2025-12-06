@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+DATE_TIME_TOGGLE_FILE="$HOME/.config/xmobar/scripts/calendar/state/date_toggle"
+  W=450
+
+# If file doesn't exist, start from 0
+[[ -f "$DATE_TIME_TOGGLE_FILE" ]] || echo 0 > "$DATE_TIME_TOGGLE_FILE"
+
+toggle=$(cat "$DATE_TIME_TOGGLE_FILE")
+
+if ! command -v yad >/dev/null 2>&1; then
+  echo "Warning: yad is not installed or not in PATH."
+fi
+
+toggleDateTime() {
+  if [[ "$toggle" == 0 ]]; then
+      echo 1 > "$DATE_TIME_TOGGLE_FILE"
+  else
+      echo 0 > "$DATE_TIME_TOGGLE_FILE"
+  fi
+}
+
+showCalendar() {
+
+  pkill -f "yad --calendar-popup" 2>/dev/null
+
+  # Window size
+
+  # Screen dimensions
+  SCREEN_W=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f1)
+
+  # Compute top-right corner position
+  POS_X=$((SCREEN_W - W))
+
+    #--close-on-unfocus \
+  yad --name="calendar-popup" \
+    --calendar \
+    --sticky \
+    --fixed \
+    --always-on-top \
+    --on-top \
+    --font="Source Code Pro Bold 22" \
+    --skip-taskbar \
+    --no-buttons \
+    --geometry="${W}x0+${POS_X}+20"
+  }
+
+case "$1" in
+    toggle) toggleDateTime ;;
+    show_calendar) showCalendar ;;
+    *) ;;
+esac
+
+format="%H:%M:%S"
+[[ toggle -eq 1 ]] && format="%d-%m-%Y"
+
+declare -A ICONS=(
+    [0]=""
+    [1]=""
+    [2]=""
+    [3]=""
+    [4]=""
+    [5]=""
+    [6]=""
+    [7]=""
+    [8]=""
+    [9]=""
+    [10]=""
+    [11]=""
+    [12]="󱑊"
+    [13]="󱐿"
+    [14]="󱑀"
+    [15]="󱑁"
+    [16]="󱑂"
+    [17]="󱑃"
+    [18]="󱑄"
+    [19]="󱑅"
+    [20]="󱑆"
+    [21]="󱑇"
+    [22]="󱑈"
+    [23]="󱑉"
+)
+
+[[ toggle -eq 1 ]] && icon=" " || icon="${ICONS[$(date +%H)]}"
+[[ toggle -eq 1 ]] && color="#e6c15c" || color="#84f098"
+
+echo "<fc=${color}>${icon}  $(date +"$format")</fc>"

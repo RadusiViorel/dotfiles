@@ -1,0 +1,78 @@
+#!/usr/bin/env sh
+
+pkill -f "yad --text-info" 2>/dev/null
+
+# Get raw cal output
+CAL_OUTPUT="$(cal "$@")"
+
+# Measure longest line and number of lines
+COLS=$(printf "%s\n" "$CAL_OUTPUT" | awk '{print length}' | sort -nr | head -1)
+ROWS=$(printf "%s\n" "$CAL_OUTPUT" | wc -l | tr -d ' ')
+
+# Font metrics (approx for monospace font)
+FONT_W=8    # px per character
+FONT_H=18   # px per line
+
+# Desired total pixel padding (you can tweak these)
+PADDING_X=40   # total horizontal padding (left + right)
+PADDING_Y=40   # total vertical padding (top + bottom)
+
+# Convert pixel padding into character/line padding (integer)
+PAD_CHARS=$(( PADDING_X / (2 * FONT_W) ))   # characters per side (left/right)
+PAD_LINES=$(( PADDING_Y / (2 * FONT_H) ))   # blank lines top/bottom per side
+
+# Compute window pixel size (include total padding)
+W=$(( COLS * FONT_W + PADDING_X ))
+H=$(( ROWS * FONT_H + PADDING_Y ))
+
+# Screen size
+SCREEN_W=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f1)
+SCREEN_H=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f2)
+
+# Center horizontally and 20px from bottom
+POS_X=$(( (SCREEN_W / 2) - (W / 2) ))
+POS_Y=$(( SCREEN_H - H - 20 ))
+
+# Build padded output:
+# - Add PAD_LINES blank lines at top
+# - For each line: left spaces = PAD_CHARS + ((COLS - len)/2)
+# - Add PAD_LINES blank lines at bottom
+
+# helper: generate N spaces
+spaces() {
+  n=$1
+  if [ "$n" -le 0 ]; then
+    printf ""
+  else
+    # printf with a big format is portable
+    printf '%*s' "$n" ""
+  fi
+}
+
+# Build the padded text
+padded="$(printf '\n%.0s' $(seq 1 $PAD_LINES))"  # top blank lines
+
+# iterate lines
+while IFS= read -r line; do
+  len=${#line}
+  # center this line within COLS (integer division)
+  extra=$(( (COLS - len) / 2 ))
+  left=$(( PAD_CHARS + extra ))
+  padded="${padded}$(spaces "$left")${line}\n"
+done <<EOF
+$CAL_OUTPUT
+EOF
+
+# Bottom padding lines
+for _ in $(seq 1 "$PAD_LINES"); do
+    padded="${padded}\n"
+done
+
+# Show popup
+yad --text-info \
+    --title="Calendar" \
+    --fontname="monospace 11" \
+    --close-on-unfocus \
+    --no-buttons \
+    --geometry="${W}x${H}+${POS_X}+${POS_Y}" \
+    <<< "$(printf "%b" "$padded")"

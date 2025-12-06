@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 
 LEVEL_FILE="$HOME/.config/xmobar/scripts/battery/state/level"
