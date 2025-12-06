@@ -85,6 +85,12 @@ cycle_output_sound() {
 
 volume_jump() {
 
+  #stupid bug, on boot sometimes dosent start
+  if (( $(get_sink_icon) == -1 )); then
+    wireplumber &
+    exit
+  fi
+
   if is_muted; then
     pactl set-sink-mute "$(default_sink)" toggle
     pactl set-sink-volume "$(default_sink)" 25%
