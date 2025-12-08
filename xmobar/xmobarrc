@@ -8,15 +8,13 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
   , allDesktops = True
   , overrideRedirect = True
   , commands = [
-      -- Network widget
-      Run Network "wlp1s0b1" ["--template", "Net: <tx>kB|<rx>kB", "-L","1000","-H","5000", "--low", "gray", "--normal","green","--high","red"] 10
-
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/updates/index"    [] "updates"    40
+      Run Com "/home/radusiviorel/.config/xmobar/scripts/updates/index"    [] "updates"    40
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/capslock/index"   [] "capslock"    10
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/volume/index"     [] "volume"     3
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/brightness/index" [] "brightness" 3
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/bluetooth/index"  [] "bluetooth"  5
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/battery/index"    [] "battery"    10
+    , Run Com "/home/radusiviorel/.config/xmobar/scripts/network/index"    [] "network"    5
     , Run Com "/home/radusiviorel/.config/xmobar/scripts/calendar/index"   [] "calendar"   10
 
       -- CPU widget
@@ -33,5 +31,5 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
   ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "%StdinReader% }{ %capslock%<action=`$HOME/.config/xmobar/scripts/updates/index show` button=1> %updates% </action><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_jump` button=1><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index mute` button=2><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index toggle` button=3><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_up` button=4><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_down` button=5> %volume% </action></action></action></action></action><action=`$HOME/.config/xmobar/scripts/brightness/index up 3` button=4> <action=`$HOME/.config/xmobar/scripts/brightness/index down 3` button=5> %brightness% </action></action><action=`$HOME/.config/xmobar/scripts/bluetooth/index open` button=1><action=`$HOME/.config/xmobar/scripts/bluetooth/index toggle` button=2><action=`$HOME/.config/xmobar/scripts/bluetooth/index reset` button=3><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_up` button=4><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_down` button=5> %bluetooth% </action></action></action></action></action>%wlp1s0b1%<action=`$HOME/.config/xmobar/scripts/battery/index show_time` button=1> %battery% </action><action=`$HOME/.config/xmobar/scripts/calendar/index toggle` button=1><action=`$HOME/.config/xmobar/scripts/calendar/index show_calendar` button=3> %calendar% </action></action>"
+  , template = "%StdinReader% }{ %capslock%<action=`$HOME/.config/xmobar/scripts/updates/index show` button=1> %updates% </action><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_jump` button=1><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index mute` button=2><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index toggle` button=3><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_up` button=4><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_down` button=5> %volume% </action></action></action></action></action><action=`$HOME/.config/xmobar/scripts/brightness/index up 3` button=4><action=`$HOME/.config/xmobar/scripts/brightness/index down 3` button=5> %brightness% </action></action><action=`$HOME/.config/xmobar/scripts/bluetooth/index open` button=1><action=`$HOME/.config/xmobar/scripts/bluetooth/index toggle` button=2><action=`$HOME/.config/xmobar/scripts/bluetooth/index reset` button=3><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_up` button=4><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_down` button=5> %bluetooth% </action></action></action></action></action><action=`$HOME/.config/xmobar/scripts/battery/index show_time` button=1> %battery% </action><action=`$HOME/.config/xmobar/scripts/network/index connect`> %network% </action><action=`$HOME/.config/xmobar/scripts/calendar/index toggle` button=1><action=`$HOME/.config/xmobar/scripts/calendar/index show_calendar` button=3> %calendar% </action></action>"
   }

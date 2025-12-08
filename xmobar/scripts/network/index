@@ -1,0 +1,172 @@
+#!/usr/bin/env bash
+
+#run this to skip sudo
+#sudo setcap cap_net_admin+ep /usr/bin/iw
+
+interface=wlan0
+lan_interface=eth0
+wifi_name_length=150
+MUTE_COLOR="#696969"
+
+spinner_icons=(      )
+
+LOADING_FILE="$HOME/.config/xmobar/scripts/network/state/loading"
+SPINNER_FILE="$HOME/.config/xmobar/scripts/network/state/spinner"
+
+if [ ! -f "$LOADING_FILE" ]; then
+  echo 0 > "$LOADING_FILE"
+fi
+
+is_loading=$(cat "$LOADING_FILE")
+
+if (( is_loading == 1 )); then
+  idx=$(cat "$SPINNER_FILE")
+  idx=$(( (idx + 1) % ${#spinner_icons[@]} ))
+  echo "$idx" > "$SPINNER_FILE"
+fi
+
+spinner_idx=$(cat "$SPINNER_FILE")
+spinner=${spinner_icons[$spinner_idx]}
+
+for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
+    if [ -d "/sys/class/net/$iface/wireless" ]; then
+        interface=$iface
+        break
+    fi
+done
+
+for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
+    if [ ! -d "/sys/class/net/$iface/wireless" ] && [[ $iface != lo ]]; then
+        lan_interface=$iface
+        break
+    fi
+done
+
+if ip link show ${lan_interface} | grep -q 'state UP'; then
+  echo "LAN<fc=${MUTE_COLOR}> 󰜥 </fc> 󰈀"
+  exit
+fi
+
+
+connect() {
+
+  echo 1 > "$LOADING_FILE"
+  # ---------------------------
+  # 1. Build KNOWN SSID LIST
+  # ---------------------------
+  known_ssids=$(wpa_cli -i "$interface" list_networks \
+    | awk -F '\t' 'NR>1 && $2!="" {print $2}')
+
+  # Convert known ssids into easy grep matches
+  is_known() {
+    echo "$known_ssids" | grep -Fxq "$1"
+  }
+
+  # ---------------------------
+  # 2. Scan Wi-Fi networks
+  # ---------------------------
+  scan_list=$(iw dev "$interface" scan 2>/dev/null \
+    | awk -F'SSID: ' '/SSID:/ {print $2}' \
+    | sed '/^$/d' \
+    | sort -u)
+
+  # ---------------------------
+  # 3. Build ROFI menu
+  # ---------------------------
+  menu=""
+  while IFS= read -r ssid; do
+    if is_known "$ssid"; then
+      menu+="$ssid 󰦕"$'\n'
+    else
+      menu+="$ssid"$'\n'
+    fi
+  done <<< "$scan_list"
+
+  # Show the menu
+  chosen=$(echo -en "$menu" | rofi -dmenu -p "Select Wi-Fi")
+  [ -z "$chosen" ] && (echo 0 > "$LOADING_FILE") && return
+
+  # Remove trailing '*' if present
+  ssid="${chosen% \*}"
+  [ -z "$ssid" ] && (echo 0 > "$LOADING_FILE") && return
+
+  # ---------------------------
+  # 4. Determine if known
+  # ---------------------------
+  nid=$(wpa_cli -i "$interface" list_networks \
+          | awk -F'\t' -v ss="$ssid" 'NR>1 && $2==ss {print $1}')
+  # ---------------------------
+  # 5. If known → connect directly
+  # ---------------------------
+  if [ -n "$nid" ]; then
+      wpa_cli -i "$interface" enable_network "$nid" >/dev/null
+      wpa_cli -i "$interface" select_network "$nid" >/dev/null
+      (echo 0 > "$LOADING_FILE")
+      return
+  fi
+
+  # --- Ask for password ---
+  password=$(rofi -dmenu -password -p "Password for $ssid")
+  [ -z "$password" ] && (echo 0 > "$LOADING_FILE") && exit
+
+  # Create new network
+  nid=$(wpa_cli -i "$interface" add_network | awk '{print $1}')
+
+  # Set SSID and PSK
+  wpa_cli -i "$interface" set_network "$nid" ssid "\"$ssid\"" >/dev/null
+  wpa_cli -i "$interface" set_network "$nid" psk "\"$password\"" >/dev/null
+
+  # Enable and save
+  wpa_cli -i "$interface" enable_network "$nid" >/dev/null
+
+  # Wait up to 10 seconds for successful connection
+  for i in {1..10}; do
+    STATUS=$(wpa_cli -i "$interface" status | grep wpa_state | cut -d= -f2)
+    if [ "$STATUS" = "COMPLETED" ]; then
+      # SUCCESS → save config permanently
+      wpa_cli -i "$interface" save_config >/dev/null
+      wpa_cli -i "$interface" select_network "$nid" >/dev/null
+      notify-send "WiFi" "Connected to $ssid"
+      echo 0 > "$LOADING_FILE"
+      return
+    fi
+    sleep 1
+  done
+
+  notify-send "WiFi" "󱛅 ${ssid} error"
+  wpa_cli -i "$interface" remove_network "$nid" >/dev/null
+  echo 0 > "$LOADING_FILE"
+}
+
+ssid=$(iw dev ${interface} link | awk -F': ' '/SSID/ {print $2}')
+
+if [ ${#ssid} -gt ${wifi_name_length} ]; then
+  ssid="${ssid:0:$((wifi_name_length-3))}<fc=${MUTE_COLOR}>󰇘</fc>"
+fi
+
+case "$1" in
+  connect) connect ;;
+  *) ;;
+esac
+
+signal_icons=( 󰤯 󰤟 󰤢 󰤥 󰤨 )
+signal_thresholds=( 15 33 50 90 )
+signal_icon=${signal_icons[-1]}
+signal=$(awk 'NR==3 {print $3}' /proc/net/wireless | sed 's/\.//')
+
+for i in "${!signal_thresholds[@]}"; do
+  if (( signal < signal_thresholds[i] )); then
+    signal_icon="${signal_icons[i]}"
+    break
+  fi
+done
+
+
+if (( is_loading == 0 )); then
+  echo "$ssid ${signal}󰏰 ${signal_icon}"
+fi
+
+
+if (( is_loading == 1 )); then
+  echo "󱛇  ${spinner}"
+fi
