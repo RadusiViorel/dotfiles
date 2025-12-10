@@ -87,4 +87,4 @@ declare -A ICONS=(
 [[ toggle -eq 1 ]] && icon=" " || icon="${ICONS[$(date +%H)]}"
 [[ toggle -eq 1 ]] && color="#e6c15c" || color="#84f098"
 
-echo "<fc=${color}>${icon}  $(date +"$format")</fc>"
+echo "<fc=${color}>${icon}  $(date +"$format")</fc>${SEP}"

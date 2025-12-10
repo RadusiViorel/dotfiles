@@ -18,6 +18,7 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
     , Run Com "/home/radusiviorel/.config/xmobar/com/network/index"    [] "network"    3
     , Run Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 3
     , Run Com "/home/radusiviorel/.config/xmobar/com/calendar/index"   [] "calendar"   10
+    , Run Com "/home/radusiviorel/.config/xmobar/com/power/index"      [] "power"      10
 
       -- Swap widget
   --  , Run Swap [] 10
@@ -63,5 +64,8 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
 
       -- calendar --
       \<action=`$HOME/.config/xmobar/com/calendar/index toggle`        button=1>\
-      \<action=`$HOME/.config/xmobar/com/calendar/index show_calendar` button=3>%calendar%</action></action>"
+      \<action=`$HOME/.config/xmobar/com/calendar/index show_calendar` button=3>%calendar%</action></action>\
+
+      -- page --
+      \<action=`$HOME/.config/xmobar/com/power/index open` button=1>%power%</action>"
   }

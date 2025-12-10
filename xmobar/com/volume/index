@@ -43,7 +43,7 @@ get_sink_icon() {
         *speaker* ) echo $ICON_SPEAKER ;;      # speakers
         *headphone* ) echo $ICON_HEADPHONES ;; # wired headphones
         *headset* ) echo $ICON_BT ;;           # headset
-        * ) echo "-1" ;;                        # fallback
+        * ) echo "-1" ;;                       # fallback
     esac
 }
 
@@ -90,7 +90,7 @@ cycle_output_sound() {
 volume_jump() {
 
   #stupid bug, on boot sometimes dosent start
-  if (( $(get_sink_icon) == -1 )); then
+  if [[ $(get_sink_icon) == "-1" ]]; then
     wireplumber &
     exit
   fi
@@ -164,7 +164,7 @@ sound_icons=("" "" "" "󰕾" "")
 
 sound_icon="${sound_icons[-1]}"
 
-if [[ icon == '-1' ]]; then
+if [[ icon == "-1" ]]; then
   echo "<fc=${OVERFLOW_COLOR}>  󰖁</fc>${SEP}"
   exit
 fi
