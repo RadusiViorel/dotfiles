@@ -9,7 +9,6 @@ source "${HOME}/.config/xmobar/scripts/page/index"
 interface=wlan0
 lan_interface=eth0
 wifi_name_length=150
-MUTE_COLOR="#696969"
 
 spinner_icons=(      )
 
@@ -47,7 +46,7 @@ for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
 done
 
 if ip link show ${lan_interface} | grep -q 'state UP'; then
-  echo "LAN<fc=${MUTE_COLOR}> 󰜥 </fc> 󰈀${SEP}"
+  echo "LAN<fc=${COLOR_MUTE}> 󰜥 </fc> 󰈀${SEP}"
   exit
 fi
 
@@ -145,7 +144,7 @@ connect() {
 ssid=$(iw dev ${interface} link | awk -F': ' '/SSID/ {print $2}')
 
 if [ ${#ssid} -gt ${wifi_name_length} ]; then
-  ssid="${ssid:0:$((wifi_name_length-3))}<fc=${MUTE_COLOR}>󰇘</fc>"
+  ssid="${ssid:0:$((wifi_name_length-3))}<fc=${COLOR_MUTE}>󰇘</fc>"
 fi
 
 case "$1" in

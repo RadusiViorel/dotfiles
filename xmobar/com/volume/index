@@ -9,10 +9,8 @@ STEP=3  # volume step
 MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
 ICON_HEADPHONES="󰋋"
-ICON_BT="<fc=#87c6e6> </fc> 󰋋"
+ICON_BT="<fc=${COLOR_INFO}> </fc> 󰋋"
 ICON_MUTED=""
-OVERFLOW_COLOR="#f58989"
-MUTE_COLOR="#696969"
 
 # ------------------------------
 
@@ -152,7 +150,7 @@ esac
 
 
 if is_muted; then
-  echo "<fc=${MUTE_COLOR}>$ICON_MUTED</fc>${SEP}"
+  echo "<fc=${COLOR_MUTE}>$ICON_MUTED</fc>${SEP}"
   exit
 fi
 
@@ -164,8 +162,8 @@ sound_icons=("" "" "" "󰕾" "")
 
 sound_icon="${sound_icons[-1]}"
 
-if [[ icon == "-1" ]]; then
-  echo "<fc=${OVERFLOW_COLOR}>  󰖁</fc>${SEP}"
+if [[ $icon == "-1" ]]; then
+  echo "<fc=${COLOR_DANGER}>  󰖁</fc>${SEP}"
   exit
 fi
 
@@ -176,9 +174,9 @@ for i in "${!thresholds[@]}"; do
   fi
 done
 
-output="$sound_icon  $vol󰏰 <fc=${MUTE_COLOR}>󰜥</fc> $icon"
+output="$sound_icon  $vol󰏰 <fc=${COLOR_MUTE}>󰜥</fc> $icon"
 if (( vol > 100 )); then
-  echo "<fc=${OVERFLOW_COLOR}>${output}</fc>${SEP}"
+  echo "<fc=${COLOR_DANGER}>${output}</fc>${SEP}"
 else
   echo "${output} "
 fi

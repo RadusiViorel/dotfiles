@@ -50,7 +50,7 @@ if [[ "$state" == "Charging" ]]; then
     idx=$(( (idx + 1) % ${#usable_icons[@]} ))
     echo "$idx" > "$LEVEL_FILE"
 
-    timercolor="#84f098"
+    timercolor=${COLOR_OK}
     icon="${usable_icons[$idx]}  <fc=$timercolor>${level}󰏰</fc>"
     [[ $showtime == 1 ]] && icon="$icon  <fc=$timercolor> $time </fc>"
     echo "${icon}${SEP}"
@@ -61,7 +61,7 @@ fi
 if [[ "$state" == "Discharging" ]]; then
   thresholds=(10 33 66)
   icons=("󰂎" "󱊡" "󱊢" "󱊣")
-  timercolors=("#d94141" "#f58989" "#e6c15c" "#84f098")
+  timercolors=($COLOR_CRITIC $COLOR_DANGER $COLOR_WARNING $COLOR_OK)
 
   icon="${icons[-1]}  ${level}󰏰"
   timercolor=${timercolors[-1]}
@@ -73,10 +73,10 @@ if [[ "$state" == "Discharging" ]]; then
     fi
   done
 else
-    icon="󰂃"
+  icon="󰂃"
 fi
 
-[[ $level -le ${thresholds[1]} ]] && output="<fc=$timercolor>$icon</fc>" || output="<fc=#ffffff>$icon</fc>"
+[[ $level -le ${thresholds[1]} ]] && output="<fc=$timercolor>$icon</fc>" || output="${icon}"
 
 
 [[ $showtime == 1 ]] && output="$output <fc=$timercolor> $time </fc>"

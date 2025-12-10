@@ -2,7 +2,6 @@
 
 source "${HOME}/.config/xmobar/scripts/vars"
 
-WARNING_COLOR="#f58989"
 WARNING_COUNT=15
 
 packageList=$(xbps-install -nuM)
@@ -18,14 +17,12 @@ case "$1" in
     *) ;;
 esac
 
-# No updates → show nothing
 (( count == 0 )) && exit 0
 
 output="  $count"
 
-# Warning color for >=15 updates
 if (( count >= WARNING_COUNT )); then
-    echo "<fc=${WARNING_COLOR}>${output}</fc> |"
+    echo "<fc=${COLOR_WARNING}>${output}</fc>${SEP}"
 else
     echo "$output ${SEP}"
 fi

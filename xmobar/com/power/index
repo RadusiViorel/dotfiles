@@ -2,32 +2,8 @@
 
 source "${HOME}/.config/xmobar/scripts/vars"
 
-OPTIONS=(
-  "⏼  Shutdown"
-  "󰑓  Restart"
-  "󰗽  Logout"
-)
-
-open() {
-
-  CHOICE=$(printf "%s\n" "${OPTIONS[@]}" | rofi -dmenu -i -p "Power Options")
-  ACTION=$(echo "$CHOICE" | sed 's/^[^ ]*  //')
-
-  case "$ACTION" in
-    "Shutdown")
-      doas $(which poweroff)
-      ;;
-    "Restart")
-      doas $(which reboot)
-      ;;
-    "Logout")
-      pkill X
-      ;;
-  esac
-}
-
 case "$1" in
-  open) open ;;
+  open) "${HOME}/.config/xmobar/com/power/actions/show" ;;
   *) ;;
 esac
 

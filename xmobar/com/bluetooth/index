@@ -19,9 +19,9 @@ currentIndex=$(cat "$LABEL_FILE")
 state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
 
 outputColor="#ffffff"
-disabledColor="#696969"
+disabledColor=${COLOR_MUTE}
 thresholds=(10 33 66)
-timercolors=("#d94141" "#f58989" "#e6c15c" "#84f098")
+timercolors=(${COLOR_CRITIC} ${COLOR_DANGER}  ${COLOR_WARNING} ${COLOR_OK})
 
 mapfile -t connectedDevices < <(
   bluetoothctl devices Connected | sed 's/^Device [A-F0-9:]* //'

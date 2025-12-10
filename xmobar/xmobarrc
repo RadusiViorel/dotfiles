@@ -8,17 +8,17 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
   , allDesktops = True
   , overrideRedirect = True
   , commands = [
-      Run Com "/home/radusiviorel/.config/xmobar/com/updates/index"    [] "updates"    40
+      Run Com "/home/radusiviorel/.config/xmobar/com/updates/index"    [] "updates"    3600
     , Run Com "/home/radusiviorel/.config/xmobar/com/capslock/index"   [] "capslock"   10
-    , Run Com "/home/radusiviorel/.config/xmobar/com/page/index"       [] "page"       5
-    , Run Com "/home/radusiviorel/.config/xmobar/com/volume/index"     [] "volume"     3
-    , Run Com "/home/radusiviorel/.config/xmobar/com/brightness/index" [] "brightness" 3
-    , Run Com "/home/radusiviorel/.config/xmobar/com/bluetooth/index"  [] "bluetooth"  3
-    , Run Com "/home/radusiviorel/.config/xmobar/com/battery/index"    [] "battery"    3
-    , Run Com "/home/radusiviorel/.config/xmobar/com/network/index"    [] "network"    3
-    , Run Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 3
+    , Run Com "/home/radusiviorel/.config/xmobar/com/page/index"       [] "page"       10
+    , Run Com "/home/radusiviorel/.config/xmobar/com/volume/index"     [] "volume"     5
+    , Run Com "/home/radusiviorel/.config/xmobar/com/brightness/index" [] "brightness" 5
+    , Run Com "/home/radusiviorel/.config/xmobar/com/bluetooth/index"  [] "bluetooth"  5
+    , Run Com "/home/radusiviorel/.config/xmobar/com/battery/index"    [] "battery"    5
+    , Run Com "/home/radusiviorel/.config/xmobar/com/network/index"    [] "network"    5
+    , Run Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 1000
     , Run Com "/home/radusiviorel/.config/xmobar/com/calendar/index"   [] "calendar"   10
-    , Run Com "/home/radusiviorel/.config/xmobar/com/power/index"      [] "power"      10
+    , Run Com "/home/radusiviorel/.config/xmobar/com/power/index"      [] "power"      1000
 
       -- Swap widget
   --  , Run Swap [] 10
@@ -66,6 +66,6 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
       \<action=`$HOME/.config/xmobar/com/calendar/index toggle`        button=1>\
       \<action=`$HOME/.config/xmobar/com/calendar/index show_calendar` button=3>%calendar%</action></action>\
 
-      -- page --
+      -- power --
       \<action=`$HOME/.config/xmobar/com/power/index open` button=1>%power%</action>"
   }

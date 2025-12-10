@@ -4,6 +4,8 @@ source "${HOME}/.config/xmobar/scripts/vars"
 
 PAGE_FILE="$HOME/.config/xmobar/scripts/page/value"
 
+[[ -f "$PAGE_FILE" ]] || echo 1 > "$PAGE_FILE"
+
 page=$(cat "$PAGE_FILE")
 
 toggle() {

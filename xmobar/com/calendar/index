@@ -4,9 +4,8 @@ source "${HOME}/.config/xmobar/scripts/vars"
 
 COM="${HOME}/.config/xmobar/com/calendar"
 DATE_TIME_TOGGLE_FILE="${COM}/state/toggle"
-  W=450
+W=450
 
-# If file doesn't exist, start from 0
 [[ -f "$DATE_TIME_TOGGLE_FILE" ]] || echo 0 > "$DATE_TIME_TOGGLE_FILE"
 
 toggle=$(cat "$DATE_TIME_TOGGLE_FILE")
@@ -27,15 +26,12 @@ showCalendar() {
 
   pkill -f "yad --calendar-popup" 2>/dev/null
 
-  # Window size
-
   # Screen dimensions
   SCREEN_W=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f1)
 
   # Compute top-right corner position
   POS_X=$((SCREEN_W - W))
 
-    #--close-on-unfocus \
   yad --name="calendar-popup" \
     --calendar \
     --sticky \
@@ -85,6 +81,6 @@ declare -A ICONS=(
 )
 
 [[ toggle -eq 1 ]] && icon=" " || icon="${ICONS[$(date +%H)]}"
-[[ toggle -eq 1 ]] && color="#e6c15c" || color="#84f098"
+[[ toggle -eq 1 ]] && color="${COLOR_WARNING}" || color="${COLOR_OK}"
 
 echo "<fc=${color}>${icon}  $(date +"$format")</fc>${SEP}"

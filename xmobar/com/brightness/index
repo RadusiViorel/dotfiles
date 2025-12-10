@@ -9,8 +9,8 @@ if ! command -v brightnessctl >/dev/null 2>&1; then
 fi
 
 BL_DIR="/sys/class/backlight/intel_backlight"  # your backlight folder
-cur=$(cat "$BL_DIR/brightness")
-max=$(cat "$BL_DIR/max_brightness")
+cur=$(<"$BL_DIR/brightness")
+max=$(<"$BL_DIR/max_brightness")
 
 # Optional: control mode
 step=${2:-3}
@@ -33,4 +33,4 @@ for i in "${!thresholds[@]}"; do
   fi
 done
 
-echo "<fc=#ffffff> $icon  $percent󰏰</fc>${SEP}"
+echo "$icon  $percent󰏰${SEP}"

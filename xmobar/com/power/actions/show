@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+OPTIONS=(
+  "⏼  Shutdown"
+  "󰑓  Restart"
+  "󰗽  Logout"
+)
+
+
+CHOICE=$(printf "%s\n" "${OPTIONS[@]}" | rofi -dmenu -i -p "Power Options")
+ACTION=$(echo "$CHOICE" | sed 's/^[^ ]*  //')
+
+case "$ACTION" in
+  "Shutdown")
+    doas $(which poweroff)
+    ;;
+  "Restart")
+    doas $(which reboot)
+    ;;
+  "Logout")
+    pkill X
+    ;;
+esac
