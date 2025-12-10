@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-DATE_TIME_TOGGLE_FILE="$HOME/.config/xmobar/scripts/calendar/state/date_toggle"
+source "${HOME}/.config/xmobar/scripts/vars"
+
+COM="${HOME}/.config/xmobar/com/calendar"
+DATE_TIME_TOGGLE_FILE="${COM}/state/toggle"
   W=450
 
 # If file doesn't exist, start from 0

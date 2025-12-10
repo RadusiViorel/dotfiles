@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+
+PAGE_FILE="$HOME/.config/xmobar/scripts/page/value"
+
+page=$(cat "$PAGE_FILE")
+
+toggle() {
+  if [[ "$page" == 2 ]]; then
+      echo 1 > "$PAGE_FILE"
+  else
+      echo 2 > "$PAGE_FILE"
+  fi
+}
+
+
+case "$1" in
+    toggle) toggle ;;
+    *) ;;
+esac
+
+icon="󰨙"
+if(( page == 2 )); then
+  icon="󰔡"
+fi
+
+echo "${icon}${SEP}"

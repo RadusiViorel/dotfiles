@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index"
 
-LEVEL_FILE="$HOME/.config/xmobar/scripts/battery/state/level"
-SHOW_TIME_FILE="$HOME/.config/xmobar/scripts/battery/state/show_time"
+COM="${HOME}/.config/xmobar/com/battery"
+LEVEL_FILE="${COM}/state/level"
+SHOW_TIME_FILE="${COM}/state/show_time"
 
 # If file doesn't exist, start from 0
 [[ -f "$LEVEL_FILE" ]] || echo 0 > "$LEVEL_FILE"
@@ -27,7 +30,7 @@ if [ "$1" == "show_time" ]; then
 fi
 
 if [[ "$state" == "Full" ]]; then
-  echo ""
+  echo "${SEP}"
   exit
 fi
 
@@ -50,7 +53,7 @@ if [[ "$state" == "Charging" ]]; then
     timercolor="#84f098"
     icon="${usable_icons[$idx]}  <fc=$timercolor>${level}󰏰</fc>"
     [[ $showtime == 1 ]] && icon="$icon  <fc=$timercolor> $time </fc>"
-    echo "$icon"
+    echo "${icon}${SEP}"
     exit
 fi
 
@@ -78,4 +81,4 @@ fi
 
 [[ $showtime == 1 ]] && output="$output <fc=$timercolor> $time </fc>"
 
-echo $output
+echo "${output}${SEP}"

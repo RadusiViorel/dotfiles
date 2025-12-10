@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index"
+
 #run this to skip sudo
 #sudo setcap cap_net_admin+ep /usr/bin/iw
 
@@ -10,8 +13,9 @@ MUTE_COLOR="#696969"
 
 spinner_icons=(      )
 
-LOADING_FILE="$HOME/.config/xmobar/scripts/network/state/loading"
-SPINNER_FILE="$HOME/.config/xmobar/scripts/network/state/spinner"
+COM="${HOME}/.config/xmobar/com/network"
+LOADING_FILE="${COM}/state/loading"
+SPINNER_FILE="${COM}/state/spinner"
 
 if [ ! -f "$LOADING_FILE" ]; then
   echo 0 > "$LOADING_FILE"
@@ -43,7 +47,7 @@ for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
 done
 
 if ip link show ${lan_interface} | grep -q 'state UP'; then
-  echo "LAN<fc=${MUTE_COLOR}> 󰜥 </fc> 󰈀"
+  echo "LAN<fc=${MUTE_COLOR}> 󰜥 </fc> 󰈀${SEP}"
   exit
 fi
 
@@ -161,12 +165,10 @@ for i in "${!signal_thresholds[@]}"; do
   fi
 done
 
-
 if (( is_loading == 0 )); then
-  echo "$ssid ${signal}󰏰 ${signal_icon}"
+  echo "$ssid ${signal}󰏰 ${signal_icon}${SEP}"
 fi
 
-
 if (( is_loading == 1 )); then
-  echo "󱛇  ${spinner}"
+  echo "󱛇  ${spinner}${SEP}"
 fi

@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index"
+
 if ! command -v bluetoothctl >/dev/null 2>&1; then
   echo "Warning: bluetoothctl is not installed or not in PATH."
   exit 1
 fi
 
-LABEL_FILE="$HOME/.config/xmobar/scripts/bluetooth/state/label"
+COM="${HOME}/.config/xmobar/com/bluetooth"
+LABEL_FILE="${COM}/state/label"
 if [ ! -f "$LABEL_FILE" ]; then
   echo -1 > "$LABEL_FILE"
 fi
@@ -79,4 +83,4 @@ fi
 icons=("󰂲" "󰂰")
 colors=(${disabledColor} ${outputColor})
 
-echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>"
+echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>${SEP}"

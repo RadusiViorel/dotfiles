@@ -1,0 +1,10 @@
+#!/bin/bash
+
+PAGE_FILE="$HOME/.config/xmobar/scripts/page/value"
+page=$(cat "$PAGE_FILE" 2>/dev/null)
+
+target_page="${1:-1}"
+
+if [[ "$page" == "$target_page" ]]; then
+    exit 0
+fi

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index"
+
 if ! command -v brightnessctl >/dev/null 2>&1; then
   echo "Warning: brightnessctl is not installed or not in PATH."
   exit 1
@@ -30,4 +33,4 @@ for i in "${!thresholds[@]}"; do
   fi
 done
 
-echo "<fc=#ffffff>$icon  $percent󰏰</fc>"
+echo "<fc=#ffffff> $icon  $percent󰏰</fc>${SEP}"

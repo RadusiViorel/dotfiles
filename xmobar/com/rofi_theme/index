@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+
+change_theme() {
+ "${HOME}/.config/xmobar/com/rofi_theme/actions/change_theme"
+}
+
+case "$1" in
+    change) change_theme ;;
+    *) ;;
+esac
+
+icon="󰔎"
+echo "${icon}${SEP}"

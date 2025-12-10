@@ -8,20 +8,16 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
   , allDesktops = True
   , overrideRedirect = True
   , commands = [
-      Run Com "/home/radusiviorel/.config/xmobar/scripts/updates/index"    [] "updates"    40
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/capslock/index"   [] "capslock"    10
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/volume/index"     [] "volume"     3
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/brightness/index" [] "brightness" 3
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/bluetooth/index"  [] "bluetooth"  5
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/battery/index"    [] "battery"    10
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/network/index"    [] "network"    5
-    , Run Com "/home/radusiviorel/.config/xmobar/scripts/calendar/index"   [] "calendar"   10
-
-      -- CPU widget
- --   , Run Cpu [ "-t", "  <total>󰏰" , "-L", "20" , "-H", "75" , "--low", "#84f098" , "--normal", "#fffff" , "--high", "#d94141" ] 10
-
-      -- Memory widget
---    , Run Memory ["-t","Mem: <usedratio>%"] 10
+      Run Com "/home/radusiviorel/.config/xmobar/com/updates/index"    [] "updates"    40
+    , Run Com "/home/radusiviorel/.config/xmobar/com/capslock/index"   [] "capslock"   10
+    , Run Com "/home/radusiviorel/.config/xmobar/com/page/index"       [] "page"       5
+    , Run Com "/home/radusiviorel/.config/xmobar/com/volume/index"     [] "volume"     3
+    , Run Com "/home/radusiviorel/.config/xmobar/com/brightness/index" [] "brightness" 3
+    , Run Com "/home/radusiviorel/.config/xmobar/com/bluetooth/index"  [] "bluetooth"  3
+    , Run Com "/home/radusiviorel/.config/xmobar/com/battery/index"    [] "battery"    3
+    , Run Com "/home/radusiviorel/.config/xmobar/com/network/index"    [] "network"    3
+    , Run Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 3
+    , Run Com "/home/radusiviorel/.config/xmobar/com/calendar/index"   [] "calendar"   10
 
       -- Swap widget
   --  , Run Swap [] 10
@@ -31,5 +27,41 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
   ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "%StdinReader% }{ %capslock%<action=`$HOME/.config/xmobar/scripts/updates/index show` button=1> %updates% </action><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_jump` button=1><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index mute` button=2><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index toggle` button=3><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_up` button=4><action=`/home/radusiviorel/.config/xmobar/scripts/volume/index volume_down` button=5> %volume% </action></action></action></action></action><action=`$HOME/.config/xmobar/scripts/brightness/index up 3` button=4><action=`$HOME/.config/xmobar/scripts/brightness/index down 3` button=5> %brightness% </action></action><action=`$HOME/.config/xmobar/scripts/bluetooth/index open` button=1><action=`$HOME/.config/xmobar/scripts/bluetooth/index toggle` button=2><action=`$HOME/.config/xmobar/scripts/bluetooth/index reset` button=3><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_up` button=4><action=`$HOME/.config/xmobar/scripts/bluetooth/index cycle_down` button=5> %bluetooth% </action></action></action></action></action><action=`$HOME/.config/xmobar/scripts/battery/index show_time` button=1> %battery% </action><action=`$HOME/.config/xmobar/scripts/network/index connect`> %network% </action><action=`$HOME/.config/xmobar/scripts/calendar/index toggle` button=1><action=`$HOME/.config/xmobar/scripts/calendar/index show_calendar` button=3> %calendar% </action></action>"
+  , template = "%StdinReader% }{ %capslock%\
+      -- updates --
+      \<action=`$HOME/.config/xmobar/com/updates/index show` button=1> %updates% </action>\
+
+      -- volume --
+      \<action=`$HOME/.config/xmobar/com/volume/index volume_jump` button=1>\
+      \<action=`$HOME/.config/xmobar/com/volume/index mute`        button=2>\
+      \<action=`$HOME/.config/xmobar/com/volume/index toggle`      button=3>\
+      \<action=`$HOME/.config/xmobar/com/volume/index volume_up`   button=4>\
+      \<action=`$HOME/.config/xmobar/com/volume/index volume_down` button=5>%volume%</action></action></action></action></action>\
+
+      -- brightness --
+      \<action=`$HOME/.config/xmobar/com/brightness/index up 3`   button=4>\
+      \<action=`$HOME/.config/xmobar/com/brightness/index down 3` button=5>%brightness%</action></action>\
+
+      -- bluetooth --
+      \<action=`$HOME/.config/xmobar/com/bluetooth/index open`       button=1>\
+      \<action=`$HOME/.config/xmobar/com/bluetooth/index toggle`     button=2>\
+      \<action=`$HOME/.config/xmobar/com/bluetooth/index reset`      button=3>\
+      \<action=`$HOME/.config/xmobar/com/bluetooth/index cycle_up`   button=4>\
+      \<action=`$HOME/.config/xmobar/com/bluetooth/index cycle_down` button=5>%bluetooth%</action></action></action></action></action>\
+
+      -- battery --
+      \<action=`$HOME/.config/xmobar/com/battery/index show_time` button=1>%battery%</action>\
+
+      -- network --
+      \<action=`$HOME/.config/xmobar/com/network/index connect`>%network%</action>\
+
+      -- page --
+      \<action=`$HOME/.config/xmobar/com/rofi_theme/index change` button=1>%rofi_theme%</action>\
+
+      -- page --
+      \<action=`$HOME/.config/xmobar/com/page/index toggle` button=1>%page%</action>\
+
+      -- calendar --
+      \<action=`$HOME/.config/xmobar/com/calendar/index toggle`        button=1>\
+      \<action=`$HOME/.config/xmobar/com/calendar/index show_calendar` button=3>%calendar%</action></action>"
   }

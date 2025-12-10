@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index"
+
 STEP=3  # volume step
 MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
@@ -39,7 +43,7 @@ get_sink_icon() {
         *speaker* ) echo $ICON_SPEAKER ;;      # speakers
         *headphone* ) echo $ICON_HEADPHONES ;; # wired headphones
         *headset* ) echo $ICON_BT ;;           # headset
-        * ) echo -1 ;;                        # fallback
+        * ) echo "-1" ;;                        # fallback
     esac
 }
 
@@ -148,7 +152,7 @@ esac
 
 
 if is_muted; then
-  echo "<fc=${MUTE_COLOR}>$ICON_MUTED</fc>"
+  echo "<fc=${MUTE_COLOR}>$ICON_MUTED</fc>${SEP}"
   exit
 fi
 
@@ -160,8 +164,8 @@ sound_icons=("" "" "" "󰕾" "")
 
 sound_icon="${sound_icons[-1]}"
 
-if (( icon == -1 )); then
-  echo "<fc=${OVERFLOW_COLOR}>  󰖁</fc>"
+if [[ icon == '-1' ]]; then
+  echo "<fc=${OVERFLOW_COLOR}>  󰖁</fc>${SEP}"
   exit
 fi
 
@@ -174,7 +178,7 @@ done
 
 output="$sound_icon  $vol󰏰 <fc=${MUTE_COLOR}>󰜥</fc> $icon"
 if (( vol > 100 )); then
-  echo "<fc=${OVERFLOW_COLOR}>$output</fc>"
+  echo "<fc=${OVERFLOW_COLOR}>${output}</fc>${SEP}"
 else
-  echo "$output"
+  echo "${output} "
 fi

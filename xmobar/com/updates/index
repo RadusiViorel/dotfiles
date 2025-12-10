@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/vars"
+
 WARNING_COLOR="#f58989"
 WARNING_COUNT=15
 
@@ -25,5 +27,5 @@ output="  $count"
 if (( count >= WARNING_COUNT )); then
     echo "<fc=${WARNING_COLOR}>${output}</fc> |"
 else
-    echo "$output "
+    echo "$output ${SEP}"
 fi
