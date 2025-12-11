@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index"
+
+COM="${HOME}/.config/xmobar/com/space"
+TOGGLE_FILE="${COM}/state/toggle"
+
+[[ -f "$TOGGLE_FILE" ]] || echo 0 > "$TOGGLE_FILE"
+
+toggle_flag=$(cat "$TOGGLE_FILE")
+
+color="#ffffff"
+format="avail"
+if [[ "$toggle_flag" == 1 ]]; then
+  format="used"
+  color="${COLOR_WARNING}"
+fi
+
+root="$(df -h --output=${format} / | tail -1)"
+home="$(df -h --output=${format} /home | tail -1)"
+
+
+toggle() {
+  if [[ "$toggle_flag" == 0 ]]; then
+    echo 1 > "$TOGGLE_FILE"
+  else
+    echo 0 > "$TOGGLE_FILE"
+  fi
+
+}
+
+case "$1" in
+    toggle) toggle ;;
+    *) ;;
+esac
+
+echo "<fc=${color}>  ${root} /${home}</fc>${SEP}"

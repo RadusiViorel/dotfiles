@@ -16,6 +16,7 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
     , Run Com "/home/radusiviorel/.config/xmobar/com/bluetooth/index"  [] "bluetooth"  5
     , Run Com "/home/radusiviorel/.config/xmobar/com/battery/index"    [] "battery"    5
     , Run Com "/home/radusiviorel/.config/xmobar/com/cpu_temp/index"   [] "cpu_temp"   50
+    , Run Com "/home/radusiviorel/.config/xmobar/com/space/index"      [] "space"      20
     , Run Com "/home/radusiviorel/.config/xmobar/com/network/index"    [] "network"    5
     , Run Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 1000
     , Run Com "/home/radusiviorel/.config/xmobar/com/calendar/index"   [] "calendar"   10
@@ -56,6 +57,9 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
 
       -- cpu_temp --
       \<action=`$HOME/.config/xmobar/com/cpu_temp/index top` button=1>%cpu_temp%</action>\
+
+      -- space --
+      \<action=`$HOME/.config/xmobar/com/space/index toggle` button=1>%space%</action>\
 
       -- network --
       \<action=`$HOME/.config/xmobar/com/network/index connect`>%network%</action>\
