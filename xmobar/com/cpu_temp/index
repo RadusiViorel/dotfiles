@@ -7,6 +7,11 @@ if ! command -v htop >/dev/null 2>&1; then
   echo "Warning: htop is not installed or not in PATH."
 fi
 
+if ! sensors -v htop >/dev/null 2>&1; then
+  echo "Warning: sensors is not installed or not in PATH. (package_name: lm_sensors)"
+  exit 1
+fi
+
 temp=$(sensors | awk '/acpitz-acpi-0/ {flag=1} flag && /temp1/ {gsub(/[+°C]/,"",$2); print $2; exit}')
 temp_int=${temp%.*}  # Convert to integer for comparison
 
