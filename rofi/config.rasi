@@ -1,0 +1,6 @@
+configuration {
+    show-icons: true;
+    drun-display-format: "{icon} {name}";
+}
+
+@theme "/home/radusiviorel/.config/rofi/themes/squared-everforest.rasi"
