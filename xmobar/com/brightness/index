@@ -8,6 +8,11 @@ if ! command -v brightnessctl >/dev/null 2>&1; then
   exit 1
 fi
 
+if ! command -v brightnessctl >/dev/null 2>&1 || \
+   ! brightnessctl -l | grep -q "backlight"; then
+    exit 0
+fi
+
 BL_DIR="/sys/class/backlight/intel_backlight"  # your backlight folder
 cur=$(<"$BL_DIR/brightness")
 max=$(<"$BL_DIR/max_brightness")
