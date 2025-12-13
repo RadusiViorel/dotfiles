@@ -9,7 +9,8 @@ STEP=3  # volume step
 MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
 ICON_HEADPHONES="󰋋"
-ICON_BT="<fc=${COLOR_INFO}> </fc> 󰋋"
+ICON_USB_HEADPHONES="<fc=${COLOR_OK}>  </fc> ${ICON_HEADPHONES}"
+ICON_WIRELESS_HEADPHONES="<fc=${COLOR_INFO}> </fc> ${ICON_HEADPHONES}"
 ICON_MUTED=""
 
 # ------------------------------
@@ -27,71 +28,82 @@ is_muted() {
 }
 
 get_sink_icon() {
-    local sink active_port
-    sink=$(pactl get-default-sink)
-    active_port=$(pactl list sinks | awk -v s="$sink" '
-        $0 ~ "Name: "s {found=1}
-        found && /Active Port:/ {
-            gsub(/.*: /, "", $0)
-            print $0
-            exit
-        }')
 
-    case "$active_port" in
-        *speaker* ) echo $ICON_SPEAKER ;;      # speakers
-        *headphone* ) echo $ICON_HEADPHONES ;; # wired headphones
-        *headset* ) echo $ICON_BT ;;           # headset
-        * ) echo "-1" ;;                       # fallback
-    esac
+
+INFO="$(wpctl inspect @DEFAULT_AUDIO_SINK@)"
+
+  case "$INFO" in
+    *'device.api = "bluez5"'*) echo "${ICON_WIRELESS_HEADPHONES}" ;;
+    *'device.bus = "usb"'*) echo "${ICON_USB_HEADPHONES}" ;;
+  
+    # Wired headset (jack)
+    *'port.name = "analog-output-headphones"'*|\
+    *'port.name = "analog-output-headset"'*)
+      echo "$ICON_HEADPOHNES" ;;
+  
+    # HDMI / Display speakers
+    *'device.profile.name = "hdmi-'*|\
+    *'Digital Stereo (HDMI'*)
+    echo "${ICON_SPEAKER}" ;;
+
+    * ) echo "-1" ;; 
+  esac
+ 
 }
 
 cycle_output_sound() {
-    mapfile -t pairs < <(
-        pactl list sinks | awk '
-            /Name:/ {sink=$2}
-            /Ports:/ {show=1; next}
-            show==1 && $0 ~ /^[[:space:]]*[a-zA-Z0-9_-]+: / {
-                split($1, a, ":")
-                print sink " " a[1]
-            }
-            show==1 && NF==0 {show=0}
-        '
-    )
+    local sinks=() line id name default volume current next next_index i
 
-    current_port=$(pactl list sinks |
-          awk -v tgt="$current_sink" '
-              $2 == tgt {found=1}
-              found && /Active Port:/ {print $3; exit}
-          '
-      )
+    # --- Parse sinks from wpctl ---
+    while read -r line; do
+        line="${line#"${line%%[![:space:]]*}"}"  # trim leading spaces
 
-    current_pair="$(default_sink) $current_port"
+        # Start/stop parsing sinks section
+        [[ "$line" == "Sinks:" ]] && section_active=1 && continue
+        [[ -z "$line" ]] && section_active=0
+        [[ "$section_active" != 1 ]] && continue
 
-    next_index=0
-    for i in "${!pairs[@]}"; do
-        if [[ "${pairs[$i]}" == "$current_pair" ]]; then
-            next_index=$(( (i + 1) % ${#pairs[@]} ))
+        default=false
+        [[ "$line" == \** ]] && default=true
+
+        # Remove leading *, trim spaces
+        clean_line="${line#\*}"
+        clean_line="${clean_line#"${clean_line%%[![:space:]]*}"}"
+
+        # Split id and name
+        id="${clean_line%%.*}"
+        rest="${clean_line#*.}"
+        name="${rest%%[[]*}"
+        name="$(echo "$name" | xargs)"
+
+        # Store as pipe-delimited string: id|name|default
+        sinks+=("$id|$name|$default")
+    done < <(wpctl status | sed 's/[├─│└]//g')
+
+    echo $sinks
+    # --- Find current default sink ---
+    for i in "${!sinks[@]}"; do
+        IFS='|' read -r id name default <<< "${sinks[$i]}"
+        if [[ "$default" == "true" ]]; then
+            current="$i"
             break
         fi
     done
 
-    next_sink=$(echo "${pairs[$next_index]}" | awk '{print $1}')
-    next_port=$(echo "${pairs[$next_index]}" | awk '{print $2}')
+    # --- Pick next sink (cycle) ---
+    next_index=$(( (current + 1) % ${#sinks[@]} ))
+    IFS='|' read -r next_id next_name next_default <<< "${sinks[$next_index]}"
 
-    #vol=$(get_volume)
-    pactl set-default-sink "$next_sink"
-    pactl set-sink-port    "$next_sink" "$next_port"
-    #pactl set-sink-volume  "$next_sink" "$(vol)%"
-    pactl set-sink-volume  "$next_sink" "40%"
+    # --- Set default sink and volume ---
+    wpctl set-default "$next_id"
+    wpctl set-volume "$next_id" "40%" 
+
+    # --- Notify user ---
+    notify-send "${next_name}"
 }
 
-volume_jump() {
 
-  #stupid bug, on boot sometimes dosent start
-  if [[ $(get_sink_icon) == "-1" ]]; then
-    wireplumber &
-    exit
-  fi
+volume_jump() {
 
   if is_muted; then
     pactl set-sink-mute "$(default_sink)" toggle
