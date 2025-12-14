@@ -12,10 +12,8 @@ for arg in "$@"; do
 done
 
 # stupid bug ...somethimes wireplumber is not starting on boot
-if [[ $icon == "-1" ]]; then
-  if ! pgrep -x wireplumber >/dev/null; then
-    wireplumber &
-  fi
+if ! pgrep -x wireplumber >/dev/null; then
+  wireplumber &
   exit 0
 fi
 

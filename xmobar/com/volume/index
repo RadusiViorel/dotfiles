@@ -5,12 +5,12 @@
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/page/index"
 
-STEP=3  # volume step
+STEP=3 
 MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
-ICON_HEADPHONES="󰋋"
-ICON_USB_HEADPHONES="<fc=${COLOR_OK}>  </fc> ${ICON_HEADPHONES}"
-ICON_WIRELESS_HEADPHONES="<fc=${COLOR_INFO}> </fc> ${ICON_HEADPHONES}"
+ICON_HEADPHONES="<fc=${COLOR_INFO}> 󱡬</fc> 󰋋"
+ICON_USB_HEADPHONES="<fc=${COLOR_INFO}>  </fc> 󰋋"
+ICON_WIRELESS_HEADPHONES="<fc=${COLOR_INFO}> </fc> 󰋋"
 ICON_MUTED=""
 
 # ------------------------------
@@ -39,24 +39,22 @@ get_sink_icon() {
     *'port.name = "analog-output-headset"'*)
       echo "$ICON_HEADPOHNES" ;;
   
-    # HDMI / Display speakers
-    *'device.profile.name = "hdmi-'*|\
-    *'Digital Stereo (HDMI'*)
-    echo "${ICON_SPEAKER}" ;;
-
-    * ) echo "-1" ;; 
+    * ) echo "${ICON_SPEAKER}" ;;
   esac
 }
 
-
 case "$1" in
-    volume_jump)     ./actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --icon="$(get_sink_icon)" ;;
-    volume_up)       ./actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
-    volume_down)     ./actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
-    mute)            ./actions/mute            --sink=${default_sink} ;;
-    toggle)          ./actions/cycle_output ;;
+    volume_jump)  $HOME/.config/xmobar/com/volume/actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --icon="$(get_sink_icon)" ;;
+    volume_up)    $HOME/.config/xmobar/com/volume/actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
+    volume_down)  $HOME/.config/xmobar/com/volume/actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
+    mute)         $HOME/.config/xmobar/com/volume/actions/mute            --sink=${default_sink} ;;
+    toggle)       $HOME/.config/xmobar/com/volume/actions/cycle_output ;;
 esac
 
+if ! pgrep -x wireplumber >/dev/null; then
+  echo "<fc=${COLOR_DANGER}>  󰖁</fc>${SEP}"
+  exit
+fi
 
 if (( $(is_muted) == 1 )); then
   echo "<fc=${COLOR_MUTE}>$ICON_MUTED</fc>${SEP}"
@@ -71,10 +69,6 @@ sound_icons=("" "" "" "󰕾" "")
 
 sound_icon="${sound_icons[-1]}"
 
-if [[ $icon == "-1" ]]; then
-  echo "<fc=${COLOR_DANGER}>  󰖁</fc>${SEP}"
-  exit
-fi
 
 for i in "${!thresholds[@]}"; do
   if (( vol <= thresholds[i] )); then
