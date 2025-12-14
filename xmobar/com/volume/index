@@ -15,22 +15,20 @@ ICON_MUTED=""
 
 # ------------------------------
 
-default_sink() {
-    pactl get-default-sink
-}
+default_sink="@DEFAULT_AUDIO_SINK@"
 
 get_volume() {
-  pactl get-sink-volume "$(default_sink)" | awk 'NR==1 {print $5}' | tr -d '%'
+  wpctl get-volume "${default_sink}" | awk '{printf "%.0f\n", $2 * 100}'
 }
 
 is_muted() {
-    pactl get-sink-mute "$(default_sink)" | grep -q "yes"
+  wpctl get-volume "${default_sink}" | grep -q MUTED  && echo 1 || echo 0
 }
 
 get_sink_icon() {
 
 
-INFO="$(wpctl inspect @DEFAULT_AUDIO_SINK@)"
+  INFO="$(wpctl inspect ${default_sink})"
 
   case "$INFO" in
     *'device.api = "bluez5"'*) echo "${ICON_WIRELESS_HEADPHONES}" ;;
@@ -51,117 +49,16 @@ INFO="$(wpctl inspect @DEFAULT_AUDIO_SINK@)"
  
 }
 
-cycle_output_sound() {
-    local sinks=() line id name default volume current next next_index i
-
-    # --- Parse sinks from wpctl ---
-    while read -r line; do
-        line="${line#"${line%%[![:space:]]*}"}"  # trim leading spaces
-
-        # Start/stop parsing sinks section
-        [[ "$line" == "Sinks:" ]] && section_active=1 && continue
-        [[ -z "$line" ]] && section_active=0
-        [[ "$section_active" != 1 ]] && continue
-
-        default=false
-        [[ "$line" == \** ]] && default=true
-
-        # Remove leading *, trim spaces
-        clean_line="${line#\*}"
-        clean_line="${clean_line#"${clean_line%%[![:space:]]*}"}"
-
-        # Split id and name
-        id="${clean_line%%.*}"
-        rest="${clean_line#*.}"
-        name="${rest%%[[]*}"
-        name="$(echo "$name" | xargs)"
-
-        # Store as pipe-delimited string: id|name|default
-        sinks+=("$id|$name|$default")
-    done < <(wpctl status | sed 's/[├─│└]//g')
-
-    echo $sinks
-    # --- Find current default sink ---
-    for i in "${!sinks[@]}"; do
-        IFS='|' read -r id name default <<< "${sinks[$i]}"
-        if [[ "$default" == "true" ]]; then
-            current="$i"
-            break
-        fi
-    done
-
-    # --- Pick next sink (cycle) ---
-    next_index=$(( (current + 1) % ${#sinks[@]} ))
-    IFS='|' read -r next_id next_name next_default <<< "${sinks[$next_index]}"
-
-    # --- Set default sink and volume ---
-    wpctl set-default "$next_id"
-    wpctl set-volume "$next_id" "40%" 
-
-    # --- Notify user ---
-    notify-send "${next_name}"
-}
-
-
-volume_jump() {
-
-  if is_muted; then
-    pactl set-sink-mute "$(default_sink)" toggle
-    pactl set-sink-volume "$(default_sink)" 25%
-    return
-  fi
-
-  vol=$(get_volume)
-  if (( vol < 25 )); then
-    pactl set-sink-volume "$(default_sink)" 25%
-  elif (( vol < 50 )); then
-    pactl set-sink-volume "$(default_sink)" 50%
-  elif (( vol < 75 )); then
-    pactl set-sink-volume "$(default_sink)" 75%
-  elif (( vol < 100 )); then
-    pactl set-sink-volume "$(default_sink)" 100%
-  else
-    pactl set-sink-volume "$(default_sink)" 25%
-  fi
-}
-
-volume_up() {
-
-  if is_muted; then
-    pactl set-sink-mute "$(default_sink)" toggle
-  fi
-
-  if (( $(get_volume) >= MAX_VOLUME)); then
-    pactl set-sink-volume "$(default_sink)" ${MAX_VOLUME}%
-  else
-    pactl set-sink-volume "$(default_sink)" +${STEP}%
-  fi
-}
-
-
-volume_down() {
-
-  if (( $(get_volume) <= 0 )); then
-    pactl set-sink-volume "$(default_sink)" 0%
-  else
-    pactl set-sink-volume "$(default_sink)" -${STEP}%
-  fi
-}
-
-mute() {
-  pactl set-sink-mute "$(default_sink)" toggle
-}
-
 case "$1" in
-    volume_jump) volume_jump ;;
-    volume_up)   volume_up ;;
-    volume_down) volume_down ;;
-    toggle)      cycle_output_sound ;;
-    mute)        mute ;;
+    volume_jump)     ./actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) ;;
+    volume_up)       ./actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
+    volume_down)     ./actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
+    mute)            ./actions/mute            --sink=${default_sink} ;;
+    toggle)          ./actions/cycle_output ;;
 esac
 
 
-if is_muted; then
+if (( $(is_muted) == 1 )); then
   echo "<fc=${COLOR_MUTE}>$ICON_MUTED</fc>${SEP}"
   exit
 fi
@@ -190,5 +87,5 @@ output="$sound_icon  $vol󰏰 <fc=${COLOR_MUTE}>󰜥</fc> $icon"
 if (( vol > 100 )); then
   echo "<fc=${COLOR_DANGER}>${output}</fc>${SEP}"
 else
-  echo "${output} "
+  echo "${output}${SEP}"
 fi

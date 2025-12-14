@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+sinks=()
+section_active=0
+
+while read -r line; do
+  line="${line#"${line%%[![:space:]]*}"}" #trim leading spaces
+
+  # Start parsing sinks
+  if [[ "$line" == "Sinks:" ]]; then
+      section_active=1
+      continue
+  fi
+
+  # Stop when next section starts
+  if [[ "$section_active" == 1 && "$line" =~ ^Sources: ]]; then
+      break
+  fi
+
+  [[ "$section_active" != 1 ]] && continue
+  [[ -z "$line" ]] && continue
+
+  default=false
+  [[ "$line" == \** ]] && default=true
+
+  clean_line="${line#\*}"
+  clean_line="${clean_line#"${clean_line%%[![:space:]]*}"}"
+
+  id="${clean_line%%.*}"
+  rest="${clean_line#*.}"
+  name="${rest%%[[]*}"
+  name="$(echo "$name" | xargs)"
+
+  sinks+=("$id|$name|$default")
+done < <(wpctl status | sed 's/[├─│└]//g')
+
+# --- Find current default sink ---
+for i in "${!sinks[@]}"; do
+    IFS='|' read -r id name default <<< "${sinks[$i]}"
+    if [[ "$default" == "true" ]]; then
+        current="$i"
+        break
+    fi
+done
+
+next_index=$(( (current + 1) % ${#sinks[@]} ))
+IFS='|' read -r next_id next_name next_default <<< "${sinks[$next_index]}"
+
+  # --- Set default sink and volume ---
+  wpctl set-default "$next_id"
+  wpctl set-volume "$next_id" "40%" 
+
+  # --- Notify user ---
+  notify-send "${next_name}"

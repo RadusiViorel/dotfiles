@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --sink=*)        sink="${arg#*=}" ;;
+    --step=*)        step="${arg#*=}" ;;
+    --muted=*)       muted="${arg#*=}" ;;
+    --volume=*)      volume="${arg#*=}" ;;
+    --max_volume=*)  max_volume="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+
+if (( muted == 1 )); then
+  wpctl set-mute "${sink}" toggle
+fi
+
+if (( volume >= max_volume )); then
+  wpctl set-volume "${sink}" ${max_volume}%
+else
+  wpctl set-volume "${sink}" ${step}%+
+fi
+ 
