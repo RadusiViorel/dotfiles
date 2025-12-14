@@ -6,11 +6,20 @@ for arg in "$@"; do
       --sink=*)     sink="${arg#*=}" ;;
       --muted=*)    muted="${arg#*=}" ;;
       --volume=*)   volume="${arg#*=}" ;;
+      --icon=*)     icon="${arg#*=}" ;;
       *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
-if ((muted == 1 )); then
+# stupid bug ...somethimes wireplumber is not starting on boot
+if [[ $icon == "-1" ]]; then
+  if ! pgrep -x wireplumber >/dev/null; then
+    wireplumber &
+  fi
+  exit 0
+fi
+
+if (( muted == 1 )); then
   wpctl set-volume "${sink}" 25%
   wpctl set-mute "${sink}" toggle
   exit 0

@@ -46,11 +46,11 @@ get_sink_icon() {
 
     * ) echo "-1" ;; 
   esac
- 
 }
 
+
 case "$1" in
-    volume_jump)     ./actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) ;;
+    volume_jump)     ./actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --icon="$(get_sink_icon)" ;;
     volume_up)       ./actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
     volume_down)     ./actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
     mute)            ./actions/mute            --sink=${default_sink} ;;
