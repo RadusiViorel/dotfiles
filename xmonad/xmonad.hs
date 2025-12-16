@@ -2,6 +2,7 @@ import XMonad
 
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, ToggleStruts(..))
+import qualified XMonad.StackSet as W
 
 import Graphics.X11.ExtraTypes.XF86
 
@@ -37,7 +38,42 @@ leader = mod4Mask
 
 
 term :: String
-term = "alacritty"
+term = "kitty"
+
+--------------------------------------------------------------------------------
+-- Workspaces
+--------------------------------------------------------------------------------
+
+myWorkspaces :: [WorkspaceId]
+myWorkspaces =
+  [ "\xf120" -- terminal
+  , "\xf269" -- browser
+  , "\xf07c" -- files
+  , "\xf121" -- code
+  , "\xf03e" -- media
+  , "\xf086" -- chat
+  , "\xf001" -- music
+  , "\xf085" -- system
+  , "\xf11b" -- games
+  , "\xf013" -- misc
+  ]
+
+
+
+--------------------------------------------------------------------------------
+-- xmobar
+--------------------------------------------------------------------------------
+myPP :: PP
+myPP = def
+  { ppCurrent = xmobarColor "#98be65" "" . wrap "[" "]"
+  , ppVisible = xmobarColor "#98be65" ""
+  , ppHidden  = xmobarColor "#bbbbbb" ""
+  , ppHiddenNoWindows = xmobarColor "#666666" ""
+  , ppWsSep   = "  "     -- 👈 SPACE BETWEEN WORKSPACES
+  , ppSep     = "  |  "
+  , ppTitle   = xmobarColor "#ffffff" "" . shorten 60
+  }
+
 
 --------------------------------------------------------------------------------
 -- Main
@@ -63,12 +99,9 @@ myConfig xmproc = def
     , focusedBorderColor = "#BF616A"
     , layoutHook         = myLayouts
     , manageHook         = myManageHook
+    , workspaces         = myWorkspaces
     , keys               = myKeys
-    , workspaces         = map show [1..9]
-    , logHook            = dynamicLogWithPP xmobarPP
-        { ppOutput = hPutStrLn xmproc
-        , ppTitle  = xmobarColor "green" "" . shorten 50
-        }
+    , logHook            = dynamicLogWithPP myPP { ppOutput = hPutStrLn xmproc }
     }
 
 --------------------------------------------------------------------------------
@@ -154,10 +187,15 @@ myKeys conf = M.fromList $
 
     -- Workspaces
     ++
-    [ ((leader, k), windows $ W.view i)
-    | (i, k) <- zip (map show [1..9]) [xK_1 .. xK_9]
+    [ ((leader,               k), windows $ W.greedyView i)
+      | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
     ]
     ++
     [ ((leader .|. shiftMask, k), windows $ W.shift i)
-    | (i, k) <- zip (map show [1..9]) [xK_1 .. xK_9]
+      | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
+    ]
+    ++
+    -- workspace 10 (0)
+    [ ((leader,               xK_0), windows $ W.greedyView (myWorkspaces !! 9))
+      , ((leader .|. shiftMask, xK_0), windows $ W.shift      (myWorkspaces !! 9))
     ]
