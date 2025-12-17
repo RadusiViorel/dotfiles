@@ -6,6 +6,8 @@ import qualified XMonad.StackSet as W
 
 import Graphics.X11.ExtraTypes.XF86
 
+import Data.List (elemIndex)
+
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageHelpers
 
@@ -33,8 +35,12 @@ import qualified XMonad.Layout.ToggleLayouts  as TL
 gap :: Int
 gap  = 4
 
+sep :: String
+sep="\58913" -- 
+
 leader :: KeyMask
 leader = mod4Mask
+
 
 
 term :: String
@@ -43,6 +49,9 @@ term = "kitty"
 --------------------------------------------------------------------------------
 -- Workspaces
 --------------------------------------------------------------------------------
+
+clickableWorkspaces :: Bool
+clickableWorkspaces = False
 
 myWorkspaces :: [WorkspaceId]
 myWorkspaces =
@@ -57,6 +66,17 @@ myWorkspaces =
   , "\xf11b" -- games
   , "\xf013" -- misc
   ]
+ 
+clickWorkspaces :: String -> String
+clickWorkspaces ws
+  | clickableWorkspaces = "<action=xdotool key super+" ++ key ++ ">" ++ ws ++ "</action>"
+  | otherwise           = ws  -- non-clickable version
+  where
+    idx = case elemIndex ws myWorkspaces of
+            Just n | n < 9 -> n + 1   -- workspaces 1-9
+            Just 9         -> 0       -- 10th workspace → key 0
+            _              -> 1
+    key = show idx
 
 
 
@@ -65,12 +85,12 @@ myWorkspaces =
 --------------------------------------------------------------------------------
 myPP :: PP
 myPP = def
-  { ppCurrent = xmobarColor "#98be65" "" . wrap "[" "]"
-  , ppVisible = xmobarColor "#98be65" ""
-  , ppHidden  = xmobarColor "#bbbbbb" ""
+  { ppCurrent = xmobarColor "#98be65" "" . xmobarRaw . clickWorkspaces
+  , ppVisible = xmobarColor "#98be65" "" . xmobarRaw . clickWorkspaces 
+  , ppHidden  = xmobarColor "#bbbbbb" "" . xmobarRaw . clickWorkspaces
   , ppHiddenNoWindows = xmobarColor "#666666" ""
-  , ppWsSep   = "  "     -- 👈 SPACE BETWEEN WORKSPACES
-  , ppSep     = "  |  "
+  , ppWsSep   = "       "   
+  , ppSep     = "  " ++ sep ++ "  "
   , ppTitle   = xmobarColor "#ffffff" "" . shorten 60
   }
 
@@ -124,8 +144,12 @@ myManageHook = composeAll
     [ isDialog --> doFloat
     , className =? "mpv"  --> doFloat
     , className =? "Gimp" --> doFloat
+    , className =? "Firefox" --> doShift "2"
+    , className =? "falkon"  --> doShift "2"
     , isFullscreen --> doFullFloat
     ]
+    <+> manageHook def
+
 
 --------------------------------------------------------------------------------
 -- Keymap
