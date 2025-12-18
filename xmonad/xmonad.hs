@@ -181,7 +181,7 @@ myKeys conf = M.fromList $
 
     -- Kill window
     , ((leader, xK_q), kill)
-    , ((leader .|. shiftMask, xK_q), restart "~/.cache/xmonad/xmonad-x86_64-linux" True)
+    , ((leader .|. shiftMask, xK_q), spawn  "stack exec xmonad -- --recompile" >> spawn "stack exec xmonad -- --restart")
 
     -- Move focus
     , ((leader, xK_j), windows W.focusDown)
