@@ -22,6 +22,7 @@ import XMonad.Layout.Spacing
 import System.Exit
 import System.IO
 import XMonad.Util.Run (spawnPipe)
+import XMonad.Hooks.ShowWName
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -41,8 +42,6 @@ sep="\58913" -- 
 leader :: KeyMask
 leader = mod4Mask
 
-
-
 term :: String
 term = "kitty"
 
@@ -51,32 +50,32 @@ term = "kitty"
 --------------------------------------------------------------------------------
 
 clickableWorkspaces :: Bool
-clickableWorkspaces = False
+clickableWorkspaces = True
 
 myWorkspaces :: [WorkspaceId]
 myWorkspaces =
-  [ "\xf120" -- terminal
-  , "\xf269" -- browser
-  , "\xf07c" -- files
-  , "\xf121" -- code
-  , "\xf03e" -- media
-  , "\xf086" -- chat
-  , "\xf001" -- music
-  , "\xf085" -- system
-  , "\xf11b" -- games
-  , "\xf013" -- misc
-  ]
- 
+   map (\i -> i ++ " ")
+      [ "\xf120" -- terminal
+      , "\xf269" -- browser
+      , "\xf07c" -- files
+      , "\xf121" -- code
+      , "\xf03e" -- media
+      , "\xf086" -- chat
+      , "\xf001" -- music
+      , "\xf085" -- system
+      , "\xf11b" -- games
+      , "\xf013" -- misc
+      ]
+
 clickWorkspaces :: String -> String
 clickWorkspaces ws
-  | clickableWorkspaces = "<action=xdotool key super+" ++ key ++ ">" ++ ws ++ "</action>"
+  | clickableWorkspaces = "<action=`xdotool key super+" ++ show idx ++ "`>"++ws++"</action>"
   | otherwise           = ws  -- non-clickable version
   where
     idx = case elemIndex ws myWorkspaces of
             Just n | n < 9 -> n + 1   -- workspaces 1-9
             Just 9         -> 0       -- 10th workspace → key 0
             _              -> 1
-    key = show idx
 
 
 
@@ -86,10 +85,10 @@ clickWorkspaces ws
 myPP :: PP
 myPP = def
   { ppCurrent = xmobarColor "#98be65" "" . xmobarRaw . clickWorkspaces
-  , ppVisible = xmobarColor "#98be65" "" . xmobarRaw . clickWorkspaces 
+  , ppVisible = xmobarColor "#98be65" "" . xmobarRaw . clickWorkspaces
   , ppHidden  = xmobarColor "#bbbbbb" "" . xmobarRaw . clickWorkspaces
   , ppHiddenNoWindows = xmobarColor "#666666" ""
-  , ppWsSep   = "       "   
+  , ppWsSep   = "    "
   , ppSep     = "  " ++ sep ++ "  "
   , ppTitle   = xmobarColor "#ffffff" "" . shorten 60
   }
@@ -121,8 +120,22 @@ myConfig xmproc = def
     , manageHook         = myManageHook
     , workspaces         = myWorkspaces
     , keys               = myKeys
-    , logHook            = dynamicLogWithPP myPP { ppOutput = hPutStrLn xmproc }
+    , logHook            = myLogHook xmproc
     }
+
+
+--
+myShowWNameTheme :: SWNConfig
+myShowWNameTheme = def
+    { swn_font = "xft:JetBrainsMono Nerd Font:style=Bold:size=60"
+    , swn_fade    = 0.7
+    , swn_bgcolor = "#1e1e2e"
+    , swn_color   = "#cdd6f4"
+    }
+
+myLogHook xmproc =
+    showWNameLogHook myShowWNameTheme
+ <> dynamicLogWithPP myPP { ppOutput = hPutStrLn xmproc }
 
 --------------------------------------------------------------------------------
 -- Layouts
@@ -161,6 +174,7 @@ myKeys conf = M.fromList $
     -- Launch applications
     [ ((leader                , xK_Return), spawn $ terminal conf)
     , ((leader .|. controlMask, xK_Return), spawn "rofi -show drun")
+    , ((leader .|. shiftMask, xK_i)       , spawn "$HOME/.config/_scripts/bg")
 
     , ((leader, xK_e), spawn "nemo")
     , ((leader, xK_b), spawn "falkon")

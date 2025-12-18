@@ -21,16 +21,11 @@ Config { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
     , Run Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 1000
     , Run Com "/home/radusiviorel/.config/xmobar/com/calendar/index"   [] "calendar"   10
     , Run Com "/home/radusiviorel/.config/xmobar/com/power/index"      [] "power"      1000
-
-      -- Swap widget
-  --  , Run Swap [] 10
-
-      -- XMonad/StdinReader
-    , Run StdinReader
+    , Run UnsafeStdinReader
   ]
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "%StdinReader% }{ %capslock%\
+  , template = "%UnsafeStdinReader% }{ %capslock%\
       -- updates --
       \<action=`$HOME/.config/xmobar/com/updates/index show` button=1> %updates% </action>\
 
