@@ -2,12 +2,19 @@ name : xmonad-config
 version : 0.1.0
 dependencies :
   - base >= 4.14 && < 5
-  - xmonad == 0.18.0
-  - xmonad-contrib == 0.18.1
-  - containers
+  - xmonad
+  - xmonad-contrib
+  - xmobar
   - X11
+  - containers
 
 executables :
+  xmobar:
+    main: /home/radusiviorel/.config/xmobar/xmobar.hs
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
   xmonad :
     main:  xmonad.hs
     ghc-options :

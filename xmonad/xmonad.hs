@@ -24,6 +24,12 @@ import System.IO
 import XMonad.Util.Run (spawnPipe)
 import XMonad.Hooks.ShowWName
 
+import XMonad.Hooks.ScreenCorners
+import XMonad.Actions.CycleWS
+
+
+
+
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified XMonad.Layout.ToggleLayouts  as TL
@@ -84,9 +90,9 @@ clickWorkspaces ws
 --------------------------------------------------------------------------------
 myPP :: PP
 myPP = def
-  { ppCurrent = xmobarColor "#98be65" "" . xmobarRaw . clickWorkspaces
-  , ppVisible = xmobarColor "#98be65" "" . xmobarRaw . clickWorkspaces
-  , ppHidden  = xmobarColor "#bbbbbb" "" . xmobarRaw . clickWorkspaces
+  { ppCurrent = xmobarColor "#98be65" "" . clickWorkspaces
+  , ppVisible = xmobarColor "#98be65" "" . clickWorkspaces
+  , ppHidden  = xmobarColor "#bbbbbb" "" . clickWorkspaces
   , ppHiddenNoWindows = xmobarColor "#666666" ""
   , ppWsSep   = "    "
   , ppSep     = "  " ++ sep ++ "  "
@@ -100,7 +106,7 @@ myPP = def
 
 main :: IO ()
 main = do
-    xmproc <- spawnPipe "xmobar"
+    xmproc <- spawnPipe "/home/radusiviorel/.local/bin/xmobar"
     xmonad $ ewmhFullscreen
            $ ewmh
            $ docks
@@ -121,9 +127,18 @@ myConfig xmproc = def
     , workspaces         = myWorkspaces
     , keys               = myKeys
     , logHook            = myLogHook xmproc
+    , handleEventHook    = screenCornerEventHook
+    , startupHook        = myStartupHook
     }
 
-
+myStartupHook = do
+    addScreenCorners
+      [
+      --  (SCUpperLeft,  spawn "rofi -show drun")
+     -- , (SCUpperRight, spawn "xterm")
+      (SCLowerLeft,  spawn "falkon")
+      ,(SCLowerRight, spawn "falkon")
+      ]
 --
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
@@ -137,11 +152,12 @@ myLogHook xmproc =
     showWNameLogHook myShowWNameTheme
  <> dynamicLogWithPP myPP { ppOutput = hPutStrLn xmproc }
 
+
 --------------------------------------------------------------------------------
 -- Layouts
 --------------------------------------------------------------------------------
 
-myLayouts = mkToggle (NBFULL ?? EOT)
+myLayouts = screenCornerLayoutHook $ mkToggle (NBFULL ?? EOT)
     $ avoidStruts
     $ smartBorders
     $ spacing gap
@@ -162,7 +178,6 @@ myManageHook = composeAll
     , isFullscreen --> doFullFloat
     ]
     <+> manageHook def
-
 
 --------------------------------------------------------------------------------
 -- Keymap
