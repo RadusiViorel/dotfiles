@@ -2,15 +2,15 @@ import XMonad
 
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, ToggleStruts(..))
-import qualified XMonad.StackSet as W
 
 import Graphics.X11.ExtraTypes.XF86
 
 import Data.List (elemIndex)
 
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageHelpers
-
+import XMonad.Layout.Grid
+import XMonad.Layout.ThreeColumns
+import XMonad.Layout.Spiral
+import XMonad.Layout.Renamed
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 
@@ -19,16 +19,14 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Spacing
 
-import System.Exit
-import System.IO
-import XMonad.Util.Run (spawnPipe)
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ShowWName
-
 import XMonad.Hooks.ScreenCorners
-import XMonad.Actions.CycleWS
 
-
-
+import System.Exit
+import XMonad.Util.Run (spawnPipe)
+import System.IO
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -50,6 +48,17 @@ leader = mod4Mask
 
 term :: String
 term = "kitty"
+
+useHotCorners :: Bool
+useHotCorners = False
+
+hotCorners =
+  [
+    --   (SCUpperLeft, spawn "rofi -show drun")
+    -- , (SCUpperRight, spawn "xterm")
+         (SCLowerLeft,  spawn "falkon")
+       , (SCLowerRight, spawn "falkon")
+  ]
 
 --------------------------------------------------------------------------------
 -- Workspaces
@@ -132,17 +141,11 @@ myConfig xmproc = def
     }
 
 myStartupHook = do
-    addScreenCorners
-      [
-      --  (SCUpperLeft,  spawn "rofi -show drun")
-     -- , (SCUpperRight, spawn "xterm")
-      (SCLowerLeft,  spawn "falkon")
-      ,(SCLowerRight, spawn "falkon")
-      ]
+      whenX (return useHotCorners) $ addScreenCorners hotCorners
 --
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
-    { swn_font = "xft:JetBrainsMono Nerd Font:style=Bold:size=60"
+    { swn_font = "xft:JetBrainsMono Nerd Font:style=Bold:size=90"
     , swn_fade    = 0.7
     , swn_bgcolor = "#1e1e2e"
     , swn_color   = "#cdd6f4"
@@ -157,13 +160,20 @@ myLogHook xmproc =
 -- Layouts
 --------------------------------------------------------------------------------
 
-myLayouts = screenCornerLayoutHook $ mkToggle (NBFULL ?? EOT)
+myLayouts =
+      screenCornerLayoutHook
+    $ mkToggle (NBFULL ?? EOT)
     $ avoidStruts
     $ smartBorders
     $ spacing gap
     layoutList
   where
-    layoutList = TL.toggleLayouts Full (Tall 1 (3/100) (1/2))
+    layoutList =
+      TL.toggleLayouts Full $
+           named "Tall"   (Tall 1 (3/100) (1/2))
+       ||| named "Grid"   Grid
+       ||| named "Three"  (ThreeColMid 1 (3/100) (1/2))
+       ||| named "Spiral" (spiral (6/7))
 
 --------------------------------------------------------------------------------
 -- Window Rules
@@ -235,7 +245,7 @@ myKeys conf = M.fromList $
     ++
     [ ((leader .|. shiftMask, xK_f), sendMessage $ Toggle NBFULL)
     , ((leader, xK_f), sendMessage TL.ToggleLayout )
-    --((leader, xK_f)              , sendMessage $ JumpToLayout "Full")
+    , ((leader, xK_grave), sendMessage NextLayout)
     ]
 
     -- Workspaces
