@@ -1,13 +1,12 @@
 import Xmobar
 import Data.Monoid ((<>))
 
--- helper for clickable actions
 click :: String -> Int -> String -> String
 click cmd btn content = "<action=`" <> cmd <> "` button=" <> show btn <> ">" <> content <> "</action>"
 
 main :: IO ()
 main = xmobar defaultConfig
-  { font = "-misc-fixed-*-*-*-*-*-12-*-*-*-*-*-*-*"
+  { font = "-misc-fixed-*-*-*-*-*-16-*-*-*-*-*-*-*"
   , bgColor = "black"
   , fgColor = "white"
   , border = TopB
@@ -17,19 +16,19 @@ main = xmobar defaultConfig
   , allDesktops = True
   , overrideRedirect = True
   , commands =
-      [ Run $ Com "/home/radusiviorel/.config/xmobar/com/updates/index" [] "updates" 3600
-      , Run $ Com "/home/radosiviorel/.config/xmobar/com/capslock/index" [] "capslock" 10
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/page/index" [] "page" 10
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/volume/index" [] "volume" 5
+      [ Run $ Com "/home/radosiviorel/.config/xmobar/com/capslock/index"   [] "capslock" 10
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/updates/index"    [] "updates" 3600
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/page/index"       [] "page" 10
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/volume/index"     [] "volume" 5
       , Run $ Com "/home/radusiviorel/.config/xmobar/com/brightness/index" [] "brightness" 5
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/bluetooth/index" [] "bluetooth" 5
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/battery/index" [] "battery" 5
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/cpu_temp/index" [] "cpu_temp" 50
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/space/index" [] "space" 20
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/network/index" [] "network" 5
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/bluetooth/index"  [] "bluetooth" 5
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/battery/index"    [] "battery" 5
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/cpu_temp/index"   [] "cpu_temp" 50
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/space/index"      [] "space" 20
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/network/index"    [] "network" 5
       , Run $ Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 1000
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/calendar/index" [] "calendar" 10
-      , Run $ Com "/home/radusiviorel/.config/xmobar/com/power/index" [] "power" 1000
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/calendar/index"   [] "calendar" 10
+      , Run $ Com "/home/radusiviorel/.config/xmobar/com/power/index"      [] "power" 1000
       , Run UnsafeStdinReader
       ]
   , sepChar = "%"

@@ -3,6 +3,7 @@ import XMonad
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, ToggleStruts(..))
 
+
 import Graphics.X11.ExtraTypes.XF86
 
 import Data.List (elemIndex)
@@ -24,9 +25,9 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ShowWName
 import XMonad.Hooks.ScreenCorners
 import XMonad.Util.NamedScratchpad
-
-import System.Exit
+import XMonad.Util.WorkspaceCompare (getSortByIndex, filterOutWs)
 import XMonad.Util.Run (spawnPipe)
+import System.Exit
 import System.IO
 
 import qualified XMonad.StackSet as W
@@ -87,16 +88,16 @@ clickableWorkspaces = True
 myWorkspaces :: [WorkspaceId]
 myWorkspaces =
    map (\i -> i ++ " ")
-      [ "\xf120" -- terminal
-      , "\xf269" -- browser
-      , "\xf07c" -- files
-      , "\xf121" -- code
-      , "\xf03e" -- media
-      , "\xf086" -- chat
-      , "\xf001" -- music
-      , "\xf085" -- system
-      , "\xf11b" -- games
-      , "\xf013" -- misc
+      [ "\58878"   --  file-explorer
+      , "\983727"  -- 󰊯 browser
+      , "\62764"   --  video
+      , "\xf121"   -- code
+      , "\xf03e"   -- media
+      , "\xf086"   -- chat
+      , "\60443"   --  music
+      , "\62578"   --  databse
+      , "\59245"   --  Redis
+      , "\984241"  -- 󰒱 slack
       ]
 
 clickWorkspaces :: String -> String
@@ -123,6 +124,7 @@ myPP = def
   , ppWsSep   = "    "
   , ppSep     = "  " ++ sep ++ "  "
   , ppTitle   = xmobarColor "#ffffff" "" . shorten 60
+  , ppSort = fmap (filterOutWs [scratchpadWorkspaceTag] .) getSortByIndex
   }
 
 
@@ -201,9 +203,8 @@ myManageHook =
   composeAll
     [ isDialog --> doFloat
     , className =? "mpv"     --> doFloat
-    , className =? "Gimp"    --> doFloat
-    , className =? "Firefox" --> doShift "2"
-    , className =? "falkon"  --> doShift "2"
+    , className =? "Firefox" --> doShift "1"
+    , className =? "falkon"  --> doShift "1"
     , isFullscreen --> doFullFloat
     ]
   <+> namedScratchpadManageHook scratchpads
