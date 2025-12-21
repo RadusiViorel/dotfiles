@@ -23,6 +23,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ShowWName
 import XMonad.Hooks.ScreenCorners
+import XMonad.Util.NamedScratchpad
 
 import System.Exit
 import XMonad.Util.Run (spawnPipe)
@@ -59,6 +60,22 @@ hotCorners =
          (SCLowerLeft,  spawn "falkon")
        , (SCLowerRight, spawn "falkon")
   ]
+
+
+--------------------------------------------------------------------------------
+-- ScratchPads
+--------------------------------------------------------------------------------
+
+scratchpads :: [NamedScratchpad]
+scratchpads =
+  [ NS "term"
+       "alacritty --class scratchpad -e tmux new-session -A -s scratch"
+       (resource =? "scratchpad")
+       (customFloating $ W.RationalRect 0.005 0.014 0.99 0.983)
+  ]
+
+scratchPadBorderColor :: String
+scratchPadBorderColor = "blue"
 
 --------------------------------------------------------------------------------
 -- Workspaces
@@ -170,24 +187,27 @@ myLayouts =
   where
     layoutList =
       TL.toggleLayouts Full $
-           named "Tall"   (Tall 1 (3/100) (1/2))
-       ||| named "Grid"   Grid
-       ||| named "Three"  (ThreeColMid 1 (3/100) (1/2))
-       ||| named "Spiral" (spiral (6/7))
+           renamed [Replace "Tall"]   (Tall 1 (3/100) (1/2))
+       ||| renamed [Replace "Grid"]   Grid
+       ||| renamed [Replace "Three"]  (ThreeColMid 1 (3/100) (1/2))
+       ||| renamed [Replace "Spiral"] (spiral (6/7))
 
 --------------------------------------------------------------------------------
 -- Window Rules
 --------------------------------------------------------------------------------
 
-myManageHook = composeAll
+myManageHook :: ManageHook
+myManageHook =
+  composeAll
     [ isDialog --> doFloat
-    , className =? "mpv"  --> doFloat
-    , className =? "Gimp" --> doFloat
+    , className =? "mpv"     --> doFloat
+    , className =? "Gimp"    --> doFloat
     , className =? "Firefox" --> doShift "2"
     , className =? "falkon"  --> doShift "2"
     , isFullscreen --> doFullFloat
     ]
-    <+> manageHook def
+  <+> namedScratchpadManageHook scratchpads
+  <+> manageHook def
 
 --------------------------------------------------------------------------------
 -- Keymap
@@ -241,16 +261,19 @@ myKeys conf = M.fromList $
     , ((0 .|. shiftMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@  0%")
     ]
 
-    -- FullScreen
+    -- Layouts switch
     ++
     [ ((leader .|. shiftMask, xK_f), sendMessage $ Toggle NBFULL)
     , ((leader, xK_f), sendMessage TL.ToggleLayout )
     , ((leader, xK_grave), sendMessage NextLayout)
     ]
 
+    ++
+    [  ((modMask conf, xK_v), namedScratchpadAction scratchpads "term")
+    ]
     -- Workspaces
     ++
-    [ ((leader,               k), windows $ W.greedyView i)
+    [ ((leader, k), windows $ W.greedyView i)
       | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
     ]
     ++
@@ -259,6 +282,6 @@ myKeys conf = M.fromList $
     ]
     ++
     -- workspace 10 (0)
-    [ ((leader,               xK_0), windows $ W.greedyView (myWorkspaces !! 9))
-      , ((leader .|. shiftMask, xK_0), windows $ W.shift      (myWorkspaces !! 9))
+    [ ((leader, xK_0), windows $ W.greedyView (myWorkspaces !! 9))
+      , ((leader .|. shiftMask, xK_0), windows $ W.shift (myWorkspaces !! 9))
     ]
