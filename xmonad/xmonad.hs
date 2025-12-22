@@ -18,6 +18,9 @@ import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.WindowNavigation
+
+import XMonad.Actions.MouseResize
 import XMonad.Layout.Spacing
 
 import XMonad.Hooks.DynamicLog
@@ -154,6 +157,7 @@ myConfig xmproc = def
     , manageHook         = myManageHook
     , workspaces         = myWorkspaces
     , keys               = myKeys
+    , mouseBindings      = myMouseBindings
     , logHook            = myLogHook xmproc
     , handleEventHook    = screenCornerEventHook
     , startupHook        = myStartupHook
@@ -185,6 +189,7 @@ myLayouts =
     $ avoidStruts
     $ smartBorders
     $ spacing gap
+    $ windowNavigation
     layoutList
   where
     layoutList =
@@ -272,6 +277,27 @@ myKeys conf = M.fromList $
     ++
     [  ((modMask conf, xK_v), namedScratchpadAction scratchpads "term")
     ]
+    ++
+    -- Focus window in direction
+    [ ((leader, xK_Left ),  sendMessage $ Go L)
+    , ((leader, xK_Right),  sendMessage $ Go R)
+    , ((leader, xK_Up   ),  sendMessage $ Go U)
+    , ((leader, xK_Down ),  sendMessage $ Go D)
+
+    -- Pull (swap) window in direction
+    , ((leader .|. shiftMask, xK_Left ),  sendMessage $ Swap L)
+    , ((leader .|. shiftMask, xK_Right),  sendMessage $ Swap R)
+    , ((leader .|. shiftMask, xK_Up   ),  sendMessage $ Swap U)
+    , ((leader .|. shiftMask, xK_Down ),  sendMessage $ Swap D)
+
+    -- Horizontal resize
+    , ((leader, xK_less), sendMessage Shrink) -- mod + <
+    , ((leader, xK_greater), sendMessage Expand) -- mod + >
+
+    -- Vertical resize
+    , ((leader, xK_minus), sendMessage MirrorShrink) -- mod + -
+    , ((leader, xK_equal), sendMessage MirrorExpand) -- mod + +
+    ]
     -- Workspaces
     ++
     [ ((leader, k), windows $ W.greedyView i)
@@ -285,4 +311,12 @@ myKeys conf = M.fromList $
     -- workspace 10 (0)
     [ ((leader, xK_0), windows $ W.greedyView (myWorkspaces !! 9))
       , ((leader .|. shiftMask, xK_0), windows $ W.shift (myWorkspaces !! 9))
+    ]
+
+myMouseBindings (XConfig {modMask = modm}) = M.fromList
+    [ -- mod + left click → resize window
+      ((modm, button1), \w -> focus w >> mouseResizeWindow w)
+
+      -- mod + middle click → pull (move) window
+    , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
     ]
