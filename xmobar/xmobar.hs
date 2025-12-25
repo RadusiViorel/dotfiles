@@ -29,12 +29,12 @@ main = xmobar defaultConfig
       , Run $ Com "/home/radusiviorel/.config/xmobar/com/rofi_theme/index" [] "rofi_theme" 1000
       , Run $ Com "/home/radusiviorel/.config/xmobar/com/calendar/index"   [] "calendar" 10
       , Run $ Com "/home/radusiviorel/.config/xmobar/com/power/index"      [] "power" 1000
-      , Run UnsafeStdinReader
+      , Run UnsafeXMonadLog
       ]
   , sepChar = "%"
   , alignSep = "}{"
   , template = mconcat
-      [ "%UnsafeStdinReader% }{ "
+      [ "%UnsafeXMonadLog% }{ "
       , "%capslock%"
       , click "$HOME/.config/xmobar/com/updates/index show" 1 "%updates%"
       , click "$HOME/.config/xmobar/com/volume/index volume_jump" 1

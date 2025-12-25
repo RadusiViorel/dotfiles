@@ -7,4 +7,3 @@ packages:
 
 extra-deps:
   - xmobar-0.50
-#  - xmonad-contrib-0.18.1

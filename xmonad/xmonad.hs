@@ -1,9 +1,4 @@
 import XMonad
-
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.ManageDocks (avoidStruts, docks, ToggleStruts(..))
-
-
 import Graphics.X11.ExtraTypes.XF86
 
 import Data.List (elemIndex)
@@ -11,32 +6,49 @@ import Data.List (elemIndex)
 import XMonad.Layout.Grid
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Spiral
+import XMonad.Layout.Spacing
 import XMonad.Layout.Renamed
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
-
-import XMonad.Layout.ThreeColumns
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
 
 import XMonad.Actions.MouseResize
-import XMonad.Layout.Spacing
 
-import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ServerMode
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageDocks (avoidStruts, docks, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ShowWName
 import XMonad.Hooks.ScreenCorners
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
+
+import XMonad.Util.Loggers
+import XMonad.Util.ClickableWorkspaces
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.WorkspaceCompare (getSortByIndex, filterOutWs)
-import XMonad.Util.Run (spawnPipe)
-import System.Exit
-import System.IO
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified XMonad.Layout.ToggleLayouts  as TL
   (toggleLayouts, ToggleLayout(..))
+
+import System.Exit
+import System.IO
+
+
+--------------------------------------------------------------------------------
+-- Main
+--------------------------------------------------------------------------------
+
+main :: IO ()
+main = xmonad . withSB mySB
+           $ ewmhFullscreen
+           $ ewmh
+           $ docks
+           $ myConfig
 
 --------------------------------------------------------------------------------
 -- Vars
@@ -86,7 +98,7 @@ scratchPadBorderColor = "blue"
 --------------------------------------------------------------------------------
 
 clickableWorkspaces :: Bool
-clickableWorkspaces = True
+clickableWorkspaces = False
 
 myWorkspaces :: [WorkspaceId]
 myWorkspaces =
@@ -106,18 +118,20 @@ myWorkspaces =
 clickWorkspaces :: String -> String
 clickWorkspaces ws
   | clickableWorkspaces = "<action=`xdotool key super+" ++ show idx ++ "`>"++ws++"</action>"
-  | otherwise           = ws  -- non-clickable version
+  | otherwise           = ws
   where
     idx = case elemIndex ws myWorkspaces of
-            Just n | n < 9 -> n + 1   -- workspaces 1-9
-            Just 9         -> 0       -- 10th workspace → key 0
+            Just n | n < 9 -> n + 1
+            Just 9         -> 0
             _              -> 1
 
-
-
 --------------------------------------------------------------------------------
--- xmobar
+-- Xmobar
 --------------------------------------------------------------------------------
+--
+mySB :: StatusBarConfig
+mySB = statusBarProp "/home/radusiviorel/.local/bin/xmobar" (clickablePP myPP)
+
 myPP :: PP
 myPP = def
   { ppCurrent = xmobarColor "#98be65" "" . clickWorkspaces
@@ -130,24 +144,11 @@ myPP = def
   , ppSort = fmap (filterOutWs [scratchpadWorkspaceTag] .) getSortByIndex
   }
 
-
---------------------------------------------------------------------------------
--- Main
---------------------------------------------------------------------------------
-
-main :: IO ()
-main = do
-    xmproc <- spawnPipe "/home/radusiviorel/.local/bin/xmobar"
-    xmonad $ ewmhFullscreen
-           $ ewmh
-           $ docks
-           $ myConfig xmproc
-
 --------------------------------------------------------------------------------
 -- Base Config
 --------------------------------------------------------------------------------
 
-myConfig xmproc = def
+myConfig = def
     { terminal           = term
     , modMask            = leader
     , borderWidth        = 1
@@ -158,14 +159,14 @@ myConfig xmproc = def
     , workspaces         = myWorkspaces
     , keys               = myKeys
     , mouseBindings      = myMouseBindings
-    , logHook            = myLogHook xmproc
-    , handleEventHook    = screenCornerEventHook
+    , logHook            = myLogHook
+    , handleEventHook    = serverModeEventHook <+> screenCornerEventHook
     , startupHook        = myStartupHook
     }
 
 myStartupHook = do
       whenX (return useHotCorners) $ addScreenCorners hotCorners
---
+
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
     { swn_font = "xft:JetBrainsMono Nerd Font:style=Bold:size=90"
@@ -174,9 +175,8 @@ myShowWNameTheme = def
     , swn_color   = "#cdd6f4"
     }
 
-myLogHook xmproc =
+myLogHook =
     showWNameLogHook myShowWNameTheme
- <> dynamicLogWithPP myPP { ppOutput = hPutStrLn xmproc }
 
 
 --------------------------------------------------------------------------------
@@ -253,17 +253,17 @@ myKeys conf = M.fromList $
 
     -- Brightness
     ++
-    [ ((0, xF86XK_MonBrightnessUp),   spawn "brightnessctl set +6%")
-    , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 6%-")
-    , ((0 .|. shiftMask, xF86XK_MonBrightnessUp),   spawn "brightnessctl set 100%")
+    [ ((0, xF86XK_MonBrightnessUp)                , spawn "brightnessctl set +6%")
+    , ((0, xF86XK_MonBrightnessDown)              , spawn "brightnessctl set 6%-")
+    , ((0 .|. shiftMask, xF86XK_MonBrightnessUp)  , spawn "brightnessctl set 100%")
     , ((0 .|. shiftMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 1%")
     ]
 
     -- Volume
     ++
-    [ ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
-    , ((0, xF86XK_AudioLowerVolume),   spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
-    , ((0 .|. shiftMask, xF86XK_AudioRaiseVolume),   spawn "pactl set-sink-volume @DEFAULT_SINK@  100%")
+    [ ((0, xF86XK_AudioRaiseVolume)              , spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+    , ((0, xF86XK_AudioLowerVolume)              , spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
+    , ((0 .|. shiftMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@  100%")
     , ((0 .|. shiftMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@  0%")
     ]
 

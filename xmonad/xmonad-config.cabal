@@ -35,3 +35,16 @@ executable xmonad
     , xmonad
     , xmonad-contrib
   default-language: Haskell2010
+
+executable xmonadctl
+  main-is: xmonadctl.hs
+  other-modules:
+      Paths_xmonad_config
+  build-depends:
+      X11
+    , base >=4.14 && <5
+    , containers
+    , xmobar
+    , xmonad
+    , xmonad-contrib
+  default-language: Haskell2010
