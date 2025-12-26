@@ -9,3 +9,4 @@ for arg in "$@"; do
 done
 
 wpctl set-mute "${sink}" toggle
+echo 0! > "${HOME}/.config/xob/volume/value"

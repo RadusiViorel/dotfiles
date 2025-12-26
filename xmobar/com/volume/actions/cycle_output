@@ -48,7 +48,8 @@ IFS='|' read -r next_id next_name next_default <<< "${sinks[$next_index]}"
 
   # --- Set default sink and volume ---
   wpctl set-default "$next_id"
-  wpctl set-volume "$next_id" "40%" 
+  wpctl set-volume "$next_id" "40%"
+  echo 40 > "${HOME}/.config/xob/volume/value"
 
   # --- Notify user ---
   notify-send "${next_name}"

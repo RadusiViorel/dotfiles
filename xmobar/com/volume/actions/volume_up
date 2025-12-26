@@ -15,11 +15,15 @@ done
 
 if (( muted == 1 )); then
   wpctl set-mute "${sink}" toggle
+  wpctl set-volume "${sink}" 10%
+  echo 10 > "${HOME}/.config/xob/volume/value"
+  exit 0
 fi
 
 if (( volume >= max_volume )); then
   wpctl set-volume "${sink}" ${max_volume}%
+  echo $max_volume > "${HOME}/.config/xob/volume/value"
 else
   wpctl set-volume "${sink}" ${step}%+
+  echo $((volume + step)) > "${HOME}/.config/xob/volume/value"
 fi
- 

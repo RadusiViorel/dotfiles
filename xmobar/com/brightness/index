@@ -13,19 +13,26 @@ if ! command -v brightnessctl >/dev/null 2>&1 || \
     exit 0
 fi
 
+if ! command -v xob >/dev/null 2>&1; then
+  echo "Warning: xob is not installed or not in PATH."
+  exit 1
+fi
+
 BL_DIR="/sys/class/backlight/intel_backlight"  # your backlight folder
 cur=$(<"$BL_DIR/brightness")
 max=$(<"$BL_DIR/max_brightness")
 
+percent=$((100 * cur / max))
 # Optional: control mode
 step=${2:-3}
 if [ "$1" = "up" ]; then
   brightnessctl set +"${step}"% >/dev/null
+  echo $percent > "${HOME}/.config/xob/brightness/value"
 elif [ "$1" = "down" ]; then
   brightnessctl set "${step}"%- >/dev/null
+  echo $percent > "${HOME}/.config/xob/brightness/value"
 fi
 
-percent=$((100 * cur / max))
 
 thresholds=(13 30 40 50 60 70 80 90)
 icons=(󰪞 󰪟 󰪠 󰪡 󰪢 󰪣 󰪤 󰪥 )

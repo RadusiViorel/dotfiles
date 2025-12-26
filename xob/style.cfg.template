@@ -1,0 +1,34 @@
+default = {
+    x         = {relative = 1; offset = -48;};
+    y         = {relative = 0.5; offset = 0;};
+    length    = {relative = 0.23; offset = 0;};
+    thickness = 16;
+    outline   = 1;
+    border    = 1;
+    padding   = 1;
+    orientation = "vertical";
+    overflow = "proportional";
+
+    color = {
+        normal = {
+            fg     = "@NORMAL_FG@";
+            bg     = "@NORMAL_BG@";
+            border = "@NORMAL_BORDER@";
+        };
+        alt = {
+            fg     = "@ALT_FG@";
+            bg     = "@ALT_BG@";
+            border = "@ALT_BORDER@";
+        };
+        overflow = {
+            fg     = "@OF_FG@";
+            bg     = "@OF_BG@";
+            border = "@OF_BORDER@";
+        };
+        altoverflow = {
+            fg     = "@ALT_OF_FG@";
+            bg     = "@ALT_OF_BG@";
+            border = "@ALT_OF_BORDER@";
+        };
+    };
+};

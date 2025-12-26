@@ -5,7 +5,7 @@
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/page/index"
 
-STEP=3 
+STEP=3
 MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
 ICON_HEADPHONES="<fc=${COLOR_INFO}> 󱡬</fc> 󰋋"
@@ -33,12 +33,12 @@ get_sink_icon() {
   case "$INFO" in
     *'device.api = "bluez5"'*) echo "${ICON_WIRELESS_HEADPHONES}" ;;
     *'device.bus = "usb"'*) echo "${ICON_USB_HEADPHONES}" ;;
-  
+
     # Wired headset (jack)
     *'port.name = "analog-output-headphones"'*|\
     *'port.name = "analog-output-headset"'*)
       echo "$ICON_HEADPOHNES" ;;
-  
+
     * ) echo "${ICON_SPEAKER}" ;;
   esac
 }
