@@ -1,11 +1,15 @@
 import Xmobar
 import Data.Monoid ((<>))
 
+dir :: String
+dir="/home/radusiviorel/.config/xmobar"
+
 click :: String -> Int -> String -> String
 click cmd btn content = "<action=`" <> cmd <> "` button=" <> show btn <> ">" <> content <> "</action>"
 
-dir :: String
-dir="/home/radusiviorel/.config/xmobar"
+enabled :: Bool -> Command -> Runnable
+enabled True  comp = Run $ comp
+enabled False _    = Run $ Com "echo" [] "" 1000000
 
 main :: IO ()
 main = xmobar defaultConfig
@@ -19,19 +23,19 @@ main = xmobar defaultConfig
   , allDesktops = True
   , overrideRedirect = True
   , commands =
-      [ Run $ Com ( dir ++ "/com/capslock/index"  ) [] "capslock" 10
-      , Run $ Com ( dir ++ "/com/updates/index"   ) [] "updates" 3600
-      , Run $ Com ( dir ++ "/com/page/index"      ) [] "page" 10
-      , Run $ Com ( dir ++ "/com/volume/index"    ) [] "volume" 5
-      , Run $ Com ( dir ++ "/com/brightness/index") [] "brightness" 5
-      , Run $ Com ( dir ++ "/com/bluetooth/index" ) [] "bluetooth" 5
-      , Run $ Com ( dir ++ "/com/battery/index"   ) [] "battery" 5
-      , Run $ Com ( dir ++ "/com/cpu_temp/index"  ) [] "cpu_temp" 50
-      , Run $ Com ( dir ++ "/com/space/index"     ) [] "space" 20
-      , Run $ Com ( dir ++ "/com/network/index"   ) [] "network" 5
-      , Run $ Com ( dir ++ "/com/rofi_theme/index") [] "rofi_theme" 1000
-      , Run $ Com ( dir ++ "/com/calendar/index"  ) [] "calendar" 10
-      , Run $ Com ( dir ++ "/com/power/index"     ) [] "power" 1000
+      [ enabled True  $ Com ( dir ++ "/com/capslock/index"  ) [] "capslock" 10
+      , enabled True  $ Com ( dir ++ "/com/updates/index"   ) [] "updates" 3600
+      , enabled True  $ Com ( dir ++ "/com/page/index"      ) [] "page" 10
+      , enabled True  $ Com ( dir ++ "/com/volume/index"    ) [] "volume" 5
+      , enabled True  $ Com ( dir ++ "/com/brightness/index") [] "brightness" 5
+      , enabled True  $ Com ( dir ++ "/com/bluetooth/index" ) [] "bluetooth" 5
+      , enabled True  $ Com ( dir ++ "/com/battery/index"   ) [] "battery" 5
+      , enabled True  $ Com ( dir ++ "/com/cpu_temp/index"  ) [] "cpu_temp" 50
+      , enabled True  $ Com ( dir ++ "/com/space/index"     ) [] "space" 20
+      , enabled True  $ Com ( dir ++ "/com/network/index"   ) [] "network" 5
+      , enabled True  $ Com ( dir ++ "/com/rofi_theme/index") [] "rofi_theme" 1000
+      , enabled True  $ Com ( dir ++ "/com/calendar/index"  ) [] "calendar" 10
+      , enabled True  $ Com ( dir ++ "/com/power/index"     ) [] "power" 1000
       , Run UnsafeXMonadLog
       ]
   , sepChar = "%"
