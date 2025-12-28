@@ -4,9 +4,10 @@
 for arg in "$@"; do
   case $arg in
     --sink=*)     sink="${arg#*=}" ;;
+    --volume=*)   volume="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
 wpctl set-mute "${sink}" toggle
-echo 0! > "${HOME}/.config/xob/volume/value"
+echo ${volume}! > "${HOME}/.config/xob/volume/value"

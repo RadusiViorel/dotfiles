@@ -47,7 +47,7 @@ case "$1" in
     volume_jump)  $HOME/.config/xmobar/com/volume/actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --icon="$(get_sink_icon)" ;;
     volume_up)    $HOME/.config/xmobar/com/volume/actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
     volume_down)  $HOME/.config/xmobar/com/volume/actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
-    mute)         $HOME/.config/xmobar/com/volume/actions/mute            --sink=${default_sink} ;;
+    mute)         $HOME/.config/xmobar/com/volume/actions/mute            --sink=${default_sink} --volume=$(get_volume) ;;
     toggle)       $HOME/.config/xmobar/com/volume/actions/cycle_output ;;
 esac
 
