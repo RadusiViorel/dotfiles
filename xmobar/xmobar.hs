@@ -27,7 +27,7 @@ main = xmobar defaultConfig
   , allDesktops = True
   , overrideRedirect = True
   , commands =
-      [ cmd True  "capslock"   [] 10
+      [ cmd True  "capslock"   [] 20
       , cmd True  "updates"    [] 3600
       , cmd True  "page"       [] 10
       , cmd True  "volume"     [] 5
@@ -39,7 +39,7 @@ main = xmobar defaultConfig
       , cmd True  "network"    [] 5
       , cmd True  "rofi_theme" [] 1000
       , cmd True  "calendar"   [] 10
-      , cmd True  "power"      [] 1000
+      , cmd True  "power"      [] 100000
       , Run UnsafeXMonadLog
       ]
   , sepChar = "%"

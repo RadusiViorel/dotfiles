@@ -12,12 +12,18 @@ spinner_icons=(      )
 COM="${HOME}/.config/xmobar/com/network"
 LOADING_FILE="${COM}/state/loading"
 SPINNER_FILE="${COM}/state/spinner"
+ENABLED_FILE="${COM}/state/enabled"
 
 if [ ! -f "$LOADING_FILE" ]; then
   echo 0 > "$LOADING_FILE"
 fi
 
+if [ ! -f "$ENABLED_FILE" ]; then
+  echo 1 > "$ENABLED_FILE"
+fi
+
 is_loading=$(cat "$LOADING_FILE")
+is_enabled=$(cat "$ENABLED_FILE")
 
 if (( is_loading == 1 )); then
   idx=$(cat "$SPINNER_FILE")
@@ -44,7 +50,18 @@ done
 
 if ip link show ${lan_interface} | grep -q 'state UP'; then
   echo "LAN<fc=${COLOR_MUTE}> 󰜥 </fc> 󰈀${SEP}"
-  exit
+  exit 0
+fi
+
+case "$1" in
+  connect)  $HOME/.config/xmobar/com/network/actions/connect       --interface=${interface}  --LOADING_FILE=${LOADING_FILE} ;;
+  disconnect)  $HOME/.config/xmobar/com/network/actions/disconnect --interface=${interface}  --ENABLED_FILE=${ENABLED_FILE} --enabled=${enabled} ;;
+  *) ;;
+esac
+
+if (( is_enabled == 0 )); then
+  echo "<fc=${COLOR_MUTE}> Wifi Disabled 󰤮</fc>${SEP}"
+  exit 0
 fi
 
 ssid=$(wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
@@ -53,10 +70,6 @@ if [ ${#ssid} -gt ${wifi_name_length} ]; then
   ssid="${ssid:0:$((wifi_name_length-3))}<fc=${COLOR_MUTE}>󰇘</fc>"
 fi
 
-case "$1" in
-  connect)  $HOME/.config/xmobar/com/network/actions/connect --interface=${interface}  --LOADING_FILE=${LOADING_FILE} ;;
-  *) ;;
-esac
 
 signal_icons=( 󰤯 󰤟 󰤢 󰤥 󰤨 )
 signal_thresholds=( 15 33 50 90 )
