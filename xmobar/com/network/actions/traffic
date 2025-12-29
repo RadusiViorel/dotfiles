@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --interface=*) interface="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+INTERVAL=1   # seconds
+
+read rx1 tx1 < <(awk -v i="${interfce}" '$1 == i ":" {print $2, $10}' /proc/net/dev)
+sleep 1
+read rx2 tx2 < <(awk -v i="${interfce}" '$1 == i ":" {print $2, $10}' /proc/net/dev)
+
+rx_MB=$(awk "BEGIN {printf \"%.2f\", ($rx2-$rx1)/1024/1024/$INTERVAL}")
+tx_MB=$(awk "BEGIN {printf \"%.2f\", ($tx2-$tx1)/1024/1024/$INTERVAL}")
+
+echo "↓ ${rx_MB} MB/s  ↑ ${tx_MB} MB/s"

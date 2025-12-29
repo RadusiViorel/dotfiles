@@ -22,17 +22,7 @@ if [ ! -f "$ENABLED_FILE" ]; then
   echo 1 > "$ENABLED_FILE"
 fi
 
-is_loading=$(cat "$LOADING_FILE")
 is_enabled=$(cat "$ENABLED_FILE")
-
-if (( is_loading == 1 )); then
-  idx=$(cat "$SPINNER_FILE")
-  idx=$(( (idx + 1) % ${#spinner_icons[@]} ))
-  echo "$idx" > "$SPINNER_FILE"
-fi
-
-spinner_idx=$(cat "$SPINNER_FILE")
-spinner=${spinner_icons[$spinner_idx]}
 
 for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
     if [ -d "/sys/class/net/$iface/wireless" ]; then
@@ -54,13 +44,13 @@ if ip link show ${lan_interface} | grep -q 'state UP'; then
 fi
 
 case "$1" in
-  connect)  $HOME/.config/xmobar/com/network/actions/connect       --interface=${interface}  --LOADING_FILE=${LOADING_FILE} ;;
-  disconnect)  $HOME/.config/xmobar/com/network/actions/disconnect --interface=${interface}  --ENABLED_FILE=${ENABLED_FILE} --enabled=${enabled} ;;
+  connect) $HOME/.config/xmobar/com/network/actions/connect --interface=${interface} --LOADING_FILE=${LOADING_FILE} ;;
+  toggle)  $HOME/.config/xmobar/com/network/actions/toggle  --interface=${interface} --ENABLED_FILE=${ENABLED_FILE} --enabled=${is_enabled} ;;
   *) ;;
 esac
 
 if (( is_enabled == 0 )); then
-  echo "<fc=${COLOR_MUTE}> Wifi Disabled 󰤮</fc>${SEP}"
+  echo "<fc=${COLOR_MUTE}>No WiFi  󰤮</fc>${SEP}"
   exit 0
 fi
 
@@ -69,7 +59,6 @@ ssid=$(wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
 if [ ${#ssid} -gt ${wifi_name_length} ]; then
   ssid="${ssid:0:$((wifi_name_length-3))}<fc=${COLOR_MUTE}>󰇘</fc>"
 fi
-
 
 signal_icons=( 󰤯 󰤟 󰤢 󰤥 󰤨 )
 signal_thresholds=( 15 33 50 90 )
@@ -83,10 +72,15 @@ for i in "${!signal_thresholds[@]}"; do
   fi
 done
 
+is_loading=$(cat "$LOADING_FILE")
+
 if (( is_loading == 0 )); then
-  echo "$ssid ${signal}󰏰 ${signal_icon}${SEP}"
+  traffic="$("$HOME/.config/xmobar/com/network/actions/traffic" --interface="$interface")"
+  echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic} ${SEP}"
 fi
 
 if (( is_loading == 1 )); then
-  echo "󱛇  ${spinner}${SEP}"
+  idx=$(( ( $(<"$SPINNER_FILE") + 1 ) % ${#spinner_icons[@]} ))
+  echo "$idx" > "$SPINNER_FILE"
+  echo "${spinner_icons[$idx]} Searching... 󱛇 ${SEP}"
 fi

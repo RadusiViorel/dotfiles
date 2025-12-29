@@ -63,7 +63,8 @@ main = xmobar defaultConfig
       ,  click "battery"    "show_time"     1 "%battery%"
       ,  click "cpu_temp"   "top"           1 "%cpu_temp%"
       ,  click "space"      "toggle"        1 "%space%"
-      ,  click "network"    "connect"       1 "%network%"
+      ,  click "network"    "connect"       1
+      $  click "network"    "toggle"        2 "%network%"
       ,  click "rofi_theme" "change"        1 "%rofi_theme%"
       ,  click "page"       "toggle"        1 "%page%"
       ,  click "calendar"   "toggle"        1

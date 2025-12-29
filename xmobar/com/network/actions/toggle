@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --interface=*) interface="${arg#*=}" ;;
+    --ENABLED_FILE=*) ENABLED_FILE="${arg#*=}" ;;
+    --enabled=*) enabled="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+toggle=$((1 - enabled))
+echo "$toggle" > "$ENABLED_FILE"
+
+if [[ "$toggle" -eq 1 ]]; then
+    wpa_cli -i ${interface} reconnect
+else
+    wpa_cli -i ${interface} disconnect
+fi
