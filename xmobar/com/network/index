@@ -13,6 +13,7 @@ COM="${HOME}/.config/xmobar/com/network"
 LOADING_FILE="${COM}/state/loading"
 SPINNER_FILE="${COM}/state/spinner"
 ENABLED_FILE="${COM}/state/enabled"
+TRAFFIC_FILE="${COM}/state/traffic"
 
 if [ ! -f "$LOADING_FILE" ]; then
   echo 0 > "$LOADING_FILE"
@@ -22,14 +23,12 @@ if [ ! -f "$ENABLED_FILE" ]; then
   echo 1 > "$ENABLED_FILE"
 fi
 
-is_enabled=$(cat "$ENABLED_FILE")
+if [ ! -f "$TRAFFIC_FILE" ]; then
+  echo 0 > "$TRAFFIC_FILE"
+fi
 
-for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
-    if [ -d "/sys/class/net/$iface/wireless" ]; then
-        interface=$iface
-        break
-    fi
-done
+is_enabled=$(cat "$ENABLED_FILE")
+show_traffic=$(cat "$TRAFFIC_FILE")
 
 for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
     if [ ! -d "/sys/class/net/$iface/wireless" ] && [[ $iface != lo ]]; then
@@ -46,13 +45,24 @@ fi
 case "$1" in
   connect) $HOME/.config/xmobar/com/network/actions/connect --interface=${interface} --LOADING_FILE=${LOADING_FILE} ;;
   toggle)  $HOME/.config/xmobar/com/network/actions/toggle  --interface=${interface} --ENABLED_FILE=${ENABLED_FILE} --enabled=${is_enabled} ;;
+  traffic) $HOME/.config/xmobar/com/network/actions/traffic --TRAFFIC_FILE=${TRAFFIC_FILE} --show_traffic=${show_traffic} ;;
   *) ;;
 esac
 
+
+for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
+    if [ -d "/sys/class/net/$iface/wireless" ]; then
+        interface=$iface
+        break
+    fi
+done
+
+
 if (( is_enabled == 0 )); then
-  echo "<fc=${COLOR_MUTE}>No WiFi  󰤮</fc>${SEP}"
+  echo "<fc=${COLOR_MUTE}>󰤮</fc>${SEP}"
   exit 0
 fi
+
 
 ssid=$(wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
 
@@ -75,8 +85,13 @@ done
 is_loading=$(cat "$LOADING_FILE")
 
 if (( is_loading == 0 )); then
-  traffic="$("$HOME/.config/xmobar/com/network/actions/traffic" --interface="$interface")"
-  echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic} ${SEP}"
+  if (( show_traffic == 1 )); then
+
+    traffic="$("$HOME/.config/xmobar/com/network/scripts/traffic/traffic" --interface="$interface")"
+    echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic}${SEP}"
+  else
+    echo "$ssid ${signal}󰏰 ${signal_icon} ${SEP}"
+  fi
 fi
 
 if (( is_loading == 1 )); then
