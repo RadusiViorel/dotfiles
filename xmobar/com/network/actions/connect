@@ -37,10 +37,10 @@ scan_list=$(
     | awk -F'\t' '$5 && $5 !~ /^[[:cntrl:]]+$/ { print $5 }' \
     | sort -u
   )
-
 # ---------------------------
 # 3. Build ROFI menu
 # ---------------------------
+#
 menu=""
 while IFS= read -r ssid; do
   if is_known "$ssid"; then
@@ -57,7 +57,6 @@ chosen=$(echo -en "$menu" | rofi -dmenu -p "Select Wi-Fi")
 # Remove trailing '*' if present
 ssid="${chosen% 󰦕}"      # removes ' 󰦕' if present at the end
 ssid="${ssid%"${ssid##*[![:space:]]}"}"  # trims trailing whitespace
-
 [ -z "$ssid" ] && (echo 0 > "$LOADING_FILE") && exit 0
 
 # ---------------------------

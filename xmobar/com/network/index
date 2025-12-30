@@ -42,20 +42,20 @@ if ip link show ${lan_interface} | grep -q 'state UP'; then
   exit 0
 fi
 
-case "$1" in
-  connect) $HOME/.config/xmobar/com/network/actions/connect --interface=${interface} --LOADING_FILE=${LOADING_FILE} ;;
-  toggle)  $HOME/.config/xmobar/com/network/actions/toggle  --interface=${interface} --ENABLED_FILE=${ENABLED_FILE} --enabled=${is_enabled} ;;
-  traffic) $HOME/.config/xmobar/com/network/actions/traffic --TRAFFIC_FILE=${TRAFFIC_FILE} --show_traffic=${show_traffic} ;;
-  *) ;;
-esac
-
-
 for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
     if [ -d "/sys/class/net/$iface/wireless" ]; then
         interface=$iface
         break
     fi
 done
+
+case "$1" in
+  connect) ${COM}/actions/connect --interface=${interface} --LOADING_FILE=${LOADING_FILE} ;;
+  toggle)  ${COM}/actions/toggle  --interface=${interface} --ENABLED_FILE=${ENABLED_FILE} --enabled=${is_enabled} ;;
+  traffic) ${COM}/actions/traffic --TRAFFIC_FILE=${TRAFFIC_FILE} --show_traffic=${show_traffic} ;;
+  *) ;;
+esac
+
 
 
 if (( is_enabled == 0 )); then
@@ -87,7 +87,7 @@ is_loading=$(cat "$LOADING_FILE")
 if (( is_loading == 0 )); then
   if (( show_traffic == 1 )); then
 
-    traffic="$("$HOME/.config/xmobar/com/network/scripts/traffic/traffic" --interface="$interface")"
+    traffic="$("${COM}/scripts/traffic/traffic" --interface="$interface")"
     echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic}${SEP}"
   else
     echo "$ssid ${signal}󰏰 ${signal_icon} ${SEP}"
