@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --showtime=*) showtime="${arg#*=}" ;;
+    --SHOW_TIME_FILE=*) SHOW_TIME_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+if [[ "$showtime" == 0 ]]; then
+    echo 1 > "$SHOW_TIME_FILE"
+else
+    echo 0 > "$SHOW_TIME_FILE"
+fi

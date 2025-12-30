@@ -33,7 +33,7 @@ main = xmobar defaultConfig
       , cmd True  "volume"     [] 5
       , cmd True  "brightness" [] 5
       , cmd True  "bluetooth"  [] 5
-      , cmd True  "battery"    [] 5
+      , cmd True  "battery"    [] 10
       , cmd True  "cpu_temp"   [] 50
       , cmd True  "space"      [] 20
       , cmd True  "network"    [] 5

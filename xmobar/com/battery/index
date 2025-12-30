@@ -3,13 +3,15 @@
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/page/index"
 
-
 COM="${HOME}/.config/xmobar/com/battery"
+VALUE_FILE="${COM}/state/value"
 LEVEL_FILE="${COM}/state/level"
 SHOW_TIME_FILE="${COM}/state/show_time"
 
+CACHE_TTL=80   # seconds
+
 # If file doesn't exist, start from 0
-[[ -f "$LEVEL_FILE" ]] || echo 0 > "$LEVEL_FILE"
+[[ -f "$LEVEL_FILE"     ]] || echo 0 > "$LEVEL_FILE"
 [[ -f "$SHOW_TIME_FILE" ]] || echo 0 > "$SHOW_TIME_FILE"
 
 if ! command -v acpi >/dev/null 2>&1; then
@@ -17,28 +19,40 @@ if ! command -v acpi >/dev/null 2>&1; then
   exit 1
 fi
 
-# Query battery info
-info="$(acpi -b 2>/dev/null)"
+now=$(date +%s)
+if [[ -f "$VALUE_FILE" ]]; then
+  read -r cached_ts < "$VALUE_FILE"
+else
+  cached_ts=0
+fi
+
+# Refresh cache if older than 1 minute
+if (( now - cached_ts >= CACHE_TTL )); then
+  info="$(acpi -b 2>/dev/null)"
+  {
+    echo "$now"
+    echo "$info"
+  } > "$VALUE_FILE"
+else
+  info="$(sed -n '2p' "$VALUE_FILE")"
+fi
 
 # If acpi output does NOT contain "Battery", then exit
 echo "$info" | grep -q "Battery" || exit 0
 
 state=$(echo "$info" | awk -F'[,: ]+' '{print $3}')
 level=$(echo "$info" | awk -F'[,% ]+' '{print $4}')
-time=$(echo "$info" | awk '{for(i=1;i<=NF;i++){if($i~/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/) print $i}}')
+time=$(echo "$info"  | awk '{for(i=1;i<=NF;i++){if($i~/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/) print $i}}')
 
 thresholds=(10 33 66 85 95)
 icons=("󰢟" "󱊤" "󱊥" "󱊦" "󰂅")
 
-showtime=$(cat "$SHOW_TIME_FILE")
+showtime=$(< "$SHOW_TIME_FILE")
 
-if [ "$1" == "show_time" ]; then
-  if [[ "$showtime" == 0 ]]; then
-      echo 1 > "$SHOW_TIME_FILE"
-  else
-      echo 0 > "$SHOW_TIME_FILE"
-  fi
-fi
+case "$1" in
+  show_time) "${COM}/actions/show_time" --showtime=${showtime} --SHOW_TIME_FILE=${SHOW_TIME_FILE} ;;
+  *) ;;
+esac
 
 if [[ "$state" == "Full" ]]; then
   echo "${SEP}"
@@ -55,9 +69,9 @@ if [[ "$state" == "Charging" ]]; then
     done
 
     # Safety fallback
-    [[ ${#usable_icons[@]} -eq 0 ]] && usable_icons=("${icons[thresholds[@]-1]}")
+    [[ ${#usable_icons[@]} -eq 0 ]] && usable_icons=("${icons[$((${#icons[@]} - 1))]}")
 
-    idx=$(cat "$LEVEL_FILE")
+    idx=$(< "$LEVEL_FILE")
     idx=$(( (idx + 1) % ${#usable_icons[@]} ))
     echo "$idx" > "$LEVEL_FILE"
 
@@ -88,7 +102,6 @@ else
 fi
 
 [[ $level -le ${thresholds[1]} ]] && output="<fc=$timercolor>$icon</fc>" || output="${icon}"
-
 
 [[ $showtime == 1 ]] && output="$output <fc=$timercolor> $time </fc>"
 
