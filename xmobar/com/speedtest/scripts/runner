@@ -14,8 +14,8 @@ speedtest-cli 2>/dev/null | awk -v now="$NOW" '
 /^Testing from/ {
   sub(/^Testing from /,""); sub(/ \(.*/, ""); isp=$0
 }
-/^Download:/ {down=sprintf("%.2f", $2/8)}
-/^Upload:/   {up=sprintf("%.2f", $2/8)}
+/^Download:/ {down=sprintf("%.2f", $2)}
+/^Upload:/   {up=sprintf("%.2f", $2)}
 END {
   if (down && up)
     printf "%s|%s|%s|%d\n", isp, down, up, now

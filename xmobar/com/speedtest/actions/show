@@ -17,7 +17,7 @@ result=$(awk -F'|' '
   else if (age < 3600) ago = int(age/60) "m ago"
   else                ago = int(age/3600) "h ago"
 
-  printf "󰖩 %s \n\n↓ %s MB/s\n↑ %s MB/s\n(%s)\n", $1, $2, $3, ago
+  printf "󰖩 %s \n\n↓ %s Mbits/s\n↑ %s Mbits/s\n(%s)\n", $1, $2, $3, ago
 }' "$OUTPUT_FILE")
 
 
