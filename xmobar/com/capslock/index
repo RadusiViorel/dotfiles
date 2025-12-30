@@ -2,7 +2,6 @@
 
 source "${HOME}/.config/xmobar/scripts/vars"
 
-
 if ! command -v xset >/dev/null 2>&1; then
   echo "Warning: xset is not installed or not in PATH."
   exit 1

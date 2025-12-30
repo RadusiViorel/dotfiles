@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
+
+if ! command -v speedtest >/dev/null 2>&1; then
+  echo "Warning: speedtest is not installed or not in PATH."
+  exit 1
+fi
+
+COM="${HOME}/.config/xmobar/com/speedtest"
+OUTPUT_FILE="${COM}/state/value"
+now=$(date +%s)
+
+# Check if we need to update cache
+if [[ -f "$OUTPUT_FILE" ]]; then
+  # Read timestamp from the last line (4th field)
+  last_ts=$(awk -F'|' '{print $4}' "$OUTPUT_FILE")
+else
+  last_ts=0
+fi
+
+# If older than 1 hour (3600s), run cache update in background
+if (( now - last_ts >= 3600 )); then
+  $(${COM}/scripts/runner --OUTPUT_FILE=${OUTPUT_FILE} &)
+fi
+
+case "$1" in
+  show) ${COM}/actions/show --OUTPUT_FILE=${OUTPUT_FILE} ;;
+esac
+
+echo "󰓅${SEP}"
