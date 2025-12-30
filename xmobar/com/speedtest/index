@@ -16,7 +16,6 @@ if [ ! -f "$LOADING_FILE" ]; then
   echo 0 > "$LOADING_FILE"
 fi
 
-
 case "$1" in
   show) ${COM}/actions/show --OUTPUT_FILE=${OUTPUT_FILE} ;;
   test) ${COM}/actions/test --OUTPUT_FILE=${OUTPUT_FILE} --LOADING_FILE=${LOADING_FILE} ;;
@@ -25,12 +24,11 @@ esac
 is_loading=$(cat "$LOADING_FILE")
 
 if (( is_loading == 0 )); then
-  echo "󰓅${SEP}"
+  echo "󰾆${SEP}"
 fi
 
-spinner_icons=(      )
 if (( is_loading == 1 )); then
-  echo "<fc=${COLOR_WARNING}>  Testing... 󰓅 </fc>${SEP}"
+  echo "<fc=${COLOR_INFO}>  Testing... 󰓅 </fc>${SEP}"
 fi
 
 # Check if we need to update cache

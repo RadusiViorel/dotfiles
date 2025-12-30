@@ -56,13 +56,10 @@ case "$1" in
   *) ;;
 esac
 
-
-
 if (( is_enabled == 0 )); then
   echo "<fc=${COLOR_MUTE}>󰤮</fc>${SEP}"
   exit 0
 fi
-
 
 ssid=$(wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
 
