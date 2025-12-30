@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/page/index" 1
+source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 if ! command -v speedtest >/dev/null 2>&1; then
   echo "Warning: speedtest is not installed or not in PATH."
@@ -9,8 +9,29 @@ if ! command -v speedtest >/dev/null 2>&1; then
 fi
 
 COM="${HOME}/.config/xmobar/com/speedtest"
+LOADING_FILE="${COM}/state/loading"
 OUTPUT_FILE="${COM}/state/value"
-now=$(date +%s)
+
+if [ ! -f "$LOADING_FILE" ]; then
+  echo 0 > "$LOADING_FILE"
+fi
+
+
+case "$1" in
+  show) ${COM}/actions/show --OUTPUT_FILE=${OUTPUT_FILE} ;;
+  test) ${COM}/actions/test --OUTPUT_FILE=${OUTPUT_FILE} --LOADING_FILE=${LOADING_FILE} ;;
+esac
+
+is_loading=$(cat "$LOADING_FILE")
+
+if (( is_loading == 0 )); then
+  echo "󰓅${SEP}"
+fi
+
+spinner_icons=(      )
+if (( is_loading == 1 )); then
+  echo "<fc=${COLOR_WARNING}>  Testing... 󰓅 </fc>${SEP}"
+fi
 
 # Check if we need to update cache
 if [[ -f "$OUTPUT_FILE" ]]; then
@@ -20,13 +41,7 @@ else
   last_ts=0
 fi
 
-# If older than 1 hour (3600s), run cache update in background
+now=$(date +%s)
 if (( now - last_ts >= 3600 )); then
   $(${COM}/scripts/runner --OUTPUT_FILE=${OUTPUT_FILE} &)
 fi
-
-case "$1" in
-  show) ${COM}/actions/show --OUTPUT_FILE=${OUTPUT_FILE} ;;
-esac
-
-echo "󰓅${SEP}"

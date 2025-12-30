@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --LOADING_FILE=*) LOADING_FILE="${arg#*=}" ;;
+    --OUTPUT_FILE=*) OUTPUT_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+echo 1 > "$LOADING_FILE"
+sleep 1
+
+COM="${HOME}/.config/xmobar/com/speedtest"
+$(${COM}/scripts/runner --OUTPUT_FILE=${OUTPUT_FILE} )
+$(${COM}/actions/show   --OUTPUT_FILE=${OUTPUT_FILE} )
+
+echo 0 > "$LOADING_FILE"

@@ -39,7 +39,7 @@ main = xmobar defaultConfig
       , cmd True  "network"    [] 5
       , cmd True  "rofi_theme" [] 1000
       , cmd True  "calendar"   [] 10
-      , cmd True  "speedtest"  [] 600
+      , cmd True  "speedtest"  [] 5
       , cmd True  "power"      [] 100000
       , Run UnsafeXMonadLog
       ]
@@ -67,11 +67,12 @@ main = xmobar defaultConfig
       ,  click "network"    "connect"       1
       $  click "network"    "toggle"        2
       $  click "network"    "traffic"       3 "%network%"
+      ,  click "speedtest"  "show"          1
+      $  click "speedtest"  "test"          3 "%speedtest%"
       ,  click "rofi_theme" "change"        1 "%rofi_theme%"
       ,  click "page"       "toggle"        1 "%page%"
       ,  click "calendar"   "toggle"        1
       $  click "calendar"   "show_calendar" 3 "%calendar%"
-      ,  click "speedtest"  "show"          1 "%speedtest%"
       ,  click "power"      "open"          1 "%power%"
       ]
   }
