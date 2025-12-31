@@ -97,23 +97,22 @@ scratchPadBorderColor = "blue"
 -- Workspaces
 --------------------------------------------------------------------------------
 
+ws1 = "\58878 "   --  file-explorer
+ws2 = "\983727 "  -- 󰊯 browser
+ws3 = "\62764 "   --  video
+ws4 = "\xf121 "   -- code
+ws5 = "\xf03e "   -- media
+ws6 = "\xf086 "   -- chat
+ws7 = "\60443 "   --  music
+ws8 = "\62578 "   --  databse
+ws9 = "\59245 "   --  Redis
+ws0 = "\984241 "  -- 󰒱 slack
+
 clickableWorkspaces :: Bool
 clickableWorkspaces = False
 
 myWorkspaces :: [WorkspaceId]
-myWorkspaces =
-   map (\i -> i ++ " ")
-      [ "\58878"   --  file-explorer
-      , "\983727"  -- 󰊯 browser
-      , "\62764"   --  video
-      , "\xf121"   -- code
-      , "\xf03e"   -- media
-      , "\xf086"   -- chat
-      , "\60443"   --  music
-      , "\62578"   --  databse
-      , "\59245"   --  Redis
-      , "\984241"  -- 󰒱 slack
-      ]
+myWorkspaces = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9, ws0]
 
 clickWorkspaces :: String -> String
 clickWorkspaces ws
@@ -207,9 +206,14 @@ myManageHook :: ManageHook
 myManageHook =
   composeAll
     [ isDialog --> doFloat
-    , className =? "mpv"     --> doFloat
-    , className =? "Firefox" --> doShift "1"
-    , className =? "falkon"  --> doShift "1"
+    , className =? "nemo"     -->  doShift ws1
+
+    , className =? "Firefox"  --> doShift ws2
+    , className =? "falkon"   --> doShift ws2
+    , className =? "chromium" --> doShift ws2
+
+    , className =? "mpv"     --> doShift ws3
+    , className =? "vlc"     --> doShift ws3
     , isFullscreen --> doFullFloat
     ]
   <+> namedScratchpadManageHook scratchpads
