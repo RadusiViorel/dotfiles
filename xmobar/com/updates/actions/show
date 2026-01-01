@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --package_list=*) package_list="${arg#*=}" ;;
+    --VALUE_FILE=*) VALUE_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+$TERM -e bash -c "echo -e '$package_list \n Updated $count packages:\n'; sudo xbps-install -Su; echo; read -p 'Press enter to exit...'"
+
+
+rm $VALUE_FILE

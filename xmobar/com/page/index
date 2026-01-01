@@ -6,7 +6,7 @@ PAGE_FILE="$HOME/.config/xmobar/scripts/page/value"
 
 [[ -f "$PAGE_FILE" ]] || echo 1 > "$PAGE_FILE"
 
-page=$(cat "$PAGE_FILE")
+page=$(< "$PAGE_FILE")
 
 toggle() {
   if [[ "$page" == 2 ]]; then

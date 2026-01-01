@@ -1,10 +1,13 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-PAGE_FILE="$HOME/.config/xmobar/scripts/page/value"
-page=$(cat "$PAGE_FILE" 2>/dev/null)
+
+PAGE_FILE="${HOME}/.config/xmobar/scripts/page/value"
+
+[[ -f "$PAGE_FILE" ]] || echo 1 > "$PAGE_FILE"
+page=$(< "$PAGE_FILE")
 
 target_page="${1:-1}"
 
-if [[ "$page" == "$target_page" ]]; then
-    exit 0
+if [[ "$page" != "$target_page" ]]; then
+  exit 0
 fi

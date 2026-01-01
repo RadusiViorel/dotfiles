@@ -2,22 +2,39 @@
 
 source "${HOME}/.config/xmobar/scripts/vars"
 
+COM="${HOME}/.config/xmobar/com/updates"
+VALUE_FILE="${COM}/state/value"
+
 WARNING_COUNT=15
 
-packageList=$(xbps-install -nuM)
-count=$(printf "%s\n" "$packageList" | grep -cve '^\s*$')
+CACHE_TTL=3600 #one hour
 
-show() {
-    # Open a terminal and run the commands
-    $TERM -e bash -c "echo -e '$packageList \n Updated $count packages:\n'; sudo xbps-install -Su; echo; read -p 'Press enter to exit...'"
-}
 
-case "$1" in
-    show) show ;;
-    *) ;;
-esac
+now=$(date +%s)
+if [[ -f "$VALUE_FILE" ]]; then
+  read -r cached_ts < "$VALUE_FILE"
+else
+  cached_ts=0
+fi
+
+# Refresh cache if older than 1 minute
+if (( now - cached_ts >= CACHE_TTL )); then
+  package_list=$(xbps-install -nuM)
+  count="$(printf "%s\n" "$package_list" | grep -cve '^\s*$')"
+  {
+    echo "$now"
+    echo "$count"
+  } > "$VALUE_FILE"
+else
+  count="$(sed -n '2p' "$VALUE_FILE")"
+fi
 
 (( count == 0 )) && exit 0
+
+case "$1" in
+    show) ${COM}/actions/show --package_list=${package_list} --VALUE_FILE=${VALUE_FILE} ;;
+    *) ;;
+esac
 
 output="  $count"
 

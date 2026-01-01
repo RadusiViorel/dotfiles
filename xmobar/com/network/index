@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/page/index"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 interface=wlan0
 lan_interface=eth0

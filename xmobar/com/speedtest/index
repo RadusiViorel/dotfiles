@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
@@ -12,16 +13,14 @@ COM="${HOME}/.config/xmobar/com/speedtest"
 LOADING_FILE="${COM}/state/loading"
 OUTPUT_FILE="${COM}/state/value"
 
-if [ ! -f "$LOADING_FILE" ]; then
-  echo 0 > "$LOADING_FILE"
-fi
+[[ -f "$LOADING_FILE" ]] || echo 0 > "$LOADING_FILE"
 
 case "$1" in
   show) ${COM}/actions/show --OUTPUT_FILE=${OUTPUT_FILE} ;;
   test) ${COM}/actions/test --OUTPUT_FILE=${OUTPUT_FILE} --LOADING_FILE=${LOADING_FILE} ;;
 esac
 
-is_loading=$(cat "$LOADING_FILE")
+is_loading=$(< "$LOADING_FILE")
 
 if (( is_loading == 0 )); then
   echo "󰾆${SEP}"
@@ -31,9 +30,7 @@ if (( is_loading == 1 )); then
   echo "<fc=${COLOR_INFO}>  Testing... 󰓅 </fc>${SEP}"
 fi
 
-# Check if we need to update cache
 if [[ -f "$OUTPUT_FILE" ]]; then
-  # Read timestamp from the last line (4th field)
   last_ts=$(awk -F'|' '{print $4}' "$OUTPUT_FILE")
 else
   last_ts=0

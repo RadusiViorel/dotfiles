@@ -27,20 +27,20 @@ main = xmobar defaultConfig
   , allDesktops = True
   , overrideRedirect = True
   , commands =
-      [ cmd True  "capslock"   [] 20
-      , cmd True  "updates"    [] 3600
-      , cmd True  "page"       [] 10
-      , cmd True  "volume"     [] 5
-      , cmd True  "brightness" [] 5
-      , cmd True  "bluetooth"  [] 5
-      , cmd True  "battery"    [] 10
-      , cmd True  "cpu_temp"   [] 50
-      , cmd True  "space"      [] 20
-      , cmd True  "network"    [] 5
-      , cmd True  "rofi_theme" [] 1000
-      , cmd True  "calendar"   [] 10
-      , cmd True  "speedtest"  [] 5
-      , cmd True  "power"      [] 100000
+      [ cmd True  "capslock"  [] 40
+      , cmd True  "updates"   [] 100
+      , cmd True  "page"      [] 15
+      , cmd True "volume"     [] 15
+      , cmd True "brightness" [] 15
+      , cmd True "bluetooth"  [] 15
+      , cmd True  "battery"   [] 15
+      , cmd True  "cpu_temp"  [] 50
+      , cmd True "space"      [] 20
+      , cmd True "network"    [] 15
+      , cmd True "rofi_theme" [] 1000
+      , cmd True "calendar"   [] 50
+      , cmd True "speedtest"  [] 15
+      , cmd True "power"      [] 100000
       , Run UnsafeXMonadLog
       ]
   , sepChar = "%"

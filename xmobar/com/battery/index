@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/page/index"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/battery"
 VALUE_FILE="${COM}/state/value"
-LEVEL_FILE="${COM}/state/level"
+3LEVEL_FILE="${COM}/state/level"
 SHOW_TIME_FILE="${COM}/state/show_time"
 
 CACHE_TTL=80   # seconds

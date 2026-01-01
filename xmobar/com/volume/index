@@ -3,7 +3,8 @@
 
 
 source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/page/index"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
+
 COM="${HOME}/.config/xmobar/com/volume"
 
 STEP=3

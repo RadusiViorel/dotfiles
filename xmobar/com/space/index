@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
+
 source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/page/index"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/space"
 TOGGLE_FILE="${COM}/state/toggle"
 
 [[ -f "$TOGGLE_FILE" ]] || echo 0 > "$TOGGLE_FILE"
 
-toggle_flag=$(cat "$TOGGLE_FILE")
+toggle_flag=$(< "$TOGGLE_FILE")
 
 color="#ffffff"
 format="avail"
