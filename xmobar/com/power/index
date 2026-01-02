@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
+COM="${HOME}/.config/xmobar/com/power"
 
 case "$1" in
-  open) "${HOME}/.config/xmobar/com/power/actions/show" ;;
+  open) "${COM}/actions/show" ;;
   *) ;;
 esac
 

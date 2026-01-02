@@ -4,7 +4,8 @@
 for arg in "$@"; do
   case $arg in
     --package_list=*) package_list="${arg#*=}" ;;
-    --VALUE_FILE=*) VALUE_FILE="${arg#*=}" ;;
+    --COUNT_KEY=*) COUNT_KEY="${arg#*=}" ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
@@ -12,4 +13,4 @@ done
 $TERM -e bash -c "echo -e '$package_list \n Updated $count packages:\n'; sudo xbps-install -Su; echo; read -p 'Press enter to exit...'"
 
 
-rm $VALUE_FILE
+sed -i "s/^$COUNT_KEY=.*/$COUNT_KEY=0/" "$STATE_FILE"

@@ -14,7 +14,7 @@ if ! command -v yad >/dev/null 2>&1; then
 fi
 
 case "$1" in
-  toggle) ${COM}/actions/toggle --calendar_toggle=${calendar_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
+  toggle) ${COM}/actions/toggle --value=${calendar_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
   show_calendar) ${COM}/actions/show_calendar;;
   *) ;;
 esac

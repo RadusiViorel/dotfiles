@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
@@ -10,7 +9,7 @@ COM="${HOME}/.config/xmobar/com/volume"
 STEP=3
 MAX_VOLUME=125
 ICON_SPEAKER="󰓃"
-ICON_HEADPHONES="<fc=${COLOR_INFO}> 󱡬</fc> 󰋋"
+ICON_JACK_HEADPHONES="<fc=${COLOR_INFO}> 󱡬</fc> 󰋋"
 ICON_USB_HEADPHONES="<fc=${COLOR_INFO}>  </fc> 󰋋"
 ICON_WIRELESS_HEADPHONES="<fc=${COLOR_INFO}> </fc> 󰋋"
 ICON_MUTED=""
@@ -39,7 +38,7 @@ get_sink_icon() {
     # Wired headset (jack)
     *'port.name = "analog-output-headphones"'*|\
     *'port.name = "analog-output-headset"'*)
-      echo "$ICON_HEADPOHNES" ;;
+      echo "$ICON_JACK_HEADPHONES" ;;
 
     * ) echo "${ICON_SPEAKER}" ;;
   esac
