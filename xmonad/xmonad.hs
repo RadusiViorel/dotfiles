@@ -116,7 +116,7 @@ myWorkspaces = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9, ws0]
 pinnedApps :: [(String, WorkspaceId, Bool)]
 pinnedApps =
   [ ("nemo"     , ws1, True)
-  , ("firefox"  , ws2, True)
+  , ("Firefox"  , ws2, True)
   , ("falkon"   , ws2, True)
   , ("chromium" , ws2, True)
   , ("mpv"      , ws3, True)
@@ -141,7 +141,7 @@ clickWorkspaces ws
 --------------------------------------------------------------------------------
 --
 mySB :: StatusBarConfig
-mySB = statusBarProp "/home/radusiviorel/.local/bin/xmobar" (clickablePP myPP)
+mySB = statusBarProp "${HOME}/.local/bin/xmobar" (clickablePP myPP)
 
 myPP :: PP
 myPP = def
@@ -220,7 +220,7 @@ myManageHook =
       ( [ isDialog --> doFloat
         , isFullscreen --> doFullFloat
         ]
-      ++ map (\(c, ws, flag) -> className =? c --> doShift ws) pinnedApps
+        ++ map (\(c, ws, shouldFocus) -> (className =? c <||> appName =? c <||> resource =? c) --> (doShift ws <+> if shouldFocus then doF (W.greedyView ws) else mempty)) pinnedApps
       )
     <+> namedScratchpadManageHook scratchpads
     <+> manageHook def
@@ -228,33 +228,22 @@ myManageHook =
 --------------------------------------------------------------------------------
 -- Keymap
 --------------------------------------------------------------------------------
-
-
-spawnAndGo :: String -> X ()
-spawnAndGo app =
-  case lookup app [(c, (ws, flag)) | (c, ws, flag) <- pinnedApps] of
-    Just (ws, switch) -> do
-        spawn app
-        case switch of
-          True  -> windows (W.greedyView ws)
-          False -> return ()
-    Nothing -> spawn app
-
-
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf = M.fromList $
 
     -- Launch applications
     [ ((leader                , xK_Return), spawn $ terminal conf)
     , ((leader .|. controlMask, xK_Return), spawn "rofi -show drun")
-    , ((leader .|. shiftMask, xK_i)       , spawn "$HOME/.config/_scripts/bg")
+    , ((leader .|. shiftMask, xK_i)       , spawn "${HOME}/.config/_scripts/bg")
 
-    , ((leader, xK_e), spawnAndGo "nemo"  )
-    , ((leader, xK_b), spawnAndGo "falkon")
+    , ((leader, xK_e), spawn "nemo"  )
+    , ((leader, xK_b), spawn "falkon")
 
     -- Kill window
     , ((leader, xK_q), kill)
-    , ((leader .|. shiftMask, xK_q), spawn "stack build" >> spawn "stack install" >> spawn  "stack exec xmonad -- --recompile" >> spawn "stack exec xmonad -- --restart")
+    , ((leader .|. shiftMask, xK_q), spawn " notify-send -t 10000 'XMonad' 'Rebuilding…' && stack build && stack install && xmonad --restart")
+
+--    , ((leader .|. shiftMask, xK_q), spawn "ID=$(dunstify -t 0 'XMonad' 'Rebuilding…' -p) && stack build && stack install && stack exec xmonad -- --recompile && dunstify -C $ID && xmonad --restart" )
 
     -- Move focus
     , ((leader, xK_j), windows W.focusDown)
@@ -275,18 +264,18 @@ myKeys conf = M.fromList $
 
     -- Brightness
     ++
-    [ ((0, xF86XK_MonBrightnessUp)                , spawn "brightnessctl set +6%")
-    , ((0, xF86XK_MonBrightnessDown)              , spawn "brightnessctl set 6%-")
+    [ ((0, xF86XK_MonBrightnessUp)                , spawn "${HOME}/.config/xmobar/com/brightness/index up")
+    , ((0, xF86XK_MonBrightnessDown)              , spawn "${HOME}/.config/xmobar/com/brightness/index down")
     , ((0 .|. shiftMask, xF86XK_MonBrightnessUp)  , spawn "brightnessctl set 100%")
     , ((0 .|. shiftMask, xF86XK_MonBrightnessDown), spawn "brightnessctl set 1%")
     ]
 
     -- Volume
     ++
-    [ ((0, xF86XK_AudioRaiseVolume)              , spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
-    , ((0, xF86XK_AudioLowerVolume)              , spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
-    , ((0 .|. shiftMask, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@  100%")
-    , ((0 .|. shiftMask, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@  0%")
+    [ ((0, xF86XK_AudioRaiseVolume)              , spawn "${HOME}/.config/xmobar/com/volume/index volume_up")
+    , ((0, xF86XK_AudioLowerVolume)              , spawn "${HOME}/.config/xmobar/com/volume/index volume_down")
+    , ((0 .|. shiftMask, xF86XK_AudioRaiseVolume), spawn "${HOME}/.config/xmobar/com/volume/index volume_jump")
+    , ((0 .|. shiftMask, xF86XK_AudioLowerVolume), spawn "${HOME}/.config/xmobar/com/volume/index mute")
     ]
 
     -- Layouts switch
