@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --calendar_toggle=*)    calendar_toggle="${arg#*=}" ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
+    --KEY=*) KEY="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+if [[ "$calendar_toggle" == 0 ]]; then
+    sed -i "s/^$KEY=.*/$KEY=1/" "$STATE_FILE"
+else
+    sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
+fi

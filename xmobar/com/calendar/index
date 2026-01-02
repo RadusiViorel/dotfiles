@@ -1,57 +1,26 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
 
 COM="${HOME}/.config/xmobar/com/calendar"
-DATE_TIME_TOGGLE_FILE="${COM}/state/toggle"
-W=450
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+__toggle="calendar_toggle"
 
-[[ -f "$DATE_TIME_TOGGLE_FILE" ]] || echo 0 > "$DATE_TIME_TOGGLE_FILE"
-
-toggle=$(cat "$DATE_TIME_TOGGLE_FILE")
+grep -q "^$__toggle=" "$STATE_FILE" || echo "$__toggle=0" >> "$STATE_FILE"
 
 if ! command -v yad >/dev/null 2>&1; then
   echo "Warning: yad is not installed or not in PATH."
 fi
 
-toggleDateTime() {
-  if [[ "$toggle" == 0 ]]; then
-      echo 1 > "$DATE_TIME_TOGGLE_FILE"
-  else
-      echo 0 > "$DATE_TIME_TOGGLE_FILE"
-  fi
-}
-
-showCalendar() {
-
-  pkill -f "yad --calendar-popup" 2>/dev/null
-
-  # Screen dimensions
-  SCREEN_W=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d'x' -f1)
-
-  # Compute top-right corner position
-  POS_X=$((SCREEN_W - W))
-
-  yad --name="calendar-popup" \
-    --calendar \
-    --sticky \
-    --fixed \
-    --always-on-top \
-    --on-top \
-    --font="Source Code Pro Bold 22" \
-    --skip-taskbar \
-    --no-buttons \
-    --geometry="${W}x0+${POS_X}+20"
-  }
-
 case "$1" in
-    toggle) toggleDateTime ;;
-    show_calendar) showCalendar ;;
-    *) ;;
+  toggle) ${COM}/actions/toggle --calendar_toggle=${calendar_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
+  show_calendar) ${COM}/actions/show_calendar;;
+  *) ;;
 esac
 
 format="%H:%M:%S"
-[[ toggle -eq 1 ]] && format="%d-%m-%Y"
+[[ calendar_toggle -eq 1 ]] && format="%d-%m-%Y"
 
 declare -A ICONS=(
     [0]=""
@@ -80,7 +49,7 @@ declare -A ICONS=(
     [23]="󱑉"
 )
 
-[[ toggle -eq 1 ]] && icon=" " || icon="${ICONS[$(date +%H)]}"
-[[ toggle -eq 1 ]] && color="${COLOR_WARNING}" || color="${COLOR_OK}"
+[[ calendar_toggle -eq 1 ]] && icon=" " || icon="${ICONS[$(date +%H)]}"
+[[ calendar_toggle -eq 1 ]] && color="${COLOR_WARNING}" || color="${COLOR_OK}"
 
 echo "<fc=${color}>${icon}  $(date +"$format")</fc>${SEP}"
