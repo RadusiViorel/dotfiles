@@ -1,4 +1,6 @@
 import XMonad
+
+
 import Graphics.X11.ExtraTypes.XF86
 
 import Data.List (elemIndex)
@@ -13,7 +15,6 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
-
 import XMonad.Actions.MouseResize
 
 import XMonad.Hooks.ServerMode
@@ -108,11 +109,22 @@ ws8 = "\62578 "   --  databse
 ws9 = "\59245 "   --  Redis
 ws0 = "\984241 "  -- 󰒱 slack
 
-clickableWorkspaces :: Bool
-clickableWorkspaces = False
 
 myWorkspaces :: [WorkspaceId]
 myWorkspaces = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9, ws0]
+
+pinnedApps :: [(String, WorkspaceId, Bool)]
+pinnedApps =
+  [ ("nemo"     , ws1, True)
+  , ("firefox"  , ws2, True)
+  , ("falkon"   , ws2, True)
+  , ("chromium" , ws2, True)
+  , ("mpv"      , ws3, True)
+  , ("vlc"      , ws3, True)
+  ]
+
+clickableWorkspaces :: Bool
+clickableWorkspaces = False
 
 clickWorkspaces :: String -> String
 clickWorkspaces ws
@@ -204,24 +216,30 @@ myLayouts =
 
 myManageHook :: ManageHook
 myManageHook =
-  composeAll
-    [ isDialog --> doFloat
-    , className =? "nemo"     -->  doShift ws1
-
-    , className =? "Firefox"  --> doShift ws2
-    , className =? "falkon"   --> doShift ws2
-    , className =? "chromium" --> doShift ws2
-
-    , className =? "mpv"     --> doShift ws3
-    , className =? "vlc"     --> doShift ws3
-    , isFullscreen --> doFullFloat
-    ]
-  <+> namedScratchpadManageHook scratchpads
-  <+> manageHook def
+    composeAll
+      ( [ isDialog --> doFloat
+        , isFullscreen --> doFullFloat
+        ]
+      ++ map (\(c, ws, flag) -> className =? c --> doShift ws) pinnedApps
+      )
+    <+> namedScratchpadManageHook scratchpads
+    <+> manageHook def
 
 --------------------------------------------------------------------------------
 -- Keymap
 --------------------------------------------------------------------------------
+
+
+spawnAndGo :: String -> X ()
+spawnAndGo app =
+  case lookup app [(c, (ws, flag)) | (c, ws, flag) <- pinnedApps] of
+    Just (ws, switch) -> do
+        spawn app
+        case switch of
+          True  -> windows (W.greedyView ws)
+          False -> return ()
+    Nothing -> spawn app
+
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf = M.fromList $
@@ -231,12 +249,12 @@ myKeys conf = M.fromList $
     , ((leader .|. controlMask, xK_Return), spawn "rofi -show drun")
     , ((leader .|. shiftMask, xK_i)       , spawn "$HOME/.config/_scripts/bg")
 
-    , ((leader, xK_e), spawn "nemo")
-    , ((leader, xK_b), spawn "falkon")
+    , ((leader, xK_e), spawnAndGo "nemo"  )
+    , ((leader, xK_b), spawnAndGo "falkon")
 
     -- Kill window
     , ((leader, xK_q), kill)
-    , ((leader .|. shiftMask, xK_q), spawn  "stack exec xmonad -- --recompile" >> spawn "stack exec xmonad -- --restart")
+    , ((leader .|. shiftMask, xK_q), spawn "stack build" >> spawn "stack install" >> spawn  "stack exec xmonad -- --recompile" >> spawn "stack exec xmonad -- --restart")
 
     -- Move focus
     , ((leader, xK_j), windows W.focusDown)
@@ -308,13 +326,13 @@ myKeys conf = M.fromList $
       | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
     ]
     ++
-    [ ((leader .|. shiftMask, k), windows $ W.shift i)
+    [ ((leader .|. shiftMask, k), windows $ W.view i . W.shift i)
       | (i, k) <- zip myWorkspaces [xK_1 .. xK_9]
     ]
     ++
     -- workspace 10 (0)
     [ ((leader, xK_0), windows $ W.greedyView (myWorkspaces !! 9))
-      , ((leader .|. shiftMask, xK_0), windows $ W.shift (myWorkspaces !! 9))
+    , ((leader .|. shiftMask, xK_0) , windows $ W.view (myWorkspaces !! 9) . W.shift (myWorkspaces !! 9))
     ]
 
 myMouseBindings (XConfig {modMask = modm}) = M.fromList
