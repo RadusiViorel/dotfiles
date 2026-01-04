@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --state=*) state="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+bluetoothctl power $([ $((1 - state)) -eq 1 ] && echo "on" || echo "off") >/dev/null

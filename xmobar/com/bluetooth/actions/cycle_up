@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --currentIndex=*)     currentIndex="${arg#*=}" ;;
+    --connectedDevices=*) connectedDevices="${arg#*=}" ;;
+    --LABEL_FILE=*)       LABEL_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+echo $(( (currentIndex + 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"

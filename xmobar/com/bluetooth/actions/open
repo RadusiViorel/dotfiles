@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+$TERM -e bluetuith >/dev/null

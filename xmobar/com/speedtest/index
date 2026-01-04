@@ -18,6 +18,7 @@ OUTPUT_FILE="${COM}/state/value"
 case "$1" in
   show) ${COM}/actions/show --OUTPUT_FILE=${OUTPUT_FILE} ;;
   test) ${COM}/actions/test --OUTPUT_FILE=${OUTPUT_FILE} --LOADING_FILE=${LOADING_FILE} ;;
+  *) ;;
 esac
 
 is_loading=$(< "$LOADING_FILE")

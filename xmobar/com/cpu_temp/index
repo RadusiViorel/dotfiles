@@ -7,10 +7,12 @@ if ! command -v htop >/dev/null 2>&1; then
   echo "Warning: htop is not installed or not in PATH."
 fi
 
-if ! sensors -v htop >/dev/null 2>&1; then
+if ! command -v sensors >/dev/null 2>&1; then
   echo "Warning: sensors is not installed or not in PATH. (package_name: lm_sensors)"
   exit 1
 fi
+
+COM="${HOME}/.config/xmobar/com/cpu_temp"
 
 temp=$(sensors | awk '/acpitz-acpi-0/ {flag=1} flag && /temp1/ {gsub(/[+°C]/,"",$2); print $2; exit}')
 temp_int=${temp%.*}  # Convert to integer for comparison
@@ -30,7 +32,7 @@ for i in "${!thresholds[@]}"; do
 done
 
 case "$1" in
-    top) $TERM -e htop >/dev/null ;;
+    top) ${COM}/actions/htop ;;
     *) ;;
 esac
 

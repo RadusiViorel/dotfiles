@@ -8,6 +8,11 @@ if ! command -v bluetoothctl >/dev/null 2>&1; then
   exit 1
 fi
 
+if ! command -v upower >/dev/null 2>&1; then
+  echo "Warning: upower is not installed or not in PATH."
+  exit 1
+fi
+
 COM="${HOME}/.config/xmobar/com/bluetooth"
 LABEL_FILE="${COM}/state/label"
 if [ ! -f "$LABEL_FILE" ]; then
@@ -36,11 +41,11 @@ if [ ${#connectedDevices[@]} -eq 0 ]; then
 fi
 
 case "$1" in
-    open) command -v bluetuith >/dev/null 2>&1 && $TERM -e bluetuith >/dev/null ;;
-    toggle) bluetoothctl power $([ $((1 - state)) -eq 1 ] && echo "on" || echo "off") >/dev/null ;;
-    reset) echo -1 > "$LABEL_FILE" ;;
-    cycle_up) echo $(( (currentIndex + 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE" ;;
-    cycle_down) echo $(( (currentIndex - 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE" ;;
+    open)     ${COM}/actions/open ;;
+    toggle)   ${COM}/actions/toggle --state=${state} ;;
+    reset)    ${COM}/actions/reset      --LABEL_FILE=${LABEL_FILE} ;;
+    cycle_up) ${COM}/actions/cycle_up   --LABEL_FILE=${LABEL_FILE} --currentIndex=${currentIndex} --connectedDevices=${connectedDevices} ;;
+    cycle_down) ${COM}/actions/cycle_up --LABEL_FILE=${LABEL_FILE} --currentIndex=${currentIndex} --connectedDevices=${connectedDevices} ;;
     *) ;;
 esac
 

@@ -45,11 +45,12 @@ get_sink_icon() {
 }
 
 case "$1" in
-    volume_jump)  ${COM}/actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --icon="$(get_sink_icon)" ;;
-    volume_up)    ${COM}/actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
-    volume_down)  ${COM}/actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
-    mute)         ${COM}/actions/mute            --sink=${default_sink} --volume=$(get_volume) ;;
-    toggle)       ${COM}/actions/cycle_output ;;
+  volume_jump)  ${COM}/actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --icon="$(get_sink_icon)" ;;
+  volume_up)    ${COM}/actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
+  volume_down)  ${COM}/actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
+  mute)         ${COM}/actions/mute            --sink=${default_sink} --volume=$(get_volume) ;;
+  toggle)       ${COM}/actions/cycle_output ;;
+  *) ;;
 esac
 
 if ! pgrep -x wireplumber >/dev/null; then

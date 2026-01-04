@@ -22,7 +22,7 @@ home="$(df -h --output=${format} /home | tail -1)"
 
 case "$1" in
   toggle) ${COM}/actions/toggle --value=${space_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
-    *) ;;
+  *) ;;
 esac
 
 echo "<fc=${color}>  ${root} /${home}</fc>${SEP}"
