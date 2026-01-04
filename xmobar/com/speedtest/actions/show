@@ -3,22 +3,23 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --OUTPUT_FILE=*) OUTPUT_FILE="${arg#*=}" ;;
+    --isp=*)       isp="${arg#*=}" ;;
+    --down=*)      down="${arg#*=}" ;;
+    --up=*)        up="${arg#*=}" ;;
+    --timestamp=*) timestamp="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
+age=$(( $(date +%s) - timestamp ))
 
-# Build xmobar-friendly line with relative time
-result=$(awk -F'|' '
-{
-  age = systime() - $4
-  if (age < 60)       ago = age "s ago"
-  else if (age < 3600) ago = int(age/60) "m ago"
-  else                ago = int(age/3600) "h ago"
+if (( age < 60 )); then
+  ago="${age}s ago"
+elif (( age < 3600 )); then
+  ago="$(( age / 60 ))m ago"
+else
+  ago="$(( age / 3600 ))h ago"
+fi
 
-  printf "󰖩 %s \n\n↓ %s Mbits/s\n↑ %s Mbits/s\n(%s)\n", $1, $2, $3, ago
-}' "$OUTPUT_FILE")
-
-
-notify-send "${result}"
+notify-send "$(printf "󰖩  %s\n\n↓ %s Mbits/s\n↑ %s Mbits/s\n(%s)" \
+  "$isp" "$down" "$up" "$ago")"

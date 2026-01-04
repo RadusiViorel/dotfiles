@@ -2,6 +2,7 @@
 
 
 source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 if ! command -v speedtest >/dev/null 2>&1; then
@@ -10,34 +11,35 @@ if ! command -v speedtest >/dev/null 2>&1; then
 fi
 
 COM="${HOME}/.config/xmobar/com/speedtest"
-LOADING_FILE="${COM}/state/loading"
-OUTPUT_FILE="${COM}/state/value"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
-[[ -f "$LOADING_FILE" ]] || echo 0 > "$LOADING_FILE"
+__loading="speedtest_loading"
+__isp="speedtest_isp"
+__up="speedtest_up"
+__down="speedtest_down"
+__timestamp="speedtest_timestamp"
+
+now=$(date +%s)
+grep -q "^$__isp=" "$STATE_FILE"       || ( echo "$__isp=UNKNOWN" >> "$STATE_FILE" && speedtest_isp="UNKNOWN" )
+grep -q "^$__up=" "$STATE_FILE"        || ( echo "$__up=0" >> "$STATE_FILE" && speedtest_up=0 )
+grep -q "^$__down=" "$STATE_FILE"      || ( echo "$__down=0" >> "$STATE_FILE" && speedtest_down=0 )
+grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(($now - 3601 ))" >> "$STATE_FILE" && speedtest_timestamp=$(($now - 3601 ))  )
+grep -q "^$__loading=" "$STATE_FILE"   || ( echo "$__loading=0" >> "$STATE_FILE" && speedtest_loading=0 )
 
 case "$1" in
-  show) ${COM}/actions/show --OUTPUT_FILE=${OUTPUT_FILE} ;;
-  test) ${COM}/actions/test --OUTPUT_FILE=${OUTPUT_FILE} --LOADING_FILE=${LOADING_FILE} ;;
+  show) ${COM}/actions/show --isp="${speedtest_isp}" --down=${speedtest_down} --up=${speedtest_up} --timestamp=${speedtest_timestamp} ;;
+  test) ${COM}/actions/test --STATE_FILE=${STATE_FILE} --ISP_KEY=${__isp} --UP_KEY=${__up} --DOWN_KEY=${__down} --TIMESTAMP_KEY=${__timestamp} --LOADING_KEY=${__loading};;
   *) ;;
 esac
 
-is_loading=$(< "$LOADING_FILE")
-
-if (( is_loading == 0 )); then
+if (( speedtest_loading == 0 )); then
   echo "󰾆${SEP}"
 fi
 
-if (( is_loading == 1 )); then
+if (( speedtest_loading == 1 )); then
   echo "<fc=${COLOR_INFO}>  Testing... 󰓅 </fc>${SEP}"
 fi
 
-if [[ -f "$OUTPUT_FILE" ]]; then
-  last_ts=$(awk -F'|' '{print $4}' "$OUTPUT_FILE")
-else
-  last_ts=0
-fi
-
-now=$(date +%s)
-if (( now - last_ts >= 3600 )); then
-  $(${COM}/scripts/runner --OUTPUT_FILE=${OUTPUT_FILE} &)
+if (( now - speedtest_timestamp >= 3600 )); then
+ $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --ISP_KEY=${__isp} --UP_KEY=${__up} --DOWN_KEY=${__down} --TIMESTAMP_KEY=${__timestamp} &)
 fi

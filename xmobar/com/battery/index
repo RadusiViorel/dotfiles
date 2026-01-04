@@ -56,7 +56,7 @@ esac
 
 if [[ "$state" == "Full" ]]; then
   echo "${SEP}"
-  exit
+  exit 0
 fi
 
 if [[ "$state" == "Charging" ]]; then
