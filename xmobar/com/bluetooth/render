@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/render"
+
+COM="${HOME}/.config/xmobar/com/bluetooth/index"
+
+xmobar_actions "$COM" \
+  "1:open" \
+  "2:toggle" \
+  "3:reset" \
+  "4:cycle_up" \
+  "5:cycle_down"

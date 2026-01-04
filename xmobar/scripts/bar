@@ -4,9 +4,17 @@ COM="${HOME}/.config/xmobar/com"
 
 components=(
   "capslock"
+  "updates"
   "volume"
-  "page"
+  "brightness"
+  "bluetooth"
+  "battery"
+  "cpu_temp"
+  "space"
+  "network"
   "speedtest"
+  "rofi_theme"
+  "page"
   "calendar"
   "power"
 )
