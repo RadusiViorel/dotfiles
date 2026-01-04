@@ -10,7 +10,7 @@ dependencies :
 
 executables :
   xmobar:
-    main: /home/radusiviorel/.config/xmobar/xmobar.hs
+    main: /home/radusiviorel/.config/xmobar/xmobar2.hs
     ghc-options:
       - -threaded
       - -rtsopts

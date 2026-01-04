@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/render"
+
+COM="${HOME}/.config/xmobar/com/capslock/index"
+
+xmobar_actions "$COM"

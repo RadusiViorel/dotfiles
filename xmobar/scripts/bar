@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+COM="${HOME}/.config/xmobar/com"
+
+components=(
+  "capslock"
+  "volume"
+  "page"
+  "speedtest"
+  "calendar"
+  "power"
+)
+
+bar=""
+for c in "${components[@]}"; do
+  bar+="$("$COM/$c/render")"
+done
+
+printf '%s\n' "$bar"
