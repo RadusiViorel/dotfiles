@@ -1,10 +1,13 @@
-
-updates_timestamp=1767542906
-updates_count=0
+updates_timestamp=1767636864
+updates_count=4
 speedtest_isp="Digi Romania"
-speedtest_up=212.16
-speedtest_down=212.16
-speedtest_timestamp=1767544265
+speedtest_up=48.90
+speedtest_down=48.90
+speedtest_timestamp=1767601041
 speedtest_loading=0
 calendar_toggle=0
-space_toggle=0
+space_toggle=1
+vpn_toggle=0
+vpn_loading=0
+vpn_spinner=5
+vpn_pid=15334

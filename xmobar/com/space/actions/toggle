@@ -10,8 +10,5 @@ for arg in "$@"; do
   esac
 done
 
-if [[ "$value" == 0 ]]; then
-    sed -i "s/^$KEY=.*/$KEY=1/" "$STATE_FILE"
-else
-    sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
-fi
+new_value=$(( ! value ))
+sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"

@@ -11,6 +11,7 @@ components=(
   "battery"
   "cpu_temp"
   "space"
+  "vpn"
   "network"
   "speedtest"
   "rofi_theme"

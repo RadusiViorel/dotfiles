@@ -12,5 +12,4 @@ done
 
 $TERM -e bash -c "echo -e '$package_list \n Updated $count packages:\n'; sudo xbps-install -Su; echo; read -p 'Press enter to exit...'"
 
-
 sed -i "s/^$COUNT_KEY=.*/$COUNT_KEY=0/" "$STATE_FILE"

@@ -6,18 +6,14 @@ OPTIONS=(
   "󰗽  Logout"
 )
 
-
 CHOICE=$(printf "%s\n" "${OPTIONS[@]}" | rofi -dmenu -i -p "Power Options")
 ACTION=$(echo "$CHOICE" | sed 's/^[^ ]*  //')
 
 case "$ACTION" in
   "Shutdown")
-    doas $(which poweroff)
-    ;;
+    doas $(which poweroff) ;;
   "Restart")
-    doas $(which reboot)
-    ;;
+    doas $(which reboot) ;;
   "Logout")
-    pkill X
-    ;;
+    pkill X ;;
 esac

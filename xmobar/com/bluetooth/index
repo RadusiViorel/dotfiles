@@ -19,7 +19,7 @@ if [ ! -f "$LABEL_FILE" ]; then
   echo -1 > "$LABEL_FILE"
 fi
 
-currentIndex=$(cat "$LABEL_FILE")
+currentIndex=$(< "$LABEL_FILE")
 
 state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
 

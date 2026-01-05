@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
+
+COM="${HOME}/.config/xmobar/com/vpn"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+VPN_CONF="${HOME}/Downloads/popcash.conf"
+
+__toggle="vpn_toggle"
+__loading="vpn_loading"
+__spinner="vpn_spinner"
+__pid="vpn_pid"
+grep -q "^$__toggle"  "$STATE_FILE" || ( echo "$__toggle=0"  >> "$STATE_FILE" && vpn_toggle=0)
+grep -q "^$__loading" "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && vpn_loading=0)
+grep -q "^$__spinner" "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && vpn_spinner=0)
+grep -q "^$__pid"     "$STATE_FILE" || ( echo "$__pid=-1"     >> "$STATE_FILE" && vpn_pid=-1)
+
+case "$1" in
+  up)   ${COM}/actions/up   --STATE_FILE=${STATE_FILE} --TOGGLE_KEY=${__toggle} --LOADING_KEY=${__loading} --PID_KEY=${__pid} --CONF_FILE=${VPN_CONF} ;;
+  down) ${COM}/actions/down --STATE_FILE=${STATE_FILE} --TOGGLE_KEY=${__toggle} --LOADING_KEY=${__loading} ;;
+  *) ;;
+esac
+
+if (( vpn_loading == 1 )); then
+  spinner_icons=(      )
+  idx=$(( ( vpn_spinner + 1 ) % ${#spinner_icons[@]} ))
+
+  echo "$idx" > "$SPINNER_FILE"
+  sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
+
+  echo "${spinner_icons[$idx]} Connecting... 󰇠 ${SEP}"
+  exit 0
+fi
+
+colors=(${COLOR_MUTE} ${COLOR_OK})
+icons=(󰯄  󰦝)
+
+echo "<fc=${colors[vpn_toggle]}>${icons[vpn_toggle]}</fc>${SEP}"

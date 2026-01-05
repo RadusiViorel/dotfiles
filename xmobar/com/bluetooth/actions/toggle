@@ -8,4 +8,5 @@ for arg in "$@"; do
   esac
 done
 
-bluetoothctl power $([ $((1 - state)) -eq 1 ] && echo "on" || echo "off") >/dev/null
+power=(on off)
+bluetoothctl power "${power[state]}" >/dev/null
