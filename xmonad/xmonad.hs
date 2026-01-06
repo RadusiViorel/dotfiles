@@ -15,10 +15,14 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.WindowNavigation
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
+
 import XMonad.Actions.MouseResize
+import XMonad.Actions.WithAll (killAll)
 
 import XMonad.Actions.TiledWindowDragging
 import XMonad.Layout.DraggingVisualizer
+
+import Control.Monad (when, unless)
 
 
 import XMonad.Hooks.ServerMode
@@ -288,6 +292,7 @@ myKeys conf = M.fromList $
     [ ((leader .|. shiftMask, xK_f), sendMessage $ Toggle NBFULL)
     , ((leader, xK_f), sendMessage TL.ToggleLayout )
     , ((leader, xK_grave), sendMessage NextLayout)
+    , ((leader, xK_t), withFocused toggleCenterFloat)
     ]
 
     ++
@@ -330,7 +335,24 @@ myKeys conf = M.fromList $
     ]
 
 myMouseBindings (XConfig {modMask = modm}) = M.fromList
-    [ ((modm, button1), dragWindow)
-    , ((modm, button2), \w -> focus w >> killWindow w)
+    [ ((modm, button1), \w -> do
+        floats <- gets (W.floating . windowset)
+        if w `M.member` floats then mouseResizeWindow w else dragWindow w
+    )
+    , ((modm .|. shiftMask, button1), \w -> do
+        floats <- gets (W.floating . windowset)
+        when (w `M.member` floats) $ mouseMoveWindow w
+      )
+
+    , ((modm              , button2), \w -> focus w >> killWindow w)
+    , ((modm .|. shiftMask, button2), \_ -> killAll)
+
     , ((modm, button3), \_ -> sendMessage $ Toggle NBFULL)
     ]
+
+toggleCenterFloat :: Window -> X ()
+toggleCenterFloat w = do
+  floats <- gets (W.floating . windowset)
+  if w `M.member` floats
+    then windows (W.sink w)  -- send back to tiling
+    else windows (W.float w (W.RationalRect 0.1 0.1 0.8 0.8))  -- float & center
