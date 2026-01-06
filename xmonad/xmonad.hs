@@ -17,6 +17,7 @@ import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 
 import XMonad.Actions.MouseResize
+import XMonad.Actions.FloatSnap
 import XMonad.Actions.WithAll (killAll)
 
 import XMonad.Actions.TiledWindowDragging
@@ -39,6 +40,7 @@ import XMonad.Util.ClickableWorkspaces
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.WorkspaceCompare (getSortByIndex, filterOutWs)
 
+import qualified XMonad.Actions.ConstrainedResize as Sqr
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified XMonad.Layout.ToggleLayouts  as TL
@@ -337,17 +339,32 @@ myKeys conf = M.fromList $
 myMouseBindings (XConfig {modMask = modm}) = M.fromList
     [ ((modm, button1), \w -> do
         floats <- gets (W.floating . windowset)
-        if w `M.member` floats then mouseResizeWindow w else dragWindow w
+        if w `M.member` floats
+          then Sqr.mouseResizeWindow w False
+            >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)
+          else dragWindow w
+    )
+    , ((modm .|. controlMask, button1), \w -> do
+        floats <- gets (W.floating . windowset)
+        when (w `M.member` floats)
+          $ Sqr.mouseResizeWindow w True
+            >> ifClick (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)
     )
     , ((modm .|. shiftMask, button1), \w -> do
         floats <- gets (W.floating . windowset)
-        when (w `M.member` floats) $ mouseMoveWindow w
+        when (w `M.member` floats)
+          $ mouseMoveWindow w
+            >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)
       )
 
     , ((modm              , button2), \w -> focus w >> killWindow w)
     , ((modm .|. shiftMask, button2), \_ -> killAll)
 
     , ((modm, button3), \_ -> sendMessage $ Toggle NBFULL)
+
+    , ((modm, button4), \_ -> sendMessage Expand)
+
+    , ((modm, button5), \_ -> sendMessage Shrink)
     ]
 
 toggleCenterFloat :: Window -> X ()
