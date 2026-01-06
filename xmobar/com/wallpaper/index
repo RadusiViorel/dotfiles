@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+COM="${HOME}/.config/xmobar/com/wallpaper"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+__lock="wallpaper_lock"
+__image="wallpaper_image"
+
+grep -q "^$__lock"  "$STATE_FILE" || ( echo "$__lock=0" >> "$STATE_FILE" && wallpaper_lock=0)
+grep -q "^$__image" "$STATE_FILE" || ( echo "$__image=" >> "$STATE_FILE" && wallpaper_image="")
+
+case "$1" in
+    nitrogen)   ${COM}/actions/nitrogen ;;
+    lock_image) ${COM}/actions/lock_image --STATE_FILE=${STATE_FILE} --LOCK_KEY=${__lock} --value=${wallpaper_lock} ;;
+    change)     ${COM}/actions/change     --STATE_FILE=${STATE_FILE} --IMAGE_KEY=${__image} --selected_image=${wallpaper_image} --is_locked=${wallpaper_lock} ;;
+    *) ;;
+esac
+
+colors=(${COLOR_WHITE} ${COLOR_WARNING})
+icon="󰸉"
+
+echo "<fc=${colors[wallpaper_lock]}>${icon}</fc>${SEP}"

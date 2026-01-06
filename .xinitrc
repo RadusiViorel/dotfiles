@@ -11,7 +11,7 @@ if [ -z "$XDG_RUNTIME_DIR" ]; then
 fi
 
 ${HOME}/.config/_scripts/brightness_on_boot 8 20 &
-${HOME}/.config/_scripts/bg &
+${HOME}/.config/xmobar/com/wallpaper/index change &
 
 ${HOME}/.config/xob/generate.sh &
 
@@ -20,5 +20,6 @@ pipewire-pulse &
 wireplumber &
 
 dunst &
+#picom -b &
 
 exec ${HOME}/.local/bin/xmonad

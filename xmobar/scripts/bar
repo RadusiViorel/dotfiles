@@ -15,6 +15,7 @@ components=(
   "network"
   "speedtest"
   "rofi_theme"
+  "wallpaper"
   "page"
   "calendar"
   "power"

@@ -1,7 +1,8 @@
-#!/usr/bin/env bash
+#!te/usr/bin/env bash
 
 SEP="  "
 
+COLOR_WHITE=${XMB_COLOR_WHITE:-"#ffffff"}
 COLOR_CRITIC=${XMB_COLOR_CRITIC:-"#d94141"}
 COLOR_DANGER=${XMB_COLOR_DANGER:-"#f58989"}
 COLOR_WARNING=${XMB_COLOR_WARNING:-"#e6c15c"}
