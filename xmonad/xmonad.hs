@@ -17,6 +17,10 @@ import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Actions.MouseResize
 
+import XMonad.Actions.TiledWindowDragging
+import XMonad.Layout.DraggingVisualizer
+
+
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, ToggleStruts(..))
@@ -196,6 +200,7 @@ myLogHook =
 
 myLayouts =
       screenCornerLayoutHook
+    $ draggingVisualizer
     $ mkToggle (NBFULL ?? EOT)
     $ avoidStruts
     $ smartBorders
@@ -325,9 +330,7 @@ myKeys conf = M.fromList $
     ]
 
 myMouseBindings (XConfig {modMask = modm}) = M.fromList
-    [ -- mod + left click → resize window
-      ((modm, button1), \w -> focus w >> mouseResizeWindow w)
-
-      -- mod + middle click → pull (move) window
-    , ((modm, button2), \w -> focus w >> windows W.shiftMaster)
+    [ ((modm, button1), dragWindow)
+    , ((modm, button2), \w -> focus w >> killWindow w)
+    , ((modm, button3), \_ -> sendMessage $ Toggle NBFULL)
     ]

@@ -40,6 +40,6 @@ if (( speedtest_loading == 1 )); then
   echo "<fc=${COLOR_INFO}>  Testing... 󰓅 </fc>${SEP}"
 fi
 
-if (( now - speedtest_timestamp >= 3600 )); then
+if (( now - speedtest_timestamp >= 7200 )); then
  $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --ISP_KEY=${__isp} --UP_KEY=${__up} --DOWN_KEY=${__down} --TIMESTAMP_KEY=${__timestamp} &)
 fi
