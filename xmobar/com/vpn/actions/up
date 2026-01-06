@@ -6,26 +6,20 @@ for arg in "$@"; do
     --STATE_FILE=*)  STATE_FILE="${arg#*=}" ;;
     --TOGGLE_KEY=*)  TOGGLE_KEY="${arg#*=}" ;;
     --LOADING_KEY=*) LOADING_KEY="${arg#*=}" ;;
-    --PID_KEY=*)     PID_KEY="${arg#*=}" ;;
     --CONF_FILE=*)   CONF_FILE="${arg#*=}" ;;
+    --PID_FILE=*)    PID_FILE="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
 sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
 
-doas /usr/sbin/openvpn --config "$CONF_FILE" --daemon >/dev/null 2>&1
+doas /usr/sbin/openvpn --config "$CONF_FILE" --daemon --writepid $PID_FILE >/dev/null 2>&1
 
 # Wait for tun0 to appear (VPN interface)
 while ! ip a | grep -q tun0; do
   sleep 0.4
 done
-
-sleep 1
-VPN_PID=$(pgrep -f $CONF_FILE | head -n1)
-
-sed -i "s/^$PID_KEY=.*/$PID_KEY=$VPN_PID/" "$STATE_FILE"
-
 
 sed -i "s/^$TOGGLE_KEY=.*/$TOGGLE_KEY=1/" "$STATE_FILE"
 sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"

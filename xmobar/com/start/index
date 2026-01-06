@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+
+echo "<fc=${COLOR_OK}></fc> ${SEP}"
