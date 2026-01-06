@@ -2,7 +2,6 @@
 
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/state"
-source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 COM="${HOME}/.config/xmobar/com/wallpaper"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
@@ -18,6 +17,8 @@ case "$1" in
     change)     ${COM}/actions/change     --STATE_FILE=${STATE_FILE} --IMAGE_KEY=${__image} --selected_image=${wallpaper_image} --is_locked=${wallpaper_lock} ;;
     *) ;;
 esac
+
+source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 colors=(${COLOR_WHITE} ${COLOR_WARNING})
 icon="󰸉"
