@@ -206,6 +206,7 @@ myLogHook =
 
 myLayouts =
       screenCornerLayoutHook
+    $ renamed [Replace ""]
     $ draggingVisualizer
     $ mkToggle (NBFULL ?? EOT)
     $ avoidStruts
