@@ -98,7 +98,7 @@ scratchpads =
   [ NS "term"
        "alacritty --class scratchpad -e tmux new-session -A -s scratch"
        (resource =? "scratchpad")
-       (customFloating $ W.RationalRect 0.005 0.014 0.99 0.983)
+       (customFloating $ W.RationalRect 0.005 0.028 0.99 0.967)
   ]
 
 scratchPadBorderColor :: String
