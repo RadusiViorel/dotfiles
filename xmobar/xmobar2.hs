@@ -19,8 +19,7 @@ main :: IO ()
 main = xmobar defaultConfig
   { font = "JetBrainsMono Nerd Font 12"
   , additionalFonts = [
-    , "JetBrainsMono Nerd Font 12"
-    , "JetBrainsMono Nerd Font 16"
+    "JetBrainsMono Nerd Font 16"
   ]
   , bgColor = "black"
   , fgColor = "white"
