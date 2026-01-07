@@ -155,12 +155,12 @@ mySB = statusBarProp "${HOME}/.local/bin/xmobar" (clickablePP myPP)
 
 myPP :: PP
 myPP = def
-  { ppCurrent = xmobarColor "#98be65" "" . clickWorkspaces
-  , ppVisible = xmobarColor "#98be65" "" . clickWorkspaces
-  , ppHidden  = xmobarColor "#bbbbbb" "" . clickWorkspaces
+  { ppCurrent         = xmobarColor "#98be65" "" . xmobarFont 1 . clickWorkspaces
+  , ppVisible         = xmobarColor "#98be65" "" . xmobarFont 1 . clickWorkspaces
+  , ppHidden          = xmobarColor "#bbbbbb" "" . xmobarFont 1 . clickWorkspaces
   , ppHiddenNoWindows = xmobarColor "#666666" ""
-  , ppWsSep   = "    "
-  , ppSep     = "  " ++ sep ++ "  "
+  , ppWsSep   = "  "
+  , ppSep     = " " ++ sep ++ " "
   , ppTitle   = xmobarColor "#ffffff" "" . shorten 60
   , ppSort = fmap (filterOutWs [scratchpadWorkspaceTag] .) getSortByIndex
   }

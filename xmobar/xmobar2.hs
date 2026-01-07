@@ -17,7 +17,11 @@ click cmd action btn content =
 
 main :: IO ()
 main = xmobar defaultConfig
-  { font = "-misc-fixed-*-*-*-*-*-16-*-*-*-*-*-*-*"
+  { font = "JetBrainsMono Nerd Font 12"
+  , additionalFonts = [
+    , "JetBrainsMono Nerd Font 12"
+    , "JetBrainsMono Nerd Font 16"
+  ]
   , bgColor = "black"
   , fgColor = "white"
   , border = TopB
