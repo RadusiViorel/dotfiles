@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --VALUE_KEY=*)     VALUE_KEY="${arg#*=}"     ;;
+    --TIMESTAMP_KEY=*) TIMESTAMP_KEY="${arg#*=}" ;;
+    --STATE_FILE=*)    STATE_FILE="${arg#*=}"    ;;
+    *) echo "Unknown argument: $arg" ; exit 1    ;;
+  esac
+done
+
+now=$(date +%s)
+
+# Nerd Font weather icons
+ICON_SUN="󰖙"
+ICON_PARTLY="󰖕"
+ICON_CLOUD="󰖐"
+ICON_RAIN="󰖗"
+ICON_DRIZZLE="󰖖"
+ICON_SNOW="󰖘"
+ICON_STORM="󰙾"
+ICON_FOG="󰖑"
+ICON_WIND="󰖑"
+ICON_UNKNOWN="󰼯"
+
+# Auto-location via IP
+raw=$(curl -sf "https://wttr.in/?format=%C|%t")
+
+if [[ -z "$raw" ]]; then
+  sed -i "s/^$VALUE_KEY=.*/$VALUE_KEY=\"${ICON_UNKNOWN}\"/" "$STATE_FILE"
+  sed -i "s/^$TIMESTAMP_KEY=.*/$TIMESTAMP_KEY=${now}/" "$STATE_FILE"
+  exit 0
+fi
+
+condition="${raw%%|*}"
+temp="${raw##*|}"
+
+# Remove °C (and any degree symbol)
+temp=$(echo "$temp" | sed 's/C.*//')
+
+cond=$(echo "$condition" | tr '[:upper:]' '[:lower:]')
+
+# Map condition → icon
+case "$cond" in
+    *sun*|*clear*)       icon="$ICON_SUN"     ;;
+    *partly*)            icon="$ICON_PARTLY"  ;;
+    *cloud*|*overcast*)  icon="$ICON_CLOUD"   ;;
+    *drizzle*)           icon="$ICON_DRIZZLE" ;;
+    *rain*)              icon="$ICON_RAIN"    ;;
+    *snow*)              icon="$ICON_SNOW"    ;;
+    *storm*|*thunder*)   icon="$ICON_STORM"   ;;
+    *fog*|*mist*|*haze*) icon="$ICON_FOG"     ;;
+    *wind*)              icon="$ICON_WIND"    ;;
+    *)                   icon="$ICON_UNKNOWN" ;;
+esac
+
+output="${icon}  ${temp}"
+
+sed -i "s/^$VALUE_KEY=.*/$VALUE_KEY=\"${output}\"/"  "$STATE_FILE"
+sed -i "s/^$TIMESTAMP_KEY=.*/$TIMESTAMP_KEY=${now}/" "$STATE_FILE"
+
+exit 0

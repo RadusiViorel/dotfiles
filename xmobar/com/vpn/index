@@ -25,8 +25,6 @@ esac
 if (( vpn_loading == 1 )); then
   spinner_icons=(      )
   idx=$(( ( vpn_spinner + 1 ) % ${#spinner_icons[@]} ))
-
-  echo "$idx" > "$SPINNER_FILE"
   sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
 
   echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]}  Connecting  󰇠</fc>${SEP}"

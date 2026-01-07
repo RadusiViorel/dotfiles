@@ -16,6 +16,7 @@ components=(
   "speedtest"
   "rofi_theme"
   "wallpaper"
+  "weather"
   "page"
   "calendar"
   "power"

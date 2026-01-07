@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/state"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
@@ -13,18 +12,20 @@ fi
 COM="${HOME}/.config/xmobar/com/speedtest"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
+now=$(date +%s)
+
 __loading="speedtest_loading"
+__spinner="speedtest_spinner"
 __isp="speedtest_isp"
 __up="speedtest_up"
 __down="speedtest_down"
 __timestamp="speedtest_timestamp"
-
-now=$(date +%s)
-grep -q "^$__isp=" "$STATE_FILE"       || ( echo "$__isp=UNKNOWN" >> "$STATE_FILE" && speedtest_isp="UNKNOWN" )
-grep -q "^$__up=" "$STATE_FILE"        || ( echo "$__up=0" >> "$STATE_FILE" && speedtest_up=0 )
-grep -q "^$__down=" "$STATE_FILE"      || ( echo "$__down=0" >> "$STATE_FILE" && speedtest_down=0 )
+grep -q "^$__isp="       "$STATE_FILE" || ( echo "$__isp=UNKNOWN" >> "$STATE_FILE" && speedtest_isp="UNKNOWN" )
+grep -q "^$__up="        "$STATE_FILE" || ( echo "$__up=0" >> "$STATE_FILE" && speedtest_up=0 )
+grep -q "^$__down="      "$STATE_FILE" || ( echo "$__down=0" >> "$STATE_FILE" && speedtest_down=0 )
 grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(($now - 3601 ))" >> "$STATE_FILE" && speedtest_timestamp=$(($now - 3601 ))  )
-grep -q "^$__loading=" "$STATE_FILE"   || ( echo "$__loading=0" >> "$STATE_FILE" && speedtest_loading=0 )
+grep -q "^$__loading="   "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && speedtest_loading=0 )
+grep -q "^$__spinner"    "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && speedtest_spinner=0 )
 
 case "$1" in
   show) ${COM}/actions/show --isp="${speedtest_isp}" --down=${speedtest_down} --up=${speedtest_up} --timestamp=${speedtest_timestamp} ;;
@@ -37,9 +38,12 @@ if (( speedtest_loading == 0 )); then
 fi
 
 if (( speedtest_loading == 1 )); then
-  echo "<fc=${COLOR_INFO}>  Testing... 󰓅 </fc>${SEP}"
+  spinner_icons=(      )
+  idx=$(( ( speedtest_spinner + 1 ) % ${#spinner_icons[@]} ))
+  sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
+  echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]}  Testing... 󰓅 </fc>${SEP}"
 fi
 
 if (( now - speedtest_timestamp >= 7200 )); then
- $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --ISP_KEY=${__isp} --UP_KEY=${__up} --DOWN_KEY=${__down} --TIMESTAMP_KEY=${__timestamp} &)
+ $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --ISP_KEY=${__isp} --UP_KEY=${__up} --DOWN_KEY=${__down} --TIMESTAMP_KEY=${__timestamp} ) &
 fi

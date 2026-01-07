@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+COM="${HOME}/.config/xmobar/com/weather"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+__value="weather_value"
+__timestamp="weather_timestamp"
+
+now=$(date +%s)
+
+grep -q "^$__value"      "$STATE_FILE" || ( echo "$__value=" >> "$STATE_FILE" && weather_value="" )
+grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(( $now - 3601 ))" >> "$STATE_FILE" && weather_timestamp=$(($now - 3601 ))  )
+
+# case "$1" in
+#   fetch) ${COM}/actions/fetch ;;
+#   *) ;;
+# esac
+
+if (( now - speedtest_timestamp >= 3600 )); then
+ $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${__timestamp} --VALUE_KEY=${__value}  ) &
+fi
+
+echo $weather_value${SEP}
