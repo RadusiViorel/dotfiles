@@ -41,7 +41,7 @@ if (( speedtest_loading == 1 )); then
   spinner_icons=(      )
   idx=$(( ( speedtest_spinner + 1 ) % ${#spinner_icons[@]} ))
   sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
-  echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]}  Testing... 󰓅 </fc>${SEP}"
+  echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]} Testing 󰓅</fc>${SEP}"
 fi
 
 if (( now - speedtest_timestamp >= 7200 )); then

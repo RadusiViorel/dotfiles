@@ -5,17 +5,16 @@ source "${HOME}/.config/xmobar/scripts/state"
 
 COM="${HOME}/.config/xmobar/com/updates"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+now=$(date +%s)
+WARNING_COUNT=15
+CACHE_TTL=3600 #one hour
+
 __timestamp="updates_timestamp"
 __count="updates_count"
+grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(($now - 3601 ))" >> "$STATE_FILE" && updates_timestamp=$(($now - 3601 ))  )
+grep -q "^$__count="     "$STATE_FILE" || ( echo "$__count=0"     >> "$STATE_FILE" && updates_count=0 )
 
-grep -q "^$__timestamp" "$STATE_FILE" || echo "$__timestamp=0" >> "$STATE_FILE"
-grep -q "^$__count"     "$STATE_FILE" || echo "$__count=0"     >> "$STATE_FILE"
-
-
-WARNING_COUNT=15
-
-CACHE_TTL=3600 #one hour
-now=$(date +%s)
 
 # Refresh cache if older than 1 minute
 if (( now - updates_timestamp >= CACHE_TTL )); then
@@ -32,10 +31,9 @@ case "$1" in
   *) ;;
 esac
 
-output="  $updates_count"
+output=" $updates_count"
+color=${COLOR_WHITE}
 
-if (( updates_count >= WARNING_COUNT )); then
-    echo "<fc=${COLOR_WARNING}>${output}</fc>${SEP}"
-else
-    echo "$output ${SEP}"
-fi
+[[ $updates_count -ge $WARNING_COUNT ]] && color=${COLOR_WARNING}
+
+echo "<fc=${color}>${output}</fc>${SEP}"

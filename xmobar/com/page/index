@@ -1,30 +1,19 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
 
-PAGE_FILE="$HOME/.config/xmobar/scripts/page/value"
+COM="${HOME}/.config/xmobar/com/page"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
-[[ -f "$PAGE_FILE" ]] || echo 1 > "$PAGE_FILE"
-
-page=$(< "$PAGE_FILE")
-
-toggle() {
-  if [[ "$page" == 2 ]]; then
-      echo 1 > "$PAGE_FILE"
-  else
-      echo 2 > "$PAGE_FILE"
-  fi
-}
-
+__number="page_number"
+grep -q "^$__number=" "$STATE_FILE" || ( echo "$__number=1" >> "$STATE_FILE" && page_number=1 )
 
 case "$1" in
-    toggle) toggle ;;
-    *) ;;
+  toggle) ${COM}/actions/toggle --value=${page_number} --STATE_FILE=${STATE_FILE} --KEY=${__number} ;;
+  *) ;;
 esac
 
-icon="󰨙"
-if(( page == 2 )); then
-  icon="󰔡"
-fi
+[[ $page_number -eq 2 ]] && icon="󰔡" || icon="󰨙"
 
 echo "${icon}${SEP}"

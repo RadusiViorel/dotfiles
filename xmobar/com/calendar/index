@@ -7,32 +7,29 @@ COM="${HOME}/.config/xmobar/com/calendar"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 __toggle="calendar_toggle"
 
-grep -q "^$__toggle=" "$STATE_FILE" || echo "$__toggle=0" >> "$STATE_FILE"
+grep -q "^$__toggle=" "$STATE_FILE" || ( echo "$__toggle=0" >> "$STATE_FILE" && calendar_toggle=0 )
 
 if ! command -v yad >/dev/null 2>&1; then
   echo "Warning: yad is not installed or not in PATH."
 fi
 
 case "$1" in
-  toggle) ${COM}/actions/toggle --value=${calendar_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
+  toggle)        ${COM}/actions/toggle --value=${calendar_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
   show_calendar) ${COM}/actions/show_calendar;;
   *) ;;
 esac
 
-format="%H:%M:%S"
-[[ calendar_toggle -eq 1 ]] && format="%d-%m-%Y"
-
 declare -A ICONS=(
-    [0]=""
-    [1]=""
-    [2]=""
-    [3]=""
-    [4]=""
-    [5]=""
-    [6]=""
-    [7]=""
-    [8]=""
-    [9]=""
+    [00]=""
+    [01]=""
+    [02]=""
+    [03]=""
+    [04]=""
+    [05]=""
+    [06]=""
+    [07]=""
+    [08]=""
+    [09]=""
     [10]=""
     [11]=""
     [12]="󱑊"
@@ -49,7 +46,8 @@ declare -A ICONS=(
     [23]="󱑉"
 )
 
-[[ calendar_toggle -eq 1 ]] && icon=" " || icon="${ICONS[$(date +%H)]}"
+[[ calendar_toggle -eq 1 ]] && format="%d-%m-%Y"        || format="%H:%M:%S"
+[[ calendar_toggle -eq 1 ]] && icon=" "                || icon="<fn=1>${ICONS[$(date +%H)]}</fn>"
 [[ calendar_toggle -eq 1 ]] && color="${COLOR_WARNING}" || color="${COLOR_OK}"
 
-echo "<fc=${color}>${icon}  $(date +"$format")</fc>${SEP}"
+echo "<fc=${color}>${icon} $(date +"$format")</fc>${SEP}"

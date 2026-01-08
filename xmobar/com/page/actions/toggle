@@ -10,5 +10,5 @@ for arg in "$@"; do
   esac
 done
 
-new_value=$(( ! value ))
+new_value=$(( value % 2 + 1 ))
 sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"

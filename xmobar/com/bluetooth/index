@@ -41,10 +41,10 @@ if [ ${#connectedDevices[@]} -eq 0 ]; then
 fi
 
 case "$1" in
-    open)     ${COM}/actions/open ;;
-    toggle)   ${COM}/actions/toggle --state=${state} ;;
-    reset)    ${COM}/actions/reset      --LABEL_FILE=${LABEL_FILE} ;;
-    cycle_up) ${COM}/actions/cycle_up   --LABEL_FILE=${LABEL_FILE} --currentIndex=${currentIndex} --connectedDevices=${connectedDevices} ;;
+    open)      ${COM}/actions/open ;;
+    toggle)    ${COM}/actions/toggle --state=${state} ;;
+    reset)     ${COM}/actions/reset     --LABEL_FILE=${LABEL_FILE} ;;
+    cycle_up)  ${COM}/actions/cycle_up  --LABEL_FILE=${LABEL_FILE} --currentIndex=${currentIndex} --connectedDevices=${connectedDevices} ;;
     cycle_down) ${COM}/actions/cycle_up --LABEL_FILE=${LABEL_FILE} --currentIndex=${currentIndex} --connectedDevices=${connectedDevices} ;;
     *) ;;
 esac

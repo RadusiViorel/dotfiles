@@ -10,19 +10,15 @@ __toggle="space_toggle"
 
 grep -q "^$__toggle=" "$STATE_FILE" || echo "$__toggle=0" >> "$STATE_FILE"
 
-color="#ffffff"
-format="avail"
-if [[ "$space_toggle" == 1 ]]; then
-  format="used"
-  color="${COLOR_WARNING}"
-fi
-
-root="$(df -h --output=${format} / | tail -1)"
-home="$(df -h --output=${format} /home | tail -1)"
-
 case "$1" in
   toggle) ${COM}/actions/toggle --value=${space_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
   *) ;;
 esac
 
-echo "<fc=${color}>  ${root} /${home}</fc>${SEP}"
+formats=("avail" "used")
+colors=(${COLOR_WHITE} ${COLOR_WARNING})
+
+root="$(df -h --output=${formats[$space_toggle]} /     | tail -1)"
+home="$(df -h --output=${formats[$space_toggle]} /home | tail -1)"
+
+echo "<fc=${colors[$space_toggle]}> ${root} /${home}</fc>${SEP}"
