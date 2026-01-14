@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+__index_device="bluetooth_index_device"
+
+grep -q "^$__index_device=" "$STATE_FILE" || ( echo "$__index_device=-1" >> "$STATE_FILE" && bluetooth_index_device=-1 )
 
 if ! command -v bluetoothctl >/dev/null 2>&1; then
   echo "Warning: bluetoothctl is not installed or not in PATH."
@@ -14,12 +19,7 @@ if ! command -v upower >/dev/null 2>&1; then
 fi
 
 COM="${HOME}/.config/xmobar/com/bluetooth"
-LABEL_FILE="${COM}/state/label"
-if [ ! -f "$LABEL_FILE" ]; then
-  echo -1 > "$LABEL_FILE"
-fi
 
-currentIndex=$(< "$LABEL_FILE")
 
 state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
 
@@ -31,25 +31,24 @@ timercolors=(${COLOR_CRITIC} ${COLOR_DANGER}  ${COLOR_WARNING} ${COLOR_OK})
 mapfile -t connectedDevices < <(
   bluetoothctl devices Connected | sed 's/^Device [A-F0-9:]* //'
 )
-
 if ! command -v bluetuith >/dev/null 2>&1; then
   echo "Warning: bluetuith is not installed or not in PATH."
 fi
 
 if [ ${#connectedDevices[@]} -eq 0 ]; then
-  echo -1 > "$LABEL_FILE"
+  sed -i "s/^$__index_device=.*/$__index_device=-1/" "$STATE_FILE"
 fi
 
 case "$1" in
     open)      ${COM}/actions/open ;;
-    toggle)    ${COM}/actions/toggle --state=${state} ;;
-    reset)     ${COM}/actions/reset     --LABEL_FILE=${LABEL_FILE} ;;
-    cycle_up)  ${COM}/actions/cycle_up  --LABEL_FILE=${LABEL_FILE} --currentIndex=${currentIndex} --connectedDevices=${connectedDevices} ;;
-    cycle_down) ${COM}/actions/cycle_up --LABEL_FILE=${LABEL_FILE} --currentIndex=${currentIndex} --connectedDevices=${connectedDevices} ;;
+    toggle)    ${COM}/actions/toggle    --state=${state} ;;
+    reset)     ${COM}/actions/reset     --STATE_FILE=${STATE_FILE} --KEY=${__index_device} ;;
+    cycle_up)  ${COM}/actions/cycle_up  --STATE_FILE=${STATE_FILE} --KEY=${__index_device} --currentIndex=${bluetooth_index_device} --count=${#connectedDevices[@]} ;;
+    cycle_down) ${COM}/actions/cycle_up --STATE_FILE=${STATE_FILE} --KEY=${__index_device} --currentIndex=${bluetooth_index_device} --count=${#connectedDevices[@]} ;;
     *) ;;
 esac
 
-if [ "$currentIndex" -eq -1 ]; then
+if [[ $bluetooth_index_device -eq -1 ]]; then
   connectedCount=${#connectedDevices[@]}
   label="  ${connectedCount} devices"
   if [ "$connectedCount" -eq 1 ]; then
@@ -58,7 +57,7 @@ if [ "$currentIndex" -eq -1 ]; then
     label=""
   fi
 else
-  percentage=$(upower --dump | awk -v name="${connectedDevices[$currentIndex]}" '
+  percentage=$(upower --dump | awk -v name="${connectedDevices[$bluetooth_index_device]}" '
       /^ *model:/ {
           # rebuild the model name after the colon
           $1=""; sub(/^ +/, "", $0)
@@ -82,7 +81,7 @@ else
       break
     fi
   done
-  label="  <fc=${outputColor}>$((currentIndex + 1))/${#connectedDevices[@]} ${connectedDevices[$currentIndex]} $percentage󰏰</fc>"
+  label="  <fc=${outputColor}>$((bluetooth_index_device + 1))/${#connectedDevices[@]} ${connectedDevices[$bluetooth_index_device]} $percentage󰏰</fc>"
 fi
 
 icons=("󰂲" "󰂰")

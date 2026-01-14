@@ -3,11 +3,14 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --currentIndex=*)     currentIndex="${arg#*=}" ;;
-    --connectedDevices=*) connectedDevices="${arg#*=}" ;;
-    --LABEL_FILE=*)       LABEL_FILE="${arg#*=}" ;;
-    *) echo "Unknown argument: $arg" ; exit 1 ;;
+    --currentIndex=*) currentIndex="${arg#*=}" ;;
+    --count=*)        count="${arg#*=}"        ;;
+    --STATE_FILE=*)   STATE_FILE="${arg#*=}"   ;;
+    --KEY=*)          KEY="${arg#*=}"          ;;
+    *) echo "Unknown argument: $arg" ; exit 1  ;;
   esac
 done
 
-echo $(( (currentIndex + 1 + ${#connectedDevices[@]}) % ${#connectedDevices[@]} )) > "$LABEL_FILE"
+val=$(( (currentIndex + 1 + ${count}) % ${count} ))
+
+sed -i "s/^$KEY=.*/$KEY=$val/" "$STATE_FILE"

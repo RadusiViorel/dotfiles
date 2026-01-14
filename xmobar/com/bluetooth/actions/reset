@@ -3,9 +3,10 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --LABEL_FILE=*) LABEL_FILE="${arg#*=}" ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
+    --KEY=*) KEY="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
-echo -1 > "$LABEL_FILE"
+sed -i "s/^$KEY=.*/$KEY=-1/" "$STATE_FILE"

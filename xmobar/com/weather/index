@@ -20,8 +20,8 @@ grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(( $now - 3601 )
 #   *) ;;
 # esac
 
-if (( now - speedtest_timestamp >= 3600 )); then
- $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${__timestamp} --VALUE_KEY=${__value}  ) &
+if (( now - weather_timestamp >= 3600 )); then
+ $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${__timestamp} --VALUE_KEY=${__value} ) &
 fi
 
-echo $weather_value${SEP}
+echo "<fc=${COLOR_INFO}>$weather_value</fc>${SEP}"
