@@ -3,14 +3,13 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --TRAFFIC_FILE=*) TRAFFIC_FILE="${arg#*=}" ;;
-    --show_traffic=*) show_traffic="${arg#*=}" ;;
+    --value=*)      value="${arg#*=}"      ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
+    --KEY=*)        KEY="${arg#*=}"        ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
 
-toggle=$((1 - show_traffic))
-echo "$toggle" > "$TRAFFIC_FILE"
-
-exit 0;
+new_value=$(( ! value ))
+sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"

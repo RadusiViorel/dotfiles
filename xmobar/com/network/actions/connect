@@ -3,13 +3,14 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --interface=*) interface="${arg#*=}" ;;
-    --LOADING_FILE=*) LOADING_FILE="${arg#*=}" ;;
+    --interface=*)  interface="${arg#*=}"  ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
+    --KEY=*)        KEY="${arg#*=}"        ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
-echo 1 > "$LOADING_FILE"
+sed -i "s/^$KEY=.*/$KEY=1/" "$STATE_FILE"
 
 # ---------------------------
 # 0. Trigger scan explicitly
@@ -52,12 +53,12 @@ done <<< "$scan_list"
 
 # Show the menu
 chosen=$(echo -en "$menu" | rofi -dmenu -p "Select Wi-Fi")
-[ -z "$chosen" ] && (echo 0 > "$LOADING_FILE") && exit 0
+[ -z "$chosen" ] && (sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE") && exit 0
 
 # Remove trailing '*' if present
 ssid="${chosen% 󰦕}"      # removes ' 󰦕' if present at the end
 ssid="${ssid%"${ssid##*[![:space:]]}"}"  # trims trailing whitespace
-[ -z "$ssid" ] && (echo 0 > "$LOADING_FILE") && exit 0
+[ -z "$ssid" ] && (sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE") && exit 0
 
 # ---------------------------
 # 4. Determine if known
@@ -71,13 +72,13 @@ nid=$(wpa_cli -i "$interface" list_networks \
 if [ -n "$nid" ]; then
   wpa_cli -i "$interface" enable_network "$nid" >/dev/null
   wpa_cli -i "$interface" select_network "$nid" >/dev/null
-  (echo 0 > "$LOADING_FILE")
+  sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
   exit 0
 fi
 
 # --- Ask for password ---
 password=$(rofi -dmenu -password -p "Password for $ssid")
-[ -z "$password" ] && (echo 0 > "$LOADING_FILE") && exit
+[ -z "$password" ] && (sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE") && exit
 
 # Create new network
 nid=$(wpa_cli -i "$interface" add_network | awk '{print $1}')
@@ -97,7 +98,7 @@ for i in {1..10}; do
     wpa_cli -i "$interface" save_config >/dev/null
     wpa_cli -i "$interface" select_network "$nid" >/dev/null
     notify-send "WiFi" "Connected to $ssid"
-    echo 0 > "$LOADING_FILE"
+    sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
     exit 0
   fi
   sleep 1
@@ -105,4 +106,5 @@ done
 
 notify-send "WiFi" "󱛅 ${ssid} error"
 wpa_cli -i "$interface" remove_network "$nid" >/dev/null
-echo 0 > "$LOADING_FILE"
+
+sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"

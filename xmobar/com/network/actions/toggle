@@ -3,17 +3,18 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --interface=*) interface="${arg#*=}" ;;
-    --ENABLED_FILE=*) ENABLED_FILE="${arg#*=}" ;;
-    --enabled=*) enabled="${arg#*=}" ;;
+    --interface=*)  interface="${arg#*=}"  ;;
+    --value=*)      value="${arg#*=}"      ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
+    --KEY=*)        KEY="${arg#*=}"        ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
-toggle=$((1 - enabled))
-echo "$toggle" > "$ENABLED_FILE"
+new_value=$(( ! value ))
+sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
 
-if [[ "$toggle" -eq 1 ]]; then
+if [[ "$new_value" -eq 1 ]]; then
     wpa_cli -i ${interface} reconnect
 else
     wpa_cli -i ${interface} disconnect

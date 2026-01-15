@@ -1,34 +1,25 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
+
+COM="${HOME}/.config/xmobar/com/network"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+__enabled="network_enabled"
+__loading="network_loading"
+__spinner="network_spinner"
+__traffic="network_traffic"
+
+grep -q "^$__enabled"    "$STATE_FILE" || ( echo "$__enabled=1" >> "$STATE_FILE" && network_enabled=1 )
+grep -q "^$__loading="   "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && network_loading=0 )
+grep -q "^$__spinner"    "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && network_spinner=0 )
+grep -q "^$__traffic"    "$STATE_FILE" || ( echo "$__traffic=0" >> "$STATE_FILE" && network_traffic=0 )
 
 interface=wlan0
 lan_interface=eth0
 wifi_name_length=150
-
-spinner_icons=(      )
-
-COM="${HOME}/.config/xmobar/com/network"
-LOADING_FILE="${COM}/state/loading"
-SPINNER_FILE="${COM}/state/spinner"
-ENABLED_FILE="${COM}/state/enabled"
-TRAFFIC_FILE="${COM}/state/traffic"
-
-if [ ! -f "$LOADING_FILE" ]; then
-  echo 0 > "$LOADING_FILE"
-fi
-
-if [ ! -f "$ENABLED_FILE" ]; then
-  echo 1 > "$ENABLED_FILE"
-fi
-
-if [ ! -f "$TRAFFIC_FILE" ]; then
-  echo 0 > "$TRAFFIC_FILE"
-fi
-
-is_enabled=$(cat "$ENABLED_FILE")
-show_traffic=$(cat "$TRAFFIC_FILE")
 
 for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
     if [ ! -d "/sys/class/net/$iface/wireless" ] && [[ $iface != lo ]]; then
@@ -50,13 +41,13 @@ for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
 done
 
 case "$1" in
-  connect) ${COM}/actions/connect --interface=${interface} --LOADING_FILE=${LOADING_FILE} ;;
-  toggle)  ${COM}/actions/toggle  --interface=${interface} --ENABLED_FILE=${ENABLED_FILE} --enabled=${is_enabled} ;;
-  traffic) ${COM}/actions/traffic --TRAFFIC_FILE=${TRAFFIC_FILE} --show_traffic=${show_traffic} ;;
+  connect) ${COM}/actions/connect --interface=${interface} --STATE_FILE=${STATE_FILE} --KEY=${__loading} ;;
+  toggle)  ${COM}/actions/toggle  --interface=${interface} --STATE_FILE=${STATE_FILE} --KEY=${__enabled} --value=${network_enabled} ;;
+  traffic) ${COM}/actions/traffic --STATE_FILE=${STATE_FILE} --KEY=${__traffic} --value=${network_traffic} ;;
   *) ;;
 esac
 
-if (( is_enabled == 0 )); then
+if (( network_enabled == 0 )); then
   echo "<fc=${COLOR_MUTE}>󰤮</fc>"
   exit 0
 fi
@@ -79,20 +70,18 @@ for i in "${!signal_thresholds[@]}"; do
   fi
 done
 
-is_loading=$(cat "$LOADING_FILE")
+if (( network_loading == 1 )); then
+  spinner_icons=(      )
+  idx=$(( ( $network_spinner + 1 ) % ${#spinner_icons[@]} ))
+  sed -i "s/^$__spinner=.*/$__spinner=${idx}/" "$STATE_FILE"
+  echo "${spinner_icons[$idx]} Searching... 󱛇"
+fi
 
-if (( is_loading == 0 )); then
-  if (( show_traffic == 1 )); then
-
+if (( network_loading == 0 )); then
+  if (( network_traffic == 1 )); then
     traffic="$("${COM}/scripts/traffic/traffic" --interface="$interface")"
     echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic}"
   else
     echo "$ssid ${signal}󰏰 ${signal_icon}"
   fi
-fi
-
-if (( is_loading == 1 )); then
-  idx=$(( ( $(<"$SPINNER_FILE") + 1 ) % ${#spinner_icons[@]} ))
-  echo "$idx" > "$SPINNER_FILE"
-  echo "${spinner_icons[$idx]} Searching... 󱛇"
 fi
