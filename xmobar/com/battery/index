@@ -1,85 +1,75 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/battery"
-VALUE_FILE="${COM}/state/value"
-LEVEL_FILE="${COM}/state/level"
-SHOW_TIME_FILE="${COM}/state/show_time"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
+now=$(date +%s)
 CACHE_TTL=80   # seconds
 
-# If file doesn't exist, start from 0
-[[ -f "$LEVEL_FILE"     ]] || echo 0 > "$LEVEL_FILE"
-[[ -f "$SHOW_TIME_FILE" ]] || echo 0 > "$SHOW_TIME_FILE"
+__level_icon="battery_level_icon"
+__show_time="battery_show_time"
+__timestamp="battery_timestamp"
+__info="battery_info"
+grep -q "^$__level_icon=" "$STATE_FILE" || ( echo "$__level_icon=0" >> "$STATE_FILE" && battery_level_icon=0 )
+grep -q "^$__show_time=" "$STATE_FILE" || ( echo "$__show_time=0" >> "$STATE_FILE" && battery_show_time=0 )
+grep -q "^$__info=" "$STATE_FILE" || ( echo "$__info=" >> "$STATE_FILE" && battery_info="" )
+grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(($now - 81 ))" >> "$STATE_FILE" && speedtest_timestamp=$(($now - 81 ))  )
 
 if ! command -v acpi >/dev/null 2>&1; then
   echo "Warning: acpi is not installed or not in PATH."
   exit 1
 fi
 
-now=$(date +%s)
-if [[ -f "$VALUE_FILE" ]]; then
-  read -r cached_ts < "$VALUE_FILE"
-else
-  cached_ts=0
-fi
-
 # Refresh cache if older than 1 minute
-if (( now - cached_ts >= CACHE_TTL )); then
-  info="$(acpi -b 2>/dev/null)"
-  {
-    echo "$now"
-    echo "$info"
-  } > "$VALUE_FILE"
-else
-  info="$(sed -n '2p' "$VALUE_FILE")"
+if (( now - battery_timestamp >= CACHE_TTL )); then
+  battery_info="$(acpi -b 2>/dev/null)"
+  sed -i "s/^$__info=.*/$__info=\"$battery_info\"/" "$STATE_FILE"
 fi
 
 # If acpi output does NOT contain "Battery", then exit
-echo "$info" | grep -q "Battery" || exit 0
+echo "$battery_info" | grep -q "Battery" || exit 0
 
-state=$(echo "$info" | awk -F'[,: ]+' '{print $3}')
-level=$(echo "$info" | awk -F'[,% ]+' '{print $4}')
-time=$(echo "$info"  | awk '{for(i=1;i<=NF;i++){if($i~/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/) print $i}}')
+state=$(echo "$battery_info" | awk -F'[,: ]+' '{print $3}')
+level=$(echo "$battery_info" | awk -F'[,% ]+' '{print $4}')
+time=$(echo "$battery_info"  | awk '{for(i=1;i<=NF;i++){if($i~/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/) print $i}}')
 
 thresholds=(10 33 66 85 95)
 icons=("󰢟" "󱊤" "󱊥" "󱊦" "󰂅")
 
-showtime=$(< "$SHOW_TIME_FILE")
-
 case "$1" in
-  show_time) "${COM}/actions/show_time" --showtime=${showtime} --SHOW_TIME_FILE=${SHOW_TIME_FILE} ;;
+  show_time) ${COM}/actions/show_time --value=${battery_show_time} --STATE_FILE=${STATE_FILE} --KEY=${__show_time} ;;
   *) ;;
 esac
 
 if [[ "$state" == "Full" ]]; then
-  echo "${SEP}"
+  echo ""
   exit 0
 fi
 
 if [[ "$state" == "Charging" ]]; then
 
-    usable_icons=()
-    for i in "${!thresholds[@]}"; do
-        if [[ "$level" -le "${thresholds[$i]}" ]]; then
-            usable_icons+=("${icons[$i]}")
-        fi
-    done
+  usable_icons=()
+  for i in "${!thresholds[@]}"; do
+    if [[ "$level" -le "${thresholds[$i]}" ]]; then
+        usable_icons+=("${icons[$i]}")
+    fi
+  done
 
-    # Safety fallback
-    [[ ${#usable_icons[@]} -eq 0 ]] && usable_icons=("${icons[$((${#icons[@]} - 1))]}")
+  # Safety fallback
+  [[ ${#usable_icons[@]} -eq 0 ]] && usable_icons=("${icons[$((${#icons[@]} - 1))]}")
 
-    idx=$(< "$LEVEL_FILE")
-    idx=$(( (idx + 1) % ${#usable_icons[@]} ))
-    echo "$idx" > "$LEVEL_FILE"
+  idx=$(( (battery_level_icon + 1) % ${#usable_icons[@]} ))
+  sed -i "s/^$__level_icon=.*/$__level_icon=$idx/" "$STATE_FILE"
 
-    timercolor=${COLOR_OK}
-    icon="${usable_icons[$idx]}  <fc=$timercolor>${level}󰏰</fc>"
-    [[ $showtime == 1 ]] && icon="$icon  <fc=$timercolor> $time </fc>"
-    echo "${icon}${SEP}"
-    exit
+  timercolor=${COLOR_OK}
+  icon="${usable_icons[$idx]}  <fc=$timercolor>${level}󰏰</fc>"
+  [[ $battery_show_time == 1 ]] && icon="$icon  <fc=$timercolor> $time </fc>"
+  echo "${icon}"
+  exit
 fi
 
 # Otherwise output normal code
@@ -92,7 +82,7 @@ if [[ "$state" == "Discharging" ]]; then
   timercolor=${timercolors[-1]}
   for i in "${!thresholds[@]}"; do
     if (( level < thresholds[i] )); then
-      icon="${icons[i]}  ${level}󰏰"
+      icon="${icons[i]} ${level}󰏰"
       timercolor=${timercolors[i]}
       break
     fi
@@ -103,6 +93,6 @@ fi
 
 [[ $level -le ${thresholds[1]} ]] && output="<fc=$timercolor>$icon</fc>" || output="${icon}"
 
-[[ $showtime == 1 ]] && output="$output <fc=$timercolor> $time </fc>"
+[[ $battery_show_time == 1 ]] && output="$output <fc=$timercolor> $time </fc>"
 
-echo "${output}${SEP}"
+echo "${output}"

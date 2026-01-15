@@ -54,12 +54,12 @@ case "$1" in
 esac
 
 if ! pgrep -x wireplumber >/dev/null; then
-  echo "<fc=${COLOR_DANGER}>  󰖁</fc>${SEP}"
+  echo "<fc=${COLOR_DANGER}>  󰖁</fc>"
   exit
 fi
 
 if (( $(is_muted) == 1 )); then
-  echo "<fc=${COLOR_MUTE}>$ICON_MUTED</fc>${SEP}"
+  echo "<fc=${COLOR_MUTE}>$ICON_MUTED</fc>"
   exit
 fi
 
@@ -81,7 +81,7 @@ done
 
 output="$sound_icon  $vol󰏰 <fc=${COLOR_MUTE}>󰜥</fc> $icon"
 if (( vol > 100 )); then
-  echo "<fc=${COLOR_DANGER}>${output}</fc>${SEP}"
+  echo "<fc=${COLOR_DANGER}>${output}</fc>"
 else
-  echo "${output}${SEP}"
+  echo "${output}"
 fi

@@ -16,4 +16,4 @@ esac
 
 [[ $page_number -eq 2 ]] && icon="󰔡" || icon="󰨙"
 
-echo "${icon}${SEP}"
+echo "${icon}"

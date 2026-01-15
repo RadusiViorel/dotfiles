@@ -9,4 +9,4 @@ case "$1" in
 esac
 
 icon="󰔎"
-echo "${icon}${SEP}"
+echo "${icon}"

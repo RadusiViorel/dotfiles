@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+source "${HOME}/.config/xmobar/scripts/vars"
 
 xmobar_actions() {
   local script="$1"
@@ -7,6 +8,9 @@ xmobar_actions() {
   # Get the rendered text once
   local text
   text="$("$script")" || return 0
+
+  # If text is empty (or only whitespace), output nothing
+  [[ -z ${text//[[:space:]]/} ]] && return 0
 
   # Wrap text in nested <action> tags in REVERSE order
   local i
@@ -17,6 +21,5 @@ xmobar_actions() {
     text="<action=\`$script $args\` button=$button>$text</action>"
   done
 
-  # Print final nested text
-  printf '%s' "$text"
+  echo "${text}${SEP}"
 }

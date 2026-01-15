@@ -50,4 +50,4 @@ declare -A ICONS=(
 [[ calendar_toggle -eq 1 ]] && icon=" "                || icon="<fn=1>${ICONS[$(date +%H)]}</fn>"
 [[ calendar_toggle -eq 1 ]] && color="${COLOR_WARNING}" || color="${COLOR_OK}"
 
-echo "<fc=${color}>${icon} $(date +"$format")</fc>${SEP}"
+echo "<fc=${color}>${icon} $(date +"$format")</fc>"

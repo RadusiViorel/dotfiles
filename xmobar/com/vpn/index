@@ -27,11 +27,11 @@ if (( vpn_loading == 1 )); then
   idx=$(( ( vpn_spinner + 1 ) % ${#spinner_icons[@]} ))
   sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
 
-  echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]}  Connecting  󰇠</fc>${SEP}"
+  echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]}  Connecting  󰇠</fc>"
   exit 0
 fi
 
 colors=(${COLOR_MUTE} ${COLOR_OK})
 icons=(󰯄  󰦝)
 
-echo "<fc=${colors[vpn_toggle]}>${icons[vpn_toggle]}</fc>${SEP}"
+echo "<fc=${colors[vpn_toggle]}>${icons[vpn_toggle]}</fc>"

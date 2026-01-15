@@ -3,6 +3,8 @@
 source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/state"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
+
+COM="${HOME}/.config/xmobar/com/bluetooth"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 __index_device="bluetooth_index_device"
 
@@ -18,7 +20,6 @@ if ! command -v upower >/dev/null 2>&1; then
   exit 1
 fi
 
-COM="${HOME}/.config/xmobar/com/bluetooth"
 
 
 state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
@@ -87,4 +88,4 @@ fi
 icons=("󰂲" "󰂰")
 colors=(${disabledColor} ${outputColor})
 
-echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>${SEP}"
+echo "<fc=${colors[$state]}>${icons[$state]}${label}</fc>"

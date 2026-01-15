@@ -24,4 +24,4 @@ if (( now - weather_timestamp >= 3600 )); then
  $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${__timestamp} --VALUE_KEY=${__value} ) &
 fi
 
-echo "<fc=${COLOR_INFO}>$weather_value</fc>${SEP}"
+echo "<fc=${COLOR_INFO}>$weather_value</fc>"

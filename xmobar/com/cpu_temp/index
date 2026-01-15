@@ -36,4 +36,4 @@ case "$1" in
     *) ;;
 esac
 
-echo "<fc=${tempcolor}>${tempicon} ${temp}°</fc>${SEP}"
+echo "<fc=${tempcolor}>${tempicon} ${temp}°</fc>"

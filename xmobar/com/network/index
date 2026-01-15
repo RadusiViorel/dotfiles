@@ -38,7 +38,7 @@ for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
 done
 
 if ip link show ${lan_interface} | grep -q 'state UP'; then
-  echo "LAN<fc=${COLOR_MUTE}> 󰜥 </fc> 󰈀${SEP}"
+  echo "LAN<fc=${COLOR_MUTE}> 󰜥 </fc> 󰈀"
   exit 0
 fi
 
@@ -57,7 +57,7 @@ case "$1" in
 esac
 
 if (( is_enabled == 0 )); then
-  echo "<fc=${COLOR_MUTE}>󰤮</fc>${SEP}"
+  echo "<fc=${COLOR_MUTE}>󰤮</fc>"
   exit 0
 fi
 
@@ -85,14 +85,14 @@ if (( is_loading == 0 )); then
   if (( show_traffic == 1 )); then
 
     traffic="$("${COM}/scripts/traffic/traffic" --interface="$interface")"
-    echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic}${SEP}"
+    echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic}"
   else
-    echo "$ssid ${signal}󰏰 ${signal_icon} ${SEP}"
+    echo "$ssid ${signal}󰏰 ${signal_icon}"
   fi
 fi
 
 if (( is_loading == 1 )); then
   idx=$(( ( $(<"$SPINNER_FILE") + 1 ) % ${#spinner_icons[@]} ))
   echo "$idx" > "$SPINNER_FILE"
-  echo "${spinner_icons[$idx]} Searching... 󱛇 ${SEP}"
+  echo "${spinner_icons[$idx]} Searching... 󱛇"
 fi

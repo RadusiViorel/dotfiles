@@ -21,4 +21,4 @@ colors=(${COLOR_WHITE} ${COLOR_WARNING})
 root="$(df -h --output=${formats[$space_toggle]} /     | tail -1)"
 home="$(df -h --output=${formats[$space_toggle]} /home | tail -1)"
 
-echo "<fc=${colors[$space_toggle]}> ${root} /${home}</fc>${SEP}"
+echo "<fc=${colors[$space_toggle]}> ${root} /${home}</fc>"

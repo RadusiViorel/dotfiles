@@ -36,4 +36,4 @@ color=${COLOR_WHITE}
 
 [[ $updates_count -ge $WARNING_COUNT ]] && color=${COLOR_WARNING}
 
-echo "<fc=${color}>${output}</fc>${SEP}"
+echo "<fc=${color}>${output}</fc>"

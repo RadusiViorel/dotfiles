@@ -23,4 +23,4 @@ source "${HOME}/.config/xmobar/scripts/page/index" 2
 colors=(${COLOR_WHITE} ${COLOR_WARNING})
 icon="󰸉"
 
-echo "<fc=${colors[wallpaper_lock]}>${icon}</fc>${SEP}"
+echo "<fc=${colors[wallpaper_lock]}>${icon}</fc>"
