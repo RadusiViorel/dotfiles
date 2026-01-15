@@ -1,4 +1,4 @@
-updates_timestamp=1768465016
+updates_timestamp=1768468616
 updates_count=0
 speedtest_isp="Digi Romania"
 speedtest_up=140.03
@@ -21,7 +21,7 @@ bluetooth_index_device=-1
 battery_level_icon=0
 battery_show_time=0
 battery_timestamp=1768462814
-battery_info="Battery 0: Discharging, 68%, 02:35:13 remaining"
+battery_info="Battery 0: Discharging, 59%, 02:02:30 remaining"
 network_loading=0
 network_spinner=1
 network_traffic=0
