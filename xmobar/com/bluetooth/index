@@ -51,9 +51,9 @@ esac
 
 if [[ $bluetooth_index_device -eq -1 ]]; then
   connectedCount=${#connectedDevices[@]}
-  label="  ${connectedCount} devices"
+  label=" ${connectedCount} devices"
   if [ "$connectedCount" -eq 1 ]; then
-    label="  ${connectedCount} device"
+    label=" ${connectedCount} device"
   elif [ "$connectedCount" -eq 0 ]; then
     label=""
   fi
@@ -82,7 +82,7 @@ else
       break
     fi
   done
-  label="  <fc=${outputColor}>$((bluetooth_index_device + 1))/${#connectedDevices[@]} ${connectedDevices[$bluetooth_index_device]} $percentage󰏰</fc>"
+  label=" <fc=${outputColor}>$((bluetooth_index_device + 1))/${#connectedDevices[@]} ${connectedDevices[$bluetooth_index_device]} $percentage󰏰</fc>"
 fi
 
 icons=("󰂲" "󰂰")

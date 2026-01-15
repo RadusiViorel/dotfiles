@@ -66,7 +66,7 @@ if [[ "$state" == "Charging" ]]; then
   sed -i "s/^$__level_icon=.*/$__level_icon=$idx/" "$STATE_FILE"
 
   timercolor=${COLOR_OK}
-  icon="${usable_icons[$idx]}  <fc=$timercolor>${level}󰏰</fc>"
+  icon="${usable_icons[$idx]} <fc=$timercolor>${level}󰏰</fc>"
   [[ $battery_show_time == 1 ]] && icon="$icon  <fc=$timercolor> $time </fc>"
   echo "${icon}"
   exit
