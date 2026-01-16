@@ -1,10 +1,8 @@
 import XMonad
 
-
 import Graphics.X11.ExtraTypes.XF86
 
 import Data.List (elemIndex)
-
 import XMonad.Layout.Grid
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Spiral
@@ -16,16 +14,17 @@ import XMonad.Layout.WindowNavigation
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 
+import XMonad.Actions.UpdatePointer
 import XMonad.Actions.MouseResize
 import XMonad.Actions.FloatSnap
 import XMonad.Actions.WithAll (killAll)
-
 import XMonad.Actions.TiledWindowDragging
 import XMonad.Layout.DraggingVisualizer
 
+
 import Control.Monad (when, unless)
 
-
+import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, ToggleStruts(..))
@@ -46,8 +45,35 @@ import qualified Data.Map as M
 import qualified XMonad.Layout.ToggleLayouts  as TL
   (toggleLayouts, ToggleLayout(..))
 
+import qualified XMonad.Prompt         as P
+import qualified XMonad.Actions.Submap as SM
+import qualified XMonad.Actions.Search as S
+
+import System.IO.Unsafe (unsafePerformIO)
+import System.Environment (lookupEnv)
 import System.Exit
 import System.IO
+
+--------------------------------------------------------------------------------
+-- ENVS
+--------------------------------------------------------------------------------
+getEnvDefault :: String -> String -> String
+getEnvDefault var def = unsafePerformIO $ fmap (maybe def id) (lookupEnv var)
+
+color_ok :: String
+color_ok = getEnvDefault "XMB_COLOR_OK" "#00FF00"
+
+color_info :: String
+color_info  = getEnvDefault "XMB_COLOR_INFO" "#0000FF"
+
+color_yellow :: String
+color_yellow  = getEnvDefault "XMB_COLOR_WARNING" "#FFFF00"
+
+color_mute :: String
+color_mute = getEnvDefault "XMB_COLOR_MUTE" "#666666"
+
+color_white :: String
+color_white = getEnvDefault "XMB_COLOR_WHITE" "#FFFFFF"
 
 
 --------------------------------------------------------------------------------
@@ -77,6 +103,9 @@ leader = mod4Mask
 term :: String
 term = "kitty"
 
+browser :: String
+browser = "falkon"
+
 useHotCorners :: Bool
 useHotCorners = False
 
@@ -84,8 +113,16 @@ hotCorners =
   [
     --   (SCUpperLeft, spawn "rofi -show drun")
     -- , (SCUpperRight, spawn "xterm")
-         (SCLowerLeft,  spawn "falkon")
-       , (SCLowerRight, spawn "falkon")
+         (SCLowerLeft,  spawn browser)
+       , (SCLowerRight, spawn browser)
+  ]
+
+searchEngineMap method = M.fromList $
+  [ ((0, xK_g), method S.google)
+  , ((0, xK_y), method S.youtube)
+  , ((0, xK_m), method S.maps)
+  , ((0, xK_p), method S.protondb)
+  , ((0, xK_x), method S.voidpgks_x86_64)
   ]
 
 
@@ -153,16 +190,25 @@ clickWorkspaces ws
 mySB :: StatusBarConfig
 mySB = statusBarProp "${HOME}/.local/bin/xmobar" (clickablePP myPP)
 
+
 myPP :: PP
 myPP = def
-  { ppCurrent         = xmobarColor "#98be65" "" . xmobarFont 1 . clickWorkspaces
-  , ppVisible         = xmobarColor "#98be65" "" . xmobarFont 1 . clickWorkspaces
-  , ppHidden          = xmobarColor "#bbbbbb" "" . xmobarFont 1 . clickWorkspaces
-  , ppHiddenNoWindows = xmobarColor "#666666" ""
-  , ppWsSep   = "  "
-  , ppSep     = " " ++ sep ++ " "
-  , ppTitle   = xmobarColor "#ffffff" "" . shorten 60
-  , ppSort = fmap (filterOutWs [scratchpadWorkspaceTag] .) getSortByIndex
+  { ppCurrent         = xmobarColor color_ok   "" . xmobarFont 1 . clickWorkspaces
+  , ppVisible         = xmobarColor color_info "" . xmobarFont 1 . clickWorkspaces
+  , ppHidden          = xmobarColor color_info "" . xmobarFont 1 . clickWorkspaces
+  , ppHiddenNoWindows = xmobarColor color_mute ""
+  , ppWsSep           = "  "
+  , ppSep             = " " ++ sep ++ " "
+  , ppTitle           = xmobarColor color_white "" . shorten 60
+  , ppSort            = fmap (filterOutWs [scratchpadWorkspaceTag] .) getSortByIndex
+  , ppLayout          = \l -> case l of
+      "Full"   -> xmobarColor color_yellow "" "\989268" -- 󱡔
+      "Tall"   -> xmobarColor color_info   "" "\62750"  -- 
+      "Grid"   -> xmobarColor color_info   "" "\987609" -- 󱇙
+      "Three"  -> xmobarColor color_info   "" "\989879" -- 󱪷
+      "Spiral" -> xmobarColor color_info   "" "\983064" -- 󰀘
+      _        -> xmobarColor color_info   "" "\984640" -- 󰙀
+
   }
 
 --------------------------------------------------------------------------------
@@ -181,9 +227,17 @@ myConfig = def
     , keys               = myKeys
     , mouseBindings      = myMouseBindings
     , logHook            = myLogHook
-    , handleEventHook    = serverModeEventHook <+> screenCornerEventHook
+    , handleEventHook    = myHandleEventHook
     , startupHook        = myStartupHook
     }
+
+myHandleEventHook =
+      serverModeEventHook
+  <+> screenCornerEventHook
+  <+> swallowEventHook (
+         className =? "Alacritty"
+    <||> className =? "kitty"
+  ) (return True)
 
 myStartupHook = do
       whenX (return useHotCorners) $ addScreenCorners hotCorners
@@ -198,7 +252,7 @@ myShowWNameTheme = def
 
 myLogHook =
     showWNameLogHook myShowWNameTheme
-
+    >> updatePointer (0.5, 0.5) (0, 0)
 
 --------------------------------------------------------------------------------
 -- Layouts
@@ -206,7 +260,7 @@ myLogHook =
 
 myLayouts =
       screenCornerLayoutHook
-    $ renamed [Replace ""]
+    $ renamed [CutWordsLeft 2]
     $ draggingVisualizer
     $ mkToggle (NBFULL ?? EOT)
     $ avoidStruts
@@ -216,9 +270,9 @@ myLayouts =
     layoutList
   where
     layoutList =
-      TL.toggleLayouts Full $
+      TL.toggleLayouts ( renamed [Replace "Full"] Full ) $
            renamed [Replace "Tall"]   (Tall 1 (3/100) (1/2))
-       ||| renamed [Replace "Grid"]   Grid
+       ||| renamed [Replace "Grid"]   (Grid)
        ||| renamed [Replace "Three"]  (ThreeColMid 1 (3/100) (1/2))
        ||| renamed [Replace "Spiral"] (spiral (6/7))
 
@@ -246,10 +300,12 @@ myKeys conf = M.fromList $
     -- Launch applications
     [ ((leader                , xK_Return), spawn $ terminal conf)
     , ((leader .|. controlMask, xK_Return), spawn "rofi -show drun")
-    , ((leader .|. shiftMask, xK_i)       , spawn "${HOME}/.config/_scripts/bg")
+--    , ((leader .|. shiftMask  , xK_i     ), randomBg $ HSV 0xff 0x20)
+
+    , ((leader, xK_s), SM.submap $ searchEngineMap $ S.promptSearch P.def)
 
     , ((leader, xK_e), spawn "nemo"  )
-    , ((leader, xK_b), spawn "falkon")
+    , ((leader, xK_b), spawn browser)
 
     -- Kill window
     , ((leader, xK_q), kill)
