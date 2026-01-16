@@ -265,7 +265,7 @@ myLayouts =
     $ mkToggle (NBFULL ?? EOT)
     $ avoidStruts
     $ smartBorders
-    $ spacing gap
+    $ smartSpacing gap
     $ windowNavigation
     layoutList
   where
