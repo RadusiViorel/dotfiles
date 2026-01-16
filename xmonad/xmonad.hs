@@ -350,8 +350,15 @@ myKeys conf = M.fromList $
     ++
     [ ((leader .|. shiftMask, xK_f), sendMessage $ Toggle NBFULL)
     , ((leader, xK_f), sendMessage TL.ToggleLayout )
-    , ((leader, xK_grave), sendMessage NextLayout)
     , ((leader, xK_t), withFocused toggleCenterFloat)
+    , ((leader, xK_grave), sendMessage NextLayout  >>
+        withWindowSet (\ws ->
+          spawn $
+            "dunstify -r 9999 'Layout: "
+            ++ (description . W.layout . W.workspace . W.current $ ws)
+            ++ "'"
+        )
+      )
     ]
 
     ++
