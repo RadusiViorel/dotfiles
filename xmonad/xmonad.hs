@@ -1,8 +1,10 @@
 import XMonad
+import Control.Monad (when)
 
 import Graphics.X11.ExtraTypes.XF86
-
 import Data.List (elemIndex)
+
+import XMonad.Layout.ZoomRow
 import XMonad.Layout.Grid
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Spiral
@@ -20,9 +22,6 @@ import XMonad.Actions.FloatSnap
 import XMonad.Actions.WithAll (killAll)
 import XMonad.Actions.TiledWindowDragging
 import XMonad.Layout.DraggingVisualizer
-
-
-import Control.Monad (when, unless)
 
 import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.ServerMode
@@ -75,7 +74,6 @@ color_mute = getEnvDefault "XMB_COLOR_MUTE" "#666666"
 color_white :: String
 color_white = getEnvDefault "XMB_COLOR_WHITE" "#FFFFFF"
 
-
 --------------------------------------------------------------------------------
 -- Main
 --------------------------------------------------------------------------------
@@ -124,7 +122,6 @@ searchEngineMap method = M.fromList $
   , ((0, xK_p), method S.protondb)
   , ((0, xK_x), method S.voidpgks_x86_64)
   ]
-
 
 --------------------------------------------------------------------------------
 -- ScratchPads
@@ -190,7 +187,6 @@ clickWorkspaces ws
 mySB :: StatusBarConfig
 mySB = statusBarProp "${HOME}/.local/bin/xmobar" (clickablePP myPP)
 
-
 myPP :: PP
 myPP = def
   { ppCurrent         = xmobarColor color_ok   "" . xmobarFont 1 . clickWorkspaces
@@ -203,9 +199,10 @@ myPP = def
   , ppSort            = fmap (filterOutWs [scratchpadWorkspaceTag] .) getSortByIndex
   , ppLayout          = \l -> case l of
       "Full"   -> xmobarColor color_yellow "" "\989268" -- 󱡔
+      "Lines"  -> xmobarColor color_info   "" "\984713" -- 󰚉
       "Tall"   -> xmobarColor color_info   "" "\62750"  -- 
       "Grid"   -> xmobarColor color_info   "" "\987609" -- 󱇙
-      "Three"  -> xmobarColor color_info   "" "\989879" -- 󱪷
+      "Three"  -> xmobarColor color_info   "" "\986897" -- 󰼑
       "Spiral" -> xmobarColor color_info   "" "\983064" -- 󰀘
       _        -> xmobarColor color_info   "" "\984640" -- 󰙀
 
@@ -252,7 +249,7 @@ myShowWNameTheme = def
 
 myLogHook =
     showWNameLogHook myShowWNameTheme
-    >> updatePointer (0.5, 0.5) (0, 0)
+--  >> updatePointer (0.5, 0.5) (0, 0) -- bug with windowDrag
 
 --------------------------------------------------------------------------------
 -- Layouts
@@ -271,10 +268,11 @@ myLayouts =
   where
     layoutList =
       TL.toggleLayouts ( renamed [Replace "Full"] Full ) $
-           renamed [Replace "Tall"]   (Tall 1 (3/100) (1/2))
+           renamed [Replace "Lines"]  (zoomRow)
+       ||| renamed [Replace "Tall"]   (Tall 1 (3/100) (1/2))
        ||| renamed [Replace "Grid"]   (Grid)
        ||| renamed [Replace "Three"]  (ThreeColMid 1 (3/100) (1/2))
-       ||| renamed [Replace "Spiral"] (spiral (6/7))
+--       ||| renamed [Replace "Spiral"] (spiral (6/7))
 
 --------------------------------------------------------------------------------
 -- Window Rules
@@ -304,7 +302,7 @@ myKeys conf = M.fromList $
 
     , ((leader, xK_s), SM.submap $ searchEngineMap $ S.promptSearch P.def)
 
-    , ((leader, xK_e), spawn "nemo"  )
+    , ((leader, xK_e), spawn "nemo" )
     , ((leader, xK_b), spawn browser)
 
     -- Kill window
@@ -324,10 +322,13 @@ myKeys conf = M.fromList $
     , ((leader .|. shiftMask, xK_Return), windows W.swapMaster)
 
     -- Resize
-    , ((leader, xK_h), sendMessage Shrink)
-    , ((leader, xK_l), sendMessage Expand)
+    , ((leader, xK_h), whenZoomRow zoomOut Shrink)
+    , ((leader, xK_l), whenZoomRow zoomIn Expand)
+    , ((leader, xK_equal), sendMessage zoomReset)
+
     , ((leader .|. shiftMask, xK_h), sendMessage MirrorShrink)
     , ((leader .|. shiftMask, xK_l), sendMessage MirrorExpand)
+
     ]
 
     -- Brightness
@@ -351,13 +352,13 @@ myKeys conf = M.fromList $
     [ ((leader .|. shiftMask, xK_f), sendMessage $ Toggle NBFULL)
     , ((leader, xK_f), sendMessage TL.ToggleLayout )
     , ((leader, xK_t), withFocused toggleCenterFloat)
-    , ((leader, xK_grave), sendMessage NextLayout  >>
-        withWindowSet (\ws ->
-          spawn $
-            "dunstify -r 9999 'Layout: "
-            ++ (description . W.layout . W.workspace . W.current $ ws)
-            ++ "'"
-        )
+    , ((leader, xK_grave), do
+        sendMessage NextLayout
+        withWindowSet $ \ws -> do
+          let desc = description . W.layout . W.workspace . W.current $ ws
+          when (desc == "Lines") $
+            sendMessage zoomReset
+          spawn $ "dunstify -r 9999 'Layout: " ++ desc ++ "'"
       )
     ]
 
@@ -376,10 +377,6 @@ myKeys conf = M.fromList $
     , ((leader .|. shiftMask, xK_Right),  sendMessage $ Swap R)
     , ((leader .|. shiftMask, xK_Up   ),  sendMessage $ Swap U)
     , ((leader .|. shiftMask, xK_Down ),  sendMessage $ Swap D)
-
-    -- Horizontal resize
-    , ((leader, xK_less), sendMessage Shrink) -- mod + <
-    , ((leader, xK_greater), sendMessage Expand) -- mod + >
 
     -- Vertical resize
     , ((leader, xK_minus), sendMessage MirrorShrink) -- mod + -
@@ -401,12 +398,14 @@ myKeys conf = M.fromList $
     ]
 
 myMouseBindings (XConfig {modMask = modm}) = M.fromList
-    [ ((modm, button1), \w -> do
-        floats <- gets (W.floating . windowset)
-        if w `M.member` floats
-          then Sqr.mouseResizeWindow w False
-            >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)
-          else dragWindow w
+    [
+
+    ((modm, button1), \w -> do
+       floats <- gets (W.floating . windowset)
+       if w `M.member` floats
+         then Sqr.mouseResizeWindow w False
+           >> afterDrag (snapMagicResize [L,R,U,D] (Just 50) (Just 50) w)
+         else dragWindow w
     )
     , ((modm .|. controlMask, button1), \w -> do
         floats <- gets (W.floating . windowset)
@@ -426,10 +425,28 @@ myMouseBindings (XConfig {modMask = modm}) = M.fromList
 
     , ((modm, button3), \_ -> sendMessage $ Toggle NBFULL)
 
-    , ((modm, button4), \_ -> sendMessage Expand)
-
-    , ((modm, button5), \_ -> sendMessage Shrink)
+    -- Scroll up → decrease window size
+    , ((modm , button4), \w -> do
+        focus w
+        whenZoomRow zoomIn Expand
+      )
+    -- Scroll down → decrease window size
+    , ((modm , button5), \w -> do
+        focus w
+        whenZoomRow zoomOut Shrink
+      )
+    , ((modm .|. shiftMask, button4), \w -> focus w >> mouseResizeWindow w)
+    , ((modm .|. shiftMask, button5), \w -> focus w >> mouseResizeWindow w)
     ]
+
+
+
+whenZoomRow :: ZoomMessage -> Resize -> X ()
+whenZoomRow zoomAction fallback = do
+  desc <- gets (description . W.layout . W.workspace . W.current . windowset)
+  if desc == "Lines"
+     then sendMessage zoomAction
+     else sendMessage fallback
 
 toggleCenterFloat :: Window -> X ()
 toggleCenterFloat w = do
