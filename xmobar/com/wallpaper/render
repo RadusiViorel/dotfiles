@@ -5,6 +5,6 @@ source "${HOME}/.config/xmobar/scripts/render"
 COM="${HOME}/.config/xmobar/com/wallpaper/index"
 
 xmobar_actions "$COM" \
-  "1:nitrogen" \
+  "1:picker" \
   "2:lock_image" \
   "3:change"

@@ -3,9 +3,10 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
+    --path=*)       path="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
 
-nitrogen
+nsxiv -otb $path
