@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+DESTINATION="${HOME}/videos"
+
+COM="${HOME}/.config/xmobar/com/yt_dl"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+if ! command -v yt-dlp >/dev/null 2>&1; then
+  echo "Warning: yt-dlp is not installed or not in PATH."
+  exit 1
+fi
+
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  echo "Warning: ffmpeg is not installed or not in PATH."
+  exit 1
+fi
+
+case "$1" in
+  download) ${COM}/actions/download --destination=${DESTINATION};;
+  *) ;;
+esac
+
+
+colors=(${COLOR_WHITE} ${COLOR_WARNING})
+icon="󰗃"
+
+echo "<fc=${COLOR_DANGER}>${icon}</fc>"

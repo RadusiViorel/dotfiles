@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --destination=*) destination="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+extract_id() {
+  case "$1" in
+    *youtu.be/*) echo "${1#*youtu.be/}" | cut -d'?' -f1 | cut -d'&' -f1 | cut -d'/' -f1 ;;
+    *v=*)        echo "${1#*v=}" | cut -d'&' -f1 ;;
+    *shorts/*)   echo "${1#*shorts/}" | cut -d'?' -f1 | cut -d'/' -f1 ;;
+    *) return 1 ;;
+  esac
+}
+
+URL=$(rofi -dmenu -p "Youtube URL:")
+
+VIDEO_ID=$(extract_id "$URL")
+
+if [[ -z "$VIDEO_ID" ]]; then
+  notify-send "yt-dlp" "Invalid YouTube URL"
+  exit 1
+fi
+
+TITLE=$(yt-dlp \
+  "$VIDEO_ID" \
+  -f mp4 \
+  -o "${destination}/%(title)s.%(ext)s" \
+  --quiet \
+  --no-progress \
+  --no-warnings \
+  --print after_move:title
+)
+FILENAME=$(printf "%s" "$TITLE" | rofi -dmenu -p "Filename:")
+
+if [[ -n "$FILENAME" && "$FILENAME" != "$TITLE" ]]; then
+  mv "$destination/$TITLE.mp4" "$destination/$FILENAME.mp4"
+fi
+
+CLIP=$(rofi -dmenu -p "Clip (optional: 1:23-2:10)")
+if [[ "$CLIP" =~ ^[^-]+-[^-]+$ ]]; then
+  INPUT="$destination/$FILENAME.mp4"
+  OUTPUT="$destination/${FILENAME}_${START//:/-}_${END//:/-}.mp4"
+  START="${CLIP%-*}"
+  END="${CLIP#*-}"
+  ffmpeg -ss "$START" -to "$END" -i "$INPUT" -c copy "$OUTPUT"
+
+  rm "${INPUT}"
+  mv "${OUTPUT}" "${INPUT}"
+fi

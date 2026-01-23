@@ -17,6 +17,7 @@ components=(
   "rofi_theme"
   "wallpaper"
   "weather"
+  "yt_dl"
   "page"
   "calendar"
   "power"
