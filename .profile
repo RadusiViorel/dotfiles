@@ -18,6 +18,15 @@ export XOB_NORMAL_BORDER_VOLUME="#888888"
 export XOB_OF_FG_VOLUME="#FF6347"
 export XOB_OF_BORDER_VOLUME="#FF4500"
 
+export XMB_COLOR_WHITE="#ffffff"
+export XMB_COLOR_MUTE=#696969
+export XMB_COLOR_INFO=#87c6e6
+export XMB_COLOR_OK="#84f098"
+export XMB_COLOR_WARNING="#e6c15c"
+export XMB_COLOR_CRITIC="#d94141"
+export XMB_COLOR_DANGER="#f58989"
+export XMB_COLOR_ORANGE="#f28f2f"
+
 
 export POPCASH_DEVDIR="/home/radusiviorel/Desktop/sites"
 
