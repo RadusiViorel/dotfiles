@@ -3,7 +3,10 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
+    --type=*)        type="${arg#*=}" ;;
     --destination=*) destination="${arg#*=}" ;;
+    --LOADING_KEY=*) LOADING_KEY="${arg#*=}" ;;
+    --STATE_FILE=*)  STATE_FILE="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
@@ -26,9 +29,12 @@ if [[ -z "$VIDEO_ID" ]]; then
   exit 1
 fi
 
+format=$([[ $type == 'mp4' ]] && echo "-f mp4" || echo "-t mp3")
+
+sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
 TITLE=$(yt-dlp \
   "$VIDEO_ID" \
-  -f mp4 \
+  $format \
   -o "${destination}/%(title)s.%(ext)s" \
   --quiet \
   --no-progress \
@@ -38,13 +44,13 @@ TITLE=$(yt-dlp \
 FILENAME=$(printf "%s" "$TITLE" | rofi -dmenu -p "Filename:")
 
 if [[ -n "$FILENAME" && "$FILENAME" != "$TITLE" ]]; then
-  mv "$destination/$TITLE.mp4" "$destination/$FILENAME.mp4"
+  mv "$destination/$TITLE.${type}" "$destination/$FILENAME.${type}"
 fi
 
 CLIP=$(rofi -dmenu -p "Clip (optional: 1:23-2:10)")
 if [[ "$CLIP" =~ ^[^-]+-[^-]+$ ]]; then
-  INPUT="$destination/$FILENAME.mp4"
-  OUTPUT="$destination/${FILENAME}_${START//:/-}_${END//:/-}.mp4"
+  INPUT="$destination/$FILENAME.${type}"
+  OUTPUT="$destination/${FILENAME}_${START//:/-}_${END//:/-}.${type}"
   START="${CLIP%-*}"
   END="${CLIP#*-}"
   ffmpeg -ss "$START" -to "$END" -i "$INPUT" -c copy "$OUTPUT"
@@ -52,3 +58,7 @@ if [[ "$CLIP" =~ ^[^-]+-[^-]+$ ]]; then
   rm "${INPUT}"
   mv "${OUTPUT}" "${INPUT}"
 fi
+
+sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+
+notify-send "Finished: ${FILENAME}.${type}"

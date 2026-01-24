@@ -5,4 +5,5 @@ source "${HOME}/.config/xmobar/scripts/render"
 COM="${HOME}/.config/xmobar/com/yt_dl/index"
 
 xmobar_actions "$COM" \
-  "1:download"
+  "1:download" \
+  "3:toggle"
