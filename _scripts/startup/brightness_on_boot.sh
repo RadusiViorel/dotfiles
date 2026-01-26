@@ -6,7 +6,7 @@ if ! command -v brightnessctl >/dev/null 2>&1; then
 fi
 
 hour=$(date +%H)
-if [ "$hour" -ge 8 ] && [ "$hour" -lt 20 ]; then
+if [ "$hour" -ge $1 ] && [ "$hour" -lt $2 ]; then
     brightnessctl set 100% >/dev/null 2>&1
 else
     brightnessctl set 5% >/dev/null 2>&1
