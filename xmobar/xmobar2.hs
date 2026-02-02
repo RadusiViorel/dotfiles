@@ -3,7 +3,7 @@ import Xmobar
 import Data.Monoid ((<>))
 
 dir :: String
-dir="/home/radusiviorel/.config/xmobar"
+dir="/home/void/.config/xmobar"
 
 cmd :: Bool -> String -> [String] -> Int -> Runnable
 cmd True comp args rate =
@@ -33,7 +33,7 @@ main = xmobar defaultConfig
   , commands =
       [ Run UnsafeXMonadLog
       , cmd True  "start"   [] 10
-      , Run $ Com "/home/radusiviorel/.config/xmobar/scripts/bar" [] "bar" 10
+      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 10
       ]
   , sepChar = "%"
   , alignSep = "}{"
