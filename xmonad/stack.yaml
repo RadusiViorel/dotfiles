@@ -1,6 +1,6 @@
 resolver: lts-24.24
 
-local-bin-path : /home/radusiviorel/.local/bin
+local-bin-path : /home/void/.local/bin
 
 packages:
   - .

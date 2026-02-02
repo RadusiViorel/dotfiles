@@ -1,2 +1,2 @@
-$ stack build --silent --stack-yaml /home/radusiviorel/.config/xmonad/stack.yaml
-$ stack ghc --stack-yaml /home/radusiviorel/.config/xmonad/stack.yaml -- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -v0 -outputdir /home/radusiviorel/.cache/xmonad/build-x86_64-linux -o /home/radusiviorel/.cache/xmonad/xmonad-x86_64-linux
+$ stack build --silent --stack-yaml /home/void/.config/xmonad/stack.yaml
+$ stack ghc --stack-yaml /home/void/.config/xmonad/stack.yaml -- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -v0 -outputdir /home/void/.cache/xmonad/build-x86_64-linux -o /home/void/.cache/xmonad/xmonad-x86_64-linux

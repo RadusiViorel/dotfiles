@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.38.1.
+-- This file has been generated from package.yaml by hpack version 0.39.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -9,7 +9,7 @@ version:        0.1.0
 build-type:     Simple
 
 executable xmobar
-  main-is: /home/radusiviorel/.config/xmobar/xmobar2.hs
+  main-is: /home/void/.config/xmobar/xmobar2.hs
   other-modules:
       Paths_xmonad_config
   ghc-options: -threaded -rtsopts -with-rtsopts=-N

@@ -159,12 +159,16 @@ myWorkspaces = [ws1, ws2, ws3, ws4, ws5, ws6, ws7, ws8, ws9, ws0]
 
 pinnedApps :: [(String, WorkspaceId, Bool)]
 pinnedApps =
-  [ ("nemo"     , ws1, True)
-  , ("Firefox"  , ws2, True)
-  , ("falkon"   , ws2, True)
-  , ("chromium" , ws2, True)
-  , ("mpv"      , ws3, True)
-  , ("vlc"      , ws3, True)
+  [ ("nemo"           , ws1, True)
+  , ("Firefox"        , ws2, True)
+  , ("falkon"         , ws2, True)
+  , ("chromium"       , ws2, True)
+  , ("Google-chrome"  , ws2, True)
+  , ("mpv"            , ws3, True)
+  , ("vlc"            , ws3, True)
+  , ("DBeaver"        , ws8, False)
+  , ("Redis Insight"  , ws9, False)
+  , ("Slack"          , ws0, True)
   ]
 
 clickableWorkspaces :: Bool
@@ -190,8 +194,8 @@ mySB = statusBarProp "${HOME}/.local/bin/xmobar" (clickablePP myPP)
 myPP :: PP
 myPP = def
   { ppCurrent         = xmobarColor color_ok   "" . xmobarFont 1 . clickWorkspaces
-  , ppVisible         = xmobarColor color_info "" . xmobarFont 1 . clickWorkspaces
-  , ppHidden          = xmobarColor color_info "" . xmobarFont 1 . clickWorkspaces
+  , ppVisible         = xmobarColor color_info "" . clickWorkspaces
+  , ppHidden          = xmobarColor color_info "" . clickWorkspaces
   , ppHiddenNoWindows = xmobarColor color_mute ""
   , ppWsSep           = "  "
   , ppSep             = " " ++ sep ++ " "
@@ -345,6 +349,11 @@ myKeys conf = M.fromList $
     , ((0, xF86XK_AudioLowerVolume)              , spawn "${HOME}/.config/xmobar/com/volume/index volume_down")
     , ((0 .|. shiftMask, xF86XK_AudioRaiseVolume), spawn "${HOME}/.config/xmobar/com/volume/index volume_jump")
     , ((0 .|. shiftMask, xF86XK_AudioLowerVolume), spawn "${HOME}/.config/xmobar/com/volume/index mute")
+    ]
+
+    -- Screenshot
+    ++
+    [ ((leader, xK_Print), spawn "$HOME/.config/xmobar/com/screenshot/index take")
     ]
 
     -- Layouts switch
