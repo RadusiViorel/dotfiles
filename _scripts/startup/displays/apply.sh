@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 xrandr \
-  --output eDP-1 --mode 1920x1080 --primary --pos 0x0 \
+  --output HDMI-1 --mode 2560x1440 --primary --pos 0x0 \
+  --output DVI-D-1 --mode 2560x1440 --right-of HDMI-1 \

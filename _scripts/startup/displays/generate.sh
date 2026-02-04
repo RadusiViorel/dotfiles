@@ -62,6 +62,6 @@ chmod +x "$APPLY"
 "$APPLY"
 
 # Save checksum of current xrandr state
-xrandr | sha256sum | cut -d' ' -f1 > "$CHECKSUM"
 
+xrandr --listmonitors | tail -n +2 | sed -E 's/^[[:space:]]*[0-9]+: //; s/\*//g; s/[+-][0-9]+\+[0-9]+//g' | sort | sha256sum | cut -d' ' -f1 > "$CHECKSUM"
 notify-send "Screen layout saved"
