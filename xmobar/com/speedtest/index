@@ -14,12 +14,12 @@ STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
 now=$(date +%s)
 
-__loading="speedtest_loading"
-__spinner="speedtest_spinner"
 __isp="speedtest_isp"
 __up="speedtest_up"
 __down="speedtest_down"
 __timestamp="speedtest_timestamp"
+__loading="speedtest_loading"
+__spinner="speedtest_spinner"
 grep -q "^$__isp="       "$STATE_FILE" || ( echo "$__isp=UNKNOWN" >> "$STATE_FILE" && speedtest_isp="UNKNOWN" )
 grep -q "^$__up="        "$STATE_FILE" || ( echo "$__up=0" >> "$STATE_FILE" && speedtest_up=0 )
 grep -q "^$__down="      "$STATE_FILE" || ( echo "$__down=0" >> "$STATE_FILE" && speedtest_down=0 )
@@ -28,22 +28,28 @@ grep -q "^$__loading="   "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE"
 grep -q "^$__spinner"    "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && speedtest_spinner=0 )
 
 case "$1" in
-  show) ${COM}/actions/show --isp="${speedtest_isp}" --down=${speedtest_down} --up=${speedtest_up} --timestamp=${speedtest_timestamp} ;;
-  test) ${COM}/actions/test --STATE_FILE=${STATE_FILE} --ISP_KEY=${__isp} --UP_KEY=${__up} --DOWN_KEY=${__down} --TIMESTAMP_KEY=${__timestamp} --LOADING_KEY=${__loading};;
+  show) ${COM}/actions/show \
+    --isp="${speedtest_isp}" \
+    --down=${speedtest_down} \
+    --up=${speedtest_up}     \
+    --timestamp=${speedtest_timestamp} ;;
+
+  run) ${COM}/actions/run          \
+    --STATE_FILE=${STATE_FILE}     \
+    --ISP_KEY=${__isp}             \
+    --UP_KEY=${__up}               \
+    --DOWN_KEY=${__down}           \
+    --TIMESTAMP_KEY=${__timestamp} \
+    --LOADING_KEY=${__loading} ;;
   *) ;;
 esac
-
-if (( speedtest_loading == 0 )); then
-  echo "󰾆"
-fi
 
 if (( speedtest_loading == 1 )); then
   spinner_icons=(      )
   idx=$(( ( speedtest_spinner + 1 ) % ${#spinner_icons[@]} ))
   sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
   echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]} Testing 󰓅</fc>"
+  exit 0
 fi
 
-if (( now - speedtest_timestamp >= 7200 )); then
- $(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --ISP_KEY=${__isp} --UP_KEY=${__up} --DOWN_KEY=${__down} --TIMESTAMP_KEY=${__timestamp} ) &
-fi
+echo "󰾆"

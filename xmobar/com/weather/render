@@ -5,4 +5,4 @@ source "${HOME}/.config/xmobar/scripts/render"
 COM="${HOME}/.config/xmobar/com/weather/index"
 
 xmobar_actions "$COM" \
-  "1:fetch"
+  "1:run"

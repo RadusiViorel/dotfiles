@@ -5,6 +5,6 @@ source "${HOME}/.config/xmobar/scripts/render"
 COM="${HOME}/.config/xmobar/com/screenshot/index"
 
 xmobar_actions "$COM" \
-  "1:take" \
-  "2:clear" \
+  "1:take"            \
+  "2:clear"           \
   "3:toggle"

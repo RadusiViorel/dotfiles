@@ -17,8 +17,18 @@ grep -q "^$__loading" "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" &&
 grep -q "^$__spinner" "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && vpn_spinner=0)
 
 case "$1" in
-  up)   ${COM}/actions/up   --STATE_FILE=${STATE_FILE} --TOGGLE_KEY=${__toggle} --LOADING_KEY=${__loading}  --CONF_FILE=${VPN_CONF} --PID_FILE=${VPN_PID_FILE} ;;
-  down) ${COM}/actions/down --STATE_FILE=${STATE_FILE} --TOGGLE_KEY=${__toggle} --LOADING_KEY=${__loading} --PID_FILE=${VPN_PID_FILE} ;;
+  up) ${COM}/actions/up        \
+    --STATE_FILE=${STATE_FILE} \
+    --TOGGLE_KEY=${__toggle}   \
+    --LOADING_KEY=${__loading} \
+    --CONF_FILE=${VPN_CONF}    \
+    --PID_FILE=${VPN_PID_FILE} ;;
+
+  down) ${COM}/actions/down    \
+    --STATE_FILE=${STATE_FILE} \
+    --TOGGLE_KEY=${__toggle}   \
+    --LOADING_KEY=${__loading} \
+    --PID_FILE=${VPN_PID_FILE} ;;
   *) ;;
 esac
 

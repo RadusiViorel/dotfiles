@@ -27,8 +27,6 @@ is_muted() {
 }
 
 get_sink_icon() {
-
-
   INFO="$(wpctl inspect ${default_sink})"
 
   case "$INFO" in
@@ -45,32 +43,47 @@ get_sink_icon() {
 }
 
 case "$1" in
-  volume_jump)  ${COM}/actions/volume_jump     --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --icon="$(get_sink_icon)" ;;
-  volume_up)    ${COM}/actions/volume_up       --sink=${default_sink} --volume=$(get_volume) --muted=$(is_muted) --step=${STEP} --max_volume=${MAX_VOLUME} ;;
-  volume_down)  ${COM}/actions/volume_down     --sink=${default_sink} --volume=$(get_volume) --step=${STEP} ;;
-  mute)         ${COM}/actions/mute            --sink=${default_sink} --volume=$(get_volume) ;;
-  toggle)       ${COM}/actions/cycle_output ;;
+  volume_jump) ${COM}/actions/volume_jump  \
+    --sink=${default_sink}                 \
+    --volume=$(get_volume)                 \
+    --muted=$(is_muted)                    \
+    --icon="$(get_sink_icon)" ;;
+
+  volume_up) ${COM}/actions/volume_up \
+    --sink=${default_sink}            \
+    --volume=$(get_volume)            \
+    --muted=$(is_muted)               \
+    --step=${STEP}                    \
+    --max_volume=${MAX_VOLUME} ;;
+
+  volume_down) ${COM}/actions/volume_down \
+    --sink=${default_sink}                \
+    --volume=$(get_volume)                \
+    --step=${STEP} ;;
+  mute) ${COM}/actions/mute  \
+    --sink=${default_sink}   \
+    --volume=$(get_volume) ;;
+
+  toggle) ${COM}/actions/cycle_output ;;
   *) ;;
 esac
 
 if ! pgrep -x wireplumber >/dev/null; then
   echo "<fc=${COLOR_DANGER}>  󰖁</fc>"
-  exit
+  exit 0
 fi
 
 if (( $(is_muted) == 1 )); then
   echo "<fc=${COLOR_MUTE}>$ICON_MUTED</fc>"
-  exit
+  exit 0
 fi
 
-icon=$(get_sink_icon)
 vol=$(get_volume)
 
 thresholds=(0 20 40 75)
 sound_icons=("" "" "" "󰕾" "")
 
 sound_icon="${sound_icons[-1]}"
-
 
 for i in "${!thresholds[@]}"; do
   if (( vol <= thresholds[i] )); then
@@ -79,9 +92,5 @@ for i in "${!thresholds[@]}"; do
   fi
 done
 
-output="$sound_icon  $vol󰏰 <fc=${COLOR_MUTE}>󰜥</fc> $icon"
-if (( vol > 100 )); then
-  echo "<fc=${COLOR_DANGER}>${output}</fc>"
-else
-  echo "${output}"
-fi
+color=$([[ $vol -gt 100 ]] && echo "${COLOR_DANGER}" || echo "${COLOR_WHITE}")
+echo "<fc=${color}>$sound_icon  $vol󰏰 <fc=${COLOR_MUTE}>󰜥</fc> $(get_sink_icon)</fc>"

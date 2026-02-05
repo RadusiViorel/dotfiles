@@ -7,22 +7,31 @@ wallpapers_folder="${HOME}/wallpapers"
 
 COM="${HOME}/.config/xmobar/com/wallpaper"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
-__lock="wallpaper_lock"
-__image="wallpaper_image"
-
 
 if ! command -v nsxiv >/dev/null 2>&1; then
   echo "Warning: nsxiv is not installed or not in PATH."
   exit 1
 fi
 
+__lock="wallpaper_lock"
+__image="wallpaper_image"
 grep -q "^$__lock"  "$STATE_FILE" || ( echo "$__lock=0" >> "$STATE_FILE" && wallpaper_lock=0)
 grep -q "^$__image" "$STATE_FILE" || ( echo "$__image=" >> "$STATE_FILE" && wallpaper_image="")
 
 case "$1" in
-    picker)   ${COM}/actions/picker --path=${wallpapers_folder} ;;
-    lock_image) ${COM}/actions/lock_image --STATE_FILE=${STATE_FILE} --LOCK_KEY=${__lock} --value=${wallpaper_lock} ;;
-    change)     ${COM}/actions/change     --STATE_FILE=${STATE_FILE} --IMAGE_KEY=${__image} --selected_image=${wallpaper_image} --is_locked=${wallpaper_lock} ;;
+    picker) ${COM}/actions/picker \
+      --path=${wallpapers_folder} ;;
+
+    lock_image) ${COM}/actions/lock_image \
+      --STATE_FILE=${STATE_FILE}          \
+      --LOCK_KEY=${__lock}                \
+      --value=${wallpaper_lock} ;;
+
+    change) ${COM}/actions/change         \
+      --STATE_FILE=${STATE_FILE}          \
+      --IMAGE_KEY=${__image}              \
+      --selected_image=${wallpaper_image} \
+      --is_locked=${wallpaper_lock} ;;
     *) ;;
 esac
 

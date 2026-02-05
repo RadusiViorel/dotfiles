@@ -14,12 +14,23 @@ for arg in "$@"; do
 done
 
 sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
-sleep 1
 
 COM="${HOME}/.config/xmobar/com/speedtest"
-$(${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --ISP_KEY=${ISP_KEY} --UP_KEY=${UP_KEY} --DOWN_KEY=${DOWN_KEY} --TIMESTAMP_KEY=${TIMESTAMP_KEY} )
+
+${COM}/scripts/runner        \
+  --STATE_FILE=${STATE_FILE} \
+  --ISP_KEY=${ISP_KEY}       \
+  --UP_KEY=${UP_KEY}         \
+  --DOWN_KEY=${DOWN_KEY}     \
+  --TIMESTAMP_KEY=${TIMESTAMP_KEY}
+
 
 source "${HOME}/.config/xmobar/scripts/state"
-$(${COM}/actions/show --isp="${speedtest_isp}" --down=${speedtest_down} --up=${speedtest_up} --timestamp=${speedtest_timestamp}  )
+
+${COM}/actions/show        \
+  --isp="${speedtest_isp}" \
+  --down=${speedtest_down} \
+  --up=${speedtest_up}     \
+  --timestamp=${speedtest_timestamp}
 
 sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"

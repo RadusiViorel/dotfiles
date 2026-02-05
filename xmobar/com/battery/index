@@ -41,7 +41,10 @@ thresholds=(10 33 66 85 95)
 icons=("󰢟" "󱊤" "󱊥" "󱊦" "󰂅")
 
 case "$1" in
-  show_time) ${COM}/actions/show_time --value=${battery_show_time} --STATE_FILE=${STATE_FILE} --KEY=${__show_time} ;;
+  show_time) ${COM}/actions/show_time \
+    --value=${battery_show_time}      \
+    --STATE_FILE=${STATE_FILE}        \
+    --KEY=${__show_time} ;;
   *) ;;
 esac
 
@@ -51,9 +54,8 @@ if [[ "$state" == "Full" ]]; then
 fi
 
 if [[ "$state" == "Not" ]]; then
-
-	echo $level
-  exit;
+  echo $level
+  exit 0;
 fi
 
 if [[ "$state" == "Charging" ]]; then
@@ -75,7 +77,7 @@ if [[ "$state" == "Charging" ]]; then
   icon="${usable_icons[$idx]} <fc=$timercolor>${level}󰏰</fc>"
   [[ $battery_show_time == 1 ]] && icon="$icon  <fc=$timercolor> $time </fc>"
   echo "${icon}"
-  exit
+  exit 0
 fi
 
 # Otherwise output normal code
@@ -97,8 +99,6 @@ else
   icon="󰂃"
 fi
 
-[[ $level -le ${thresholds[1]} ]] && output="<fc=$timercolor>$icon</fc>" || output="${icon}"
-
-[[ $battery_show_time == 1 ]] && output="$output <fc=$timercolor> $time </fc>"
-
+output=$([[ $level -le ${thresholds[1]} ]] && echo "<fc=$timercolor>$icon</fc>" || echo ${icon} )
+output=$([[ $battery_show_time -eq 1 ]] && echo $output || echo "$output <fc=$timercolor> $time </fc>" )
 echo "${output}"

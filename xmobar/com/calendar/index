@@ -14,40 +14,43 @@ if ! command -v yad >/dev/null 2>&1; then
 fi
 
 case "$1" in
-  toggle)        ${COM}/actions/toggle --value=${calendar_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
+  toggle) ${COM}/actions/toggle \
+    --value=${calendar_toggle}  \
+    --STATE_FILE=${STATE_FILE}  \
+    --KEY=${__toggle} ;;
   show_calendar) ${COM}/actions/show_calendar;;
   *) ;;
 esac
 
 declare -A ICONS=(
-    [00]=""
-    [01]=""
-    [02]=""
-    [03]=""
-    [04]=""
-    [05]=""
-    [06]=""
-    [07]=""
-    [08]=""
-    [09]=""
-    [10]=""
-    [11]=""
-    [12]="󱑊"
-    [13]="󱐿"
-    [14]="󱑀"
-    [15]="󱑁"
-    [16]="󱑂"
-    [17]="󱑃"
-    [18]="󱑄"
-    [19]="󱑅"
-    [20]="󱑆"
-    [21]="󱑇"
-    [22]="󱑈"
-    [23]="󱑉"
+  [00]=""
+  [01]=""
+  [02]=""
+  [03]=""
+  [04]=""
+  [05]=""
+  [06]=""
+  [07]=""
+  [08]=""
+  [09]=""
+  [10]=""
+  [11]=""
+  [12]="󱑊"
+  [13]="󱐿"
+  [14]="󱑀"
+  [15]="󱑁"
+  [16]="󱑂"
+  [17]="󱑃"
+  [18]="󱑄"
+  [19]="󱑅"
+  [20]="󱑆"
+  [21]="󱑇"
+  [22]="󱑈"
+  [23]="󱑉"
 )
 
-[[ calendar_toggle -eq 1 ]] && format="%d-%m-%Y"        || format="%H:%M:%S"
-[[ calendar_toggle -eq 1 ]] && icon=" "                || icon="<fn=1>${ICONS[$(date +%H)]}</fn>"
-[[ calendar_toggle -eq 1 ]] && color="${COLOR_WARNING}" || color="${COLOR_OK}"
+format=$([[ calendar_toggle -eq 1 ]] && echo "%d-%m-%Y" || echo "%H:%M:%S" )
+icon=$([[   calendar_toggle -eq 1 ]] && echo " "                || echo "<fn=1>${ICONS[$(date +%H)]}</fn>" )
+color=$([[  calendar_toggle -eq 1 ]] && echo ${COLOR_WARNING} || echo ${COLOR_OK} )
 
 echo "<fc=${color}>${icon} $(date +"$format")</fc>"

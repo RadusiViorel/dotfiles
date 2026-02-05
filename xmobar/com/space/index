@@ -6,12 +6,15 @@ source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/space"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
-__toggle="space_toggle"
 
-grep -q "^$__toggle=" "$STATE_FILE" || echo "$__toggle=0" >> "$STATE_FILE"
+__toggle="space_toggle"
+grep -q "^$__toggle=" "$STATE_FILE" || ( echo "$__toggle=0" >> "$STATE_FILE" && space_toggle=0 )
 
 case "$1" in
-  toggle) ${COM}/actions/toggle --value=${space_toggle} --STATE_FILE=${STATE_FILE} --KEY=${__toggle} ;;
+  toggle) ${COM}/actions/toggle \
+    --value=${space_toggle}     \
+    --STATE_FILE=${STATE_FILE}  \
+    --KEY=${__toggle} ;;
   *) ;;
 esac
 

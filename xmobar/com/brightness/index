@@ -29,8 +29,13 @@ max=$(<"$BL_DIR/max_brightness")
 percent=$((100 * cur / max))
 
 case "$1" in
-  up)   ${COM}/actions/brightness_up   --step=${STEP} --percent=${percent} ;;
-  down) ${COM}/actions/brightness_down --step=${STEP} --percent=${percent} ;;
+  up) ${COM}/actions/brightness_up \
+    --step=${STEP}                 \
+    --percent=${percent} ;;
+
+  down) ${COM}/actions/brightness_down \
+    --step=${STEP}                     \
+    --percent=${percent} ;;
   *) ;;
 esac
 

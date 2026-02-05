@@ -5,5 +5,5 @@ source "${HOME}/.config/xmobar/scripts/render"
 COM="${HOME}/.config/xmobar/com/vpn/index"
 
 xmobar_actions "$COM" \
-  "1:up" \
+  "1:up"              \
   "2:down"

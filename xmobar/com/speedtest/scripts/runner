@@ -27,7 +27,7 @@ IFS='|' read -r isp down up ts < <(
   }'
 )
 
-sed -i "s/^$ISP_KEY=.*/$ISP_KEY=\"$isp\"/" "$STATE_FILE"
-sed -i "s/^$UP_KEY=.*/$UP_KEY=$up/" "$STATE_FILE"
-sed -i "s/^$DOWN_KEY=.*/$DOWN_KEY=$up/" "$STATE_FILE"
+sed -i "s/^$ISP_KEY=.*/$ISP_KEY=\"$isp\"/"        "$STATE_FILE"
+sed -i "s/^$UP_KEY=.*/$UP_KEY=$up/"               "$STATE_FILE"
+sed -i "s/^$DOWN_KEY=.*/$DOWN_KEY=$up/"           "$STATE_FILE"
 sed -i "s/^$TIMESTAMP_KEY=.*/$TIMESTAMP_KEY=$ts/" "$STATE_FILE"

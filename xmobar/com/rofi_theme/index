@@ -8,5 +8,4 @@ case "$1" in
   *) ;;
 esac
 
-icon="󰔎"
-echo "${icon}"
+echo "󰔎"
