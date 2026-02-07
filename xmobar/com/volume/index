@@ -8,10 +8,6 @@ COM="${HOME}/.config/xmobar/com/volume"
 
 STEP=3
 MAX_VOLUME=125
-ICON_SPEAKER="󰓃"
-ICON_JACK_HEADPHONES="<fc=${COLOR_INFO}> 󱡬</fc> 󰋋"
-ICON_USB_HEADPHONES="<fc=${COLOR_INFO}>  </fc> 󰋋"
-ICON_WIRELESS_HEADPHONES="<fc=${COLOR_INFO}> </fc> 󰋋"
 ICON_MUTED=""
 
 # ------------------------------
@@ -26,28 +22,11 @@ is_muted() {
   wpctl get-volume "${default_sink}" | grep -q MUTED  && echo 1 || echo 0
 }
 
-get_sink_icon() {
-  INFO="$(wpctl inspect ${default_sink})"
-
-  case "$INFO" in
-    *'device.api = "bluez5"'*) echo "${ICON_WIRELESS_HEADPHONES}" ;;
-    *'device.bus = "usb"'*) echo "${ICON_USB_HEADPHONES}" ;;
-
-    # Wired headset (jack)
-    *'port.name = "analog-output-headphones"'*|\
-    *'port.name = "analog-output-headset"'*)
-      echo "$ICON_JACK_HEADPHONES" ;;
-
-    * ) echo "${ICON_SPEAKER}" ;;
-  esac
-}
-
 case "$1" in
   volume_jump) ${COM}/actions/volume_jump  \
     --sink=${default_sink}                 \
     --volume=$(get_volume)                 \
-    --muted=$(is_muted)                    \
-    --icon="$(get_sink_icon)" ;;
+    --muted=$(is_muted) ;;
 
   volume_up) ${COM}/actions/volume_up \
     --sink=${default_sink}            \
@@ -60,11 +39,10 @@ case "$1" in
     --sink=${default_sink}                \
     --volume=$(get_volume)                \
     --step=${STEP} ;;
+
   mute) ${COM}/actions/mute  \
     --sink=${default_sink}   \
     --volume=$(get_volume) ;;
-
-  toggle) ${COM}/actions/cycle_output ;;
   *) ;;
 esac
 
@@ -93,4 +71,4 @@ for i in "${!thresholds[@]}"; do
 done
 
 color=$([[ $vol -gt 100 ]] && echo "${COLOR_DANGER}" || echo "${COLOR_WHITE}")
-echo "<fc=${color}>$sound_icon  $vol󰏰 <fc=${COLOR_MUTE}>󰜥</fc> $(get_sink_icon)</fc>"
+echo "<fc=${color}>$sound_icon  $vol󰏰</fc>"

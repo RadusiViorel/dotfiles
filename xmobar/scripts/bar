@@ -6,6 +6,7 @@ components=(
   "capslock"
   "updates"
   "volume"
+  "volume_output"
   "brightness"
   "bluetooth"
   "battery"

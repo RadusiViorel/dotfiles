@@ -8,4 +8,4 @@ for arg in "$@"; do
 done
 
 
-$TERM -e htop >/dev/null
+$TERM --class float-large -e htop >/dev/null

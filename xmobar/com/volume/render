@@ -7,6 +7,5 @@ COM="${HOME}/.config/xmobar/com/volume/index"
 xmobar_actions "$COM" \
   "1:volume_jump"     \
   "2:mute"            \
-  "3:toggle"          \
   "4:volume_up"       \
   "5:volume_down"

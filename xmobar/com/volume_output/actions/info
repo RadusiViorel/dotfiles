@@ -7,4 +7,5 @@ for arg in "$@"; do
   esac
 done
 
-$TERM --class float-small -e bluetuith >/dev/null
+
+$TERM --class float-medium -e wiremix >/dev/null

@@ -102,7 +102,7 @@ term :: String
 term = "kitty"
 
 browser :: String
-browser = "falkon"
+browser = "google-chrome-stable"
 
 useHotCorners :: Bool
 useHotCorners = False
@@ -277,6 +277,14 @@ myLayouts =
        ||| renamed [Replace "Grid"]   (Grid)
        ||| renamed [Replace "Three"]  (ThreeColMid 1 (3/100) (1/2))
 --       ||| renamed [Replace "Spiral"] (spiral (6/7))
+--
+--
+--------------------------------------------------------------------------------
+-- Floating window rectangles
+--------------------------------------------------------------------------------
+floatSmallRect  = W.RationalRect 0.3 0.3 0.4 0.4
+floatMediumRect = W.RationalRect 0.2 0.2 0.6 0.6
+floatLargeRect  = W.RationalRect 0.1 0.1 0.8 0.8
 
 --------------------------------------------------------------------------------
 -- Window Rules
@@ -287,6 +295,9 @@ myManageHook =
     composeAll
       ( [ isDialog --> doFloat
         , isFullscreen --> doFullFloat
+        , className =? "float-small"  --> doRectFloat floatSmallRect
+        , className =? "float-medium" --> doRectFloat floatMediumRect
+        , className =? "float-large"  --> doRectFloat floatLargeRect
         ]
         ++ map (\(c, ws, shouldFocus) -> (className =? c <||> appName =? c <||> resource =? c) --> (doShift ws <+> if shouldFocus then doF (W.greedyView ws) else mempty)) pinnedApps
       )
@@ -329,6 +340,7 @@ myKeys conf = M.fromList $
     , ((leader, xK_h), whenZoomRow zoomOut Shrink)
     , ((leader, xK_l), whenZoomRow zoomIn Expand)
     , ((leader, xK_equal), sendMessage zoomReset)
+    , ((mod4Mask, xK_apostrophe), withFocused toggleFloatSize)
 
     , ((leader .|. shiftMask, xK_h), sendMessage MirrorShrink)
     , ((leader .|. shiftMask, xK_l), sendMessage MirrorExpand)
@@ -448,8 +460,6 @@ myMouseBindings (XConfig {modMask = modm}) = M.fromList
     , ((modm .|. shiftMask, button5), \w -> focus w >> mouseResizeWindow w)
     ]
 
-
-
 whenZoomRow :: ZoomMessage -> Resize -> X ()
 whenZoomRow zoomAction fallback = do
   desc <- gets (description . W.layout . W.workspace . W.current . windowset)
@@ -463,3 +473,16 @@ toggleCenterFloat w = do
   if w `M.member` floats
     then windows (W.sink w)  -- send back to tiling
     else windows (W.float w (W.RationalRect 0.1 0.1 0.8 0.8))  -- float & center
+
+
+toggleFloatSize :: Window -> X ()
+toggleFloatSize w = do
+    floats <- gets (W.floating . windowset)
+    case M.lookup w floats of
+        Just (W.RationalRect x y wdt hgt) ->  -- pattern match to get width
+            let next
+                  | abs (wdt - 0.4) < 0.01 = floatMediumRect
+                  | abs (wdt - 0.6) < 0.01 = floatLargeRect
+                  | otherwise              = floatSmallRect
+            in windows (W.float w next)
+        Nothing -> return ()  -- not floating

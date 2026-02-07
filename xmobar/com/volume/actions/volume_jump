@@ -6,7 +6,6 @@ for arg in "$@"; do
       --sink=*)     sink="${arg#*=}" ;;
       --muted=*)    muted="${arg#*=}" ;;
       --volume=*)   volume="${arg#*=}" ;;
-      --icon=*)     icon="${arg#*=}" ;;
       *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
