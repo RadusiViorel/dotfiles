@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 source "${HOME}/.config/xmobar/scripts/vars"
 
+for arg in "$@"; do
+  case $arg in
+    --sep=*) custom_sep="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
 xmobar_actions() {
   local script="$1"
   shift
@@ -11,6 +18,7 @@ xmobar_actions() {
 
   # If text is empty (or only whitespace), output nothing
   [[ -z ${text//[[:space:]]/} ]] && return 0
+  sep="$([[ -z ${custom_sep//[[:space:]]/} ]] && printf '%s' "$SEP" || printf '%s' "$custom_sep")"
 
   # Wrap text in nested <action> tags in REVERSE order
   local i
@@ -21,5 +29,5 @@ xmobar_actions() {
     text="<action=\`$script $args\` button=$button>$text</action>"
   done
 
-  echo "${text}${SEP}"
+  echo "${text} $sep "
 }

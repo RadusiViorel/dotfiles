@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/vars"
+
 COM="${HOME}/.config/xmobar/com"
 
 components=(
   "capslock"
   "updates"
-  "volume"
+  "volume:<fc="$COLOR_MUTE">󰜥</fc>"
   "volume_output"
   "brightness"
   "bluetooth"
@@ -27,7 +29,9 @@ components=(
 
 bar=""
 for c in "${components[@]}"; do
-  bar+="$("$COM/$c/render")"
+
+  IFS=':' read -r component sep <<< "$c"
+  bar+="$("$COM/$component/render" "--sep=$sep")"
 done
 
 printf '%s\n' "$bar"

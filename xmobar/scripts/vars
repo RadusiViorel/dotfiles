@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SEP="  "
+SEP=""
 
 COLOR_WHITE=${XMB_COLOR_WHITE:-"#ffffff"}
 COLOR_CRITIC=${XMB_COLOR_CRITIC:-"#d94141"}
