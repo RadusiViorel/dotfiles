@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/vars"
+
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
@@ -34,10 +36,15 @@ if [[ -z "$raw" ]]; then
 fi
 
 condition="${raw%%|*}"
-temp="${raw##*|}"
+temp_raw="${raw##*|}"
 
-# Remove °C (and any degree symbol)
-temp=$(echo "$temp" | sed 's/C.*//')
+# Remove °C and any symbols, keep sign and number
+temp=$(echo "$temp_raw" | sed 's/[°C]//g' | sed 's/[^0-9-]//g')
+
+# Handle empty or invalid temp
+if [[ -z "$temp" ]]; then
+  temp=0
+fi
 
 cond=$(echo "$condition" | tr '[:upper:]' '[:lower:]')
 
@@ -55,9 +62,19 @@ case "$cond" in
     *)                   icon="$ICON_UNKNOWN" ;;
 esac
 
-output="${icon}  ${temp}"
+thresholds=(8           15           23        29             36)
+colors=(    $COLOR_INFO $COLOR_WHITE $COLOR_OK $COLOR_WARNING $COLOR_DANGER)
+
+color="${colors[-1]}"  # Default to CRITIC (>= 36°C)
+
+for i in "${!thresholds[@]}"; do
+  if (( temp < thresholds[i] )); then
+    color="${colors[i]}"
+    break
+  fi
+done
+
+output="<fc=${color}>${icon}  ${temp_raw}</fc>"
 
 sed -i "s/^$VALUE_KEY=.*/$VALUE_KEY=\"${output}\"/"  "$STATE_FILE"
 sed -i "s/^$TIMESTAMP_KEY=.*/$TIMESTAMP_KEY=${now}/" "$STATE_FILE"
-
-exit 0
