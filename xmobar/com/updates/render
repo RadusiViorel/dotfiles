@@ -6,4 +6,5 @@ COM="${HOME}/.config/xmobar/com/updates/index"
 
 
 xmobar_actions "$COM" \
-  "1:show"
+  "1:show" \
+  "3:view_log"

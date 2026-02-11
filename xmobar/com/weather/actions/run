@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-#!/usr/bin/env bash
-
 # Parse named parameters
 for arg in "$@"; do
   case $arg in

@@ -10,6 +10,37 @@ for arg in "$@"; do
   esac
 done
 
-$TERM -e bash -c "echo -e '$package_list \n Updated $count packages:\n'; sudo xbps-install -Su; echo; read -p 'Press enter to exit...'"
+# Capture package list before update
+TEMP_DIR="/tmp/xmobar_updates_$$"
+mkdir -p "$TEMP_DIR"
+PACKAGES_FILE="$TEMP_DIR/packages.txt"
+UPDATE_OUTPUT="$TEMP_DIR/output.txt"
+
+# Save what packages are pending update (these are the ones that will be updated)
+echo "$package_list" > "$PACKAGES_FILE"
+
+# Run the update and capture the full output
+$TERM --class float-medium -e bash -c "
+  echo -e 'Packages to update:\n'
+  echo '$package_list'
+  echo -e '\n========================================\n'
+  echo 'Running update...'
+  echo
+  
+  # Run update and capture output
+  sudo xbps-install -Su 2>&1 | tee '$UPDATE_OUTPUT'
+  
+  echo
+  read -p 'Press enter to exit...'
+"
+
+# Log the update session
+LOG_SCRIPT="${HOME}/.config/xmobar/com/updates/scripts/log_update"
+if [[ -f "$LOG_SCRIPT" ]]; then
+  "$LOG_SCRIPT" --packages="$PACKAGES_FILE" --output="$UPDATE_OUTPUT"
+fi
+
+# Clean up temp directory
+rm -rf "$TEMP_DIR"
 
 sed -i "s/^$COUNT_KEY=.*/$COUNT_KEY=0/" "$STATE_FILE"

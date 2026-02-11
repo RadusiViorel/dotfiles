@@ -16,6 +16,7 @@ components=(
   "vpn"
   "network"
   "cpu_temp"
+  "sys_usage"
   "weather"
   "speedtest"
   "rofi_theme"
