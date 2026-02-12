@@ -15,6 +15,10 @@ pipewire & pipewire-pulse & wireplumber &
 dunst &
 picom -b
 
+docker compose --project-directory /opt/devenv start
+
 $HOME/.config/_scripts/startup/displays/run.sh
+
+
 
 exec $HOME/.local/bin/xmonad
