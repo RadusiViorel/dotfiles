@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/render"
+
+COM="${HOME}/.config/xmobar/com/brightness/index"
+
+xmobar_actions "$COM" \
+  "4:up"              \
+  "5:down"

@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
+
+COM="${HOME}/.config/xmobar/com/network"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+__enabled="network_enabled"
+__loading="network_loading"
+__spinner="network_spinner"
+__traffic="network_traffic"
+grep -q "^$__enabled=" "$STATE_FILE" || ( echo "$__enabled=1" >> "$STATE_FILE" && network_enabled=1 )
+grep -q "^$__loading=" "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && network_loading=0 )
+grep -q "^$__spinner=" "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && network_spinner=0 )
+grep -q "^$__traffic=" "$STATE_FILE" || ( echo "$__traffic=0" >> "$STATE_FILE" && network_traffic=0 )
+
+interface=wlan0
+lan_interface=eth0
+wifi_name_length=150
+
+for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
+  if [ ! -d "/sys/class/net/$iface/wireless" ] && [[ $iface != lo ]]; then
+    lan_interface=$iface
+    break
+  fi
+done
+
+if ip link show ${lan_interface} | grep -q 'state UP'; then
+  echo "LAN<fc=${COLOR_MUTE}> 󰜥 </fc> 󰈀"
+  exit 0
+fi
+
+for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
+  if [ -d "/sys/class/net/$iface/wireless" ]; then
+    interface=$iface
+    break
+  fi
+done
+
+case "$1" in
+  connect) ${COM}/actions/connect \
+    --interface=${interface}      \
+    --STATE_FILE=${STATE_FILE}    \
+    --KEY=${__loading} ;;
+
+  toggle) ${COM}/actions/toggle \
+    --interface=${interface}    \
+    --STATE_FILE=${STATE_FILE}  \
+    --KEY=${__enabled}          \
+    --value=${network_enabled} ;;
+
+  traffic) ${COM}/actions/traffic \
+    --STATE_FILE=${STATE_FILE}    \
+    --KEY=${__traffic}            \
+    --value=${network_traffic} ;;
+  *) ;;
+esac
+
+if (( network_enabled == 0 )); then
+  echo "<fc=${COLOR_MUTE}>󰤮</fc>"
+  exit 0
+fi
+
+ssid=$(wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
+
+if [ ${#ssid} -gt ${wifi_name_length} ]; then
+  ssid="${ssid:0:$((wifi_name_length-3))}<fc=${COLOR_MUTE}>󰇘</fc>"
+fi
+
+signal_icons=( 󰤯 󰤟 󰤢 󰤥 󰤨 )
+signal_thresholds=( 15 33 50 90 )
+signal_icon=${signal_icons[-1]}
+signal=$(awk 'NR==3 {print $3}' /proc/net/wireless | sed 's/\.//')
+
+for i in "${!signal_thresholds[@]}"; do
+  if (( signal < signal_thresholds[i] )); then
+    signal_icon="${signal_icons[i]}"
+    break
+  fi
+done
+
+if (( network_loading == 1 )); then
+  spinner_icons=(      )
+  idx=$(( ( $network_spinner + 1 ) % ${#spinner_icons[@]} ))
+  sed -i "s/^$__spinner=.*/$__spinner=${idx}/" "$STATE_FILE"
+  echo "${spinner_icons[$idx]} Searching... 󱛇"
+  exit 0
+fi
+
+if (( network_traffic == 1 )); then
+  traffic="$("${COM}/scripts/traffic/traffic" --interface="$interface")"
+  echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic}"
+  exit 0
+fi
+
+echo "$ssid ${signal}󰏰 ${signal_icon}"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+case "$1" in
+  change) "${HOME}/.config/xmobar/com/rofi_theme/actions/change_theme" ;;
+  *) ;;
+esac
+
+echo "󰔎"

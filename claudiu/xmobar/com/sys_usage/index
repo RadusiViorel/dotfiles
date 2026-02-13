@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+# Get CPU usage (average across all cores)
+# Uses /proc/stat to calculate CPU percentage
+cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+cpu_int=${cpu_usage%.*}
+
+# Get RAM usage in GB
+ram_total=$(free -g | awk '/^Mem:/ {print $2}')
+ram_used=$(free -g | awk '/^Mem:/ {print $3}')
+
+# More accurate RAM in MB for better precision
+ram_used_mb=$(free -m | awk '/^Mem:/ {print $3}')
+ram_used_gb=$(awk "BEGIN {printf \"%.1f\", $ram_used_mb/1024}")
+
+# CPU color thresholds
+if (( cpu_int < 30 )); then
+  cpu_color=$COLOR_WHITE
+elif (( cpu_int < 60 )); then
+  cpu_color=$COLOR_WARNING
+elif (( cpu_int < 90 )); then
+  cpu_color=$COLOR_DANGER
+else
+  cpu_color=$COLOR_CRITIC
+fi
+
+# RAM color thresholds (in GB)
+ram_float=$(awk "BEGIN {print $ram_used_gb}")
+if awk "BEGIN {exit !($ram_float < 4.0)}"; then
+  ram_color=$COLOR_WHITE
+elif awk "BEGIN {exit !($ram_float < 6.0)}"; then
+  ram_color=$COLOR_WARNING
+elif awk "BEGIN {exit !($ram_float < 10.0)}"; then
+  ram_color=$COLOR_DANGER
+else
+  ram_color=$COLOR_DANGER
+fi
+
+# Nerd Font icons
+cpu_icon="󰻠"  # CPU chip icon
+ram_icon="󰍛"  # RAM/memory icon
+
+# Format output: CPU icon + percentage / RAM icon + usage
+echo "<fc=${cpu_color}>${cpu_icon} ${cpu_int}%</fc> <fc=${COLOR_MUTE}>󰜥</fc> <fc=${ram_color}>${ram_icon} ${ram_used_gb}G</fc>"

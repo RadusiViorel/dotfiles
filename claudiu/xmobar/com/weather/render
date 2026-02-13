@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/render"
+
+COM="${HOME}/.config/xmobar/com/weather/index"
+
+xmobar_actions "$COM" \
+  "1:run"

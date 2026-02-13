@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/state"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+__number="page_number"
+grep -q "^$__number=" "$STATE_FILE" || ( echo "$__number=1" >> "$STATE_FILE" && page_number=1 )
+
+target_page=${1:-1}
+
+[[ $page_number -ne $target_page ]] && exit 0

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --interface=*)  interface="${arg#*=}"  ;;
+    --value=*)      value="${arg#*=}"      ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
+    --KEY=*)        KEY="${arg#*=}"        ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+new_value=$(( ! value ))
+sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
+
+if [[ "$new_value" -eq 1 ]]; then
+    wpa_cli -i ${interface} reconnect
+else
+    wpa_cli -i ${interface} disconnect
+fi

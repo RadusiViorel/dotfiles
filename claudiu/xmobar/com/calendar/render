@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/render"
+
+COM="${HOME}/.config/xmobar/com/calendar/index"
+
+xmobar_actions "$COM" \
+  "1:toggle"          \
+  "3:show_calendar"

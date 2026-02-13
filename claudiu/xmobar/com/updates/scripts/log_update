@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# Logs package updates with timestamp and details
+
+# Parse arguments
+for arg in "$@"; do
+  case $arg in
+    --packages=*) PACKAGES_FILE="${arg#*=}" ;;
+    --output=*) OUTPUT_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+LOG_DIR="${HOME}/.config/xmobar/com/updates/logs"
+MASTER_LOG="${LOG_DIR}/updates.log"
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+DATE_SLUG=$(date '+%Y%m%d_%H%M%S')
+SESSION_LOG="${LOG_DIR}/session_${DATE_SLUG}.log"
+
+# Ensure log directory exists
+mkdir -p "$LOG_DIR"
+
+# Read the package list (what was pending to update)
+if [[ -f "$PACKAGES_FILE" ]]; then
+  UPDATED_PACKAGES=$(cat "$PACKAGES_FILE")
+  # Count non-empty lines
+  PACKAGE_COUNT=$(echo "$UPDATED_PACKAGES" | grep -cv '^[[:space:]]*$' 2>/dev/null || echo 0)
+else
+  UPDATED_PACKAGES="Package list not captured"
+  PACKAGE_COUNT=0
+fi
+
+# Extract additional info from xbps output if available
+INSTALL_SIZE=""
+DOWNLOAD_SIZE=""
+if [[ -f "$OUTPUT_FILE" ]]; then
+  # Try to extract size information from xbps output
+  INSTALL_SIZE=$(grep -i "Size required on disk" "$OUTPUT_FILE" 2>/dev/null | head -1)
+  DOWNLOAD_SIZE=$(grep -i "Size to download" "$OUTPUT_FILE" 2>/dev/null | head -1)
+fi
+
+# Write to master log
+{
+  echo "========================================"
+  echo "Update Session: $TIMESTAMP"
+  echo "Packages Updated: $PACKAGE_COUNT"
+  [[ -n "$INSTALL_SIZE" ]] && echo "$INSTALL_SIZE"
+  [[ -n "$DOWNLOAD_SIZE" ]] && echo "$DOWNLOAD_SIZE"
+  echo "----------------------------------------"
+  if [[ $PACKAGE_COUNT -gt 0 ]]; then
+    echo "$UPDATED_PACKAGES"
+  else
+    echo "No packages updated"
+  fi
+  echo "========================================"
+  echo ""
+} >> "$MASTER_LOG"
+
+# Write detailed session log
+{
+  echo "Update Session Log"
+  echo "Timestamp: $TIMESTAMP"
+  echo "Packages Updated: $PACKAGE_COUNT"
+  [[ -n "$INSTALL_SIZE" ]] && echo "$INSTALL_SIZE"
+  [[ -n "$DOWNLOAD_SIZE" ]] && echo "$DOWNLOAD_SIZE"
+  echo ""
+  echo "Packages:"
+  echo "----------------------------------------"
+  if [[ $PACKAGE_COUNT -gt 0 ]]; then
+    echo "$UPDATED_PACKAGES"
+  else
+    echo "No packages updated"
+  fi
+  
+  # Include full output if available
+  if [[ -f "$OUTPUT_FILE" && -s "$OUTPUT_FILE" ]]; then
+    echo ""
+    echo "Full Update Output:"
+    echo "========================================"
+    cat "$OUTPUT_FILE"
+  fi
+} > "$SESSION_LOG"
+
+# Clean up temp files
+[[ -f "$PACKAGES_FILE" ]] && rm -f "$PACKAGES_FILE"
+[[ -f "$OUTPUT_FILE" ]] && rm -f "$OUTPUT_FILE"
+
+echo "Logged to: $SESSION_LOG"

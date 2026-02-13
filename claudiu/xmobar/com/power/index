@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+COM="${HOME}/.config/xmobar/com/power"
+
+case "$1" in
+  open) "${COM}/actions/show" ;;
+  *) ;;
+esac
+
+echo "󰐥"

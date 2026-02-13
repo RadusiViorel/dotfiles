@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# xbps-install libspa-bluetooth -- bluetooth support for audio
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
+
+COM="${HOME}/.config/xmobar/com/volume"
+
+STEP=3
+MAX_VOLUME=125
+ICON_MUTED=""
+
+# ------------------------------
+
+default_sink="@DEFAULT_AUDIO_SINK@"
+
+get_volume() {
+  wpctl get-volume "${default_sink}" | awk '{printf "%.0f\n", $2 * 100}'
+}
+
+is_muted() {
+  wpctl get-volume "${default_sink}" | grep -q MUTED  && echo 1 || echo 0
+}
+
+case "$1" in
+  volume_jump) ${COM}/actions/volume_jump  \
+    --sink=${default_sink}                 \
+    --volume=$(get_volume)                 \
+    --muted=$(is_muted) ;;
+
+  volume_up) ${COM}/actions/volume_up \
+    --sink=${default_sink}            \
+    --volume=$(get_volume)            \
+    --muted=$(is_muted)               \
+    --step=${STEP}                    \
+    --max_volume=${MAX_VOLUME} ;;
+
+  volume_down) ${COM}/actions/volume_down \
+    --sink=${default_sink}                \
+    --volume=$(get_volume)                \
+    --step=${STEP} ;;
+
+  mute) ${COM}/actions/mute  \
+    --sink=${default_sink}   \
+    --volume=$(get_volume) ;;
+  *) ;;
+esac
+
+if ! pgrep -x wireplumber >/dev/null; then
+  echo "<fc=${COLOR_DANGER}>  󰖁</fc>"
+  exit 0
+fi
+
+if (( $(is_muted) == 1 )); then
+  echo "<fc=${COLOR_MUTE}>$ICON_MUTED</fc>"
+  exit 0
+fi
+
+vol=$(get_volume)
+
+thresholds=(0 20 40 75)
+sound_icons=("" "" "" "󰕾" "")
+
+sound_icon="${sound_icons[-1]}"
+
+for i in "${!thresholds[@]}"; do
+  if (( vol <= thresholds[i] )); then
+    sound_icon="${sound_icons[i]}"
+    break
+  fi
+done
+
+color=$([[ $vol -gt 100 ]] && echo "${COLOR_DANGER}" || echo "${COLOR_WHITE}")
+echo "<fc=${color}>$sound_icon  $vol󰏰</fc>"

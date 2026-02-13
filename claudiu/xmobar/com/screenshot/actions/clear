@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --DESTINATION=*) DESTINATION="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+find $DESTINATION -maxdepth 1 -type f -exec rm -f {} \;
+
+notify-send "Screenshot" "Images cleared. 󰃢"

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
+
+COM="${HOME}/.config/xmobar/com/space"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+__toggle="space_toggle"
+grep -q "^$__toggle=" "$STATE_FILE" || ( echo "$__toggle=0" >> "$STATE_FILE" && space_toggle=0 )
+
+case "$1" in
+  toggle) ${COM}/actions/toggle \
+    --value=${space_toggle}     \
+    --STATE_FILE=${STATE_FILE}  \
+    --KEY=${__toggle} ;;
+  *) ;;
+esac
+
+formats=("avail" "used")
+colors=(${COLOR_WHITE} ${COLOR_WARNING})
+
+root="$(df -h --output=${formats[$space_toggle]} /     | tail -1)"
+home="$(df -h --output=${formats[$space_toggle]} /home | tail -1)"
+
+echo "<fc=${colors[$space_toggle]}> ${root} /${home}</fc>"

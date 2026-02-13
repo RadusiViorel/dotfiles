@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --STATE_FILE=*)  STATE_FILE="${arg#*=}" ;;
+    --TOGGLE_KEY=*)  TOGGLE_KEY="${arg#*=}" ;;
+    --LOADING_KEY=*) LOADING_KEY="${arg#*=}" ;;
+    --PID_FILE=*)    PID_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+pid=$(< $PID_FILE)
+doas kill -- -${pid} >/dev/null 2>&1
+sed -i "s/^$TOGGLE_KEY=.*/$TOGGLE_KEY=0/" "$STATE_FILE"
+sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+
+rm $PID_FILE

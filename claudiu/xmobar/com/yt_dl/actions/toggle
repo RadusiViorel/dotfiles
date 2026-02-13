@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --value=*)    value="${arg#*=}" ;;
+    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
+    --KEY=*) KEY="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+new_value=$([[ $value == 'mp4' ]] && echo "mp3" || echo "mp4")
+sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
+
+icon=$( [[ $new_value == 'mp4' ]] && echo "" || echo "󰝚")
+notify-send "   ${icon}   ${new_value}"

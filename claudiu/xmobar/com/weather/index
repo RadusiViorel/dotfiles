@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+COM="${HOME}/.config/xmobar/com/weather"
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+now=$(date +%s)
+
+__loading="weather_loading"
+__spinner="weather_spinner"
+__value="weather_value"
+__timestamp="weather_timestamp"
+grep -q "^$__value="     "$STATE_FILE" || ( echo "$__value=" >> "$STATE_FILE" && weather_value="" )
+grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(( $now - 3601 ))" >> "$STATE_FILE" && weather_timestamp=$(($now - 3601 ))  )
+grep -q "^$__loading="   "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && weather_loading=0 )
+grep -q "^$__spinner="   "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && weather_spinner=0 )
+
+case "$1" in
+  run) ${COM}/actions/run          \
+    --STATE_FILE=${STATE_FILE}     \
+    --TIMESTAMP_KEY=${__timestamp} \
+    --VALUE_KEY=${__value}         \
+    --LOADING_KEY=${__loading} ;;
+  *) ;;
+esac
+
+if (( weather_loading == 1 )); then
+  spinner_icons=(      )
+  idx=$(( ( weather_spinner + 1 ) % ${#spinner_icons[@]} ))
+  sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
+  echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]} Update...󱣶 </fc>"
+  exit 0
+fi
+
+echo "$weather_value"

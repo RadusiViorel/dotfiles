@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/vars"
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --VALUE_KEY=*)     VALUE_KEY="${arg#*=}"     ;;
+    --TIMESTAMP_KEY=*) TIMESTAMP_KEY="${arg#*=}" ;;
+    --STATE_FILE=*)    STATE_FILE="${arg#*=}"    ;;
+    *) echo "Unknown argument: $arg" ; exit 1    ;;
+  esac
+done
+
+now=$(date +%s)
+
+# Nerd Font weather icons
+ICON_SUN="󰖙"
+ICON_PARTLY="󰖕"
+ICON_CLOUD="󰖐"
+ICON_RAIN="󰖗"
+ICON_DRIZZLE="󰖖"
+ICON_SNOW="󰖘"
+ICON_STORM="󰙾"
+ICON_FOG="󰖑"
+ICON_WIND="󰖑"
+ICON_UNKNOWN="󰼯"
+
+# Auto-location via IP
+raw=$(curl -sf "https://wttr.in/?format=%C|%t")
+
+if [[ -z "$raw" ]]; then
+  sed -i "s/^$VALUE_KEY=.*/$VALUE_KEY=\"${ICON_UNKNOWN}\"/" "$STATE_FILE"
+  sed -i "s/^$TIMESTAMP_KEY=.*/$TIMESTAMP_KEY=${now}/" "$STATE_FILE"
+  exit 0
+fi
+
+condition="${raw%%|*}"
+temp_raw="${raw##*|}"
+
+# Remove °C and any symbols, keep sign and number
+temp=$(echo "$temp_raw" | sed 's/[°C]//g' | sed 's/[^0-9-]//g')
+
+# Handle empty or invalid temp
+if [[ -z "$temp" ]]; then
+  temp=0
+fi
+
+cond=$(echo "$condition" | tr '[:upper:]' '[:lower:]')
+
+# Map condition → icon
+case "$cond" in
+    *sun*|*clear*)       icon="$ICON_SUN"     ;;
+    *partly*)            icon="$ICON_PARTLY"  ;;
+    *cloud*|*overcast*)  icon="$ICON_CLOUD"   ;;
+    *drizzle*)           icon="$ICON_DRIZZLE" ;;
+    *rain*)              icon="$ICON_RAIN"    ;;
+    *snow*)              icon="$ICON_SNOW"    ;;
+    *storm*|*thunder*)   icon="$ICON_STORM"   ;;
+    *fog*|*mist*|*haze*) icon="$ICON_FOG"     ;;
+    *wind*)              icon="$ICON_WIND"    ;;
+    *)                   icon="$ICON_UNKNOWN" ;;
+esac
+
+thresholds=(8           15           23        29             36)
+colors=(    $COLOR_INFO $COLOR_WHITE $COLOR_OK $COLOR_WARNING $COLOR_DANGER)
+
+color="${colors[-1]}"  # Default to CRITIC (>= 36°C)
+
+for i in "${!thresholds[@]}"; do
+  if (( temp < thresholds[i] )); then
+    color="${colors[i]}"
+    break
+  fi
+done
+
+output="<fc=${color}>${icon}  ${temp_raw}</fc>"
+
+sed -i "s/^$VALUE_KEY=.*/$VALUE_KEY=\"${output}\"/"  "$STATE_FILE"
+sed -i "s/^$TIMESTAMP_KEY=.*/$TIMESTAMP_KEY=${now}/" "$STATE_FILE"
