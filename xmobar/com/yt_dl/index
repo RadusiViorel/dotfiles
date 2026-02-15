@@ -1,21 +1,10 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
-
+COM="${HOME}/.config/xmobar/com/yt_dl"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 DESTINATION="${HOME}/youtube_dl"
-
-COM="${HOME}/.config/xmobar/com/yt_dl"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
-
-__loading="yt_loading"
-__spinner="yt_spinner"
-__type="yt_type"
-grep -q "^$__type="    "$STATE_FILE" || ( echo "$__type=mp4"  >> "$STATE_FILE" && yt_type="mp4" )
-grep -q "^$__loading=" "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && yt_loading=0 )
-grep -q "^$__spinner=" "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && yt_spinner=0 )
 
 if ! command -v yt-dlp >/dev/null 2>&1; then
   echo "Warning: yt-dlp is not installed or not in PATH."
@@ -27,24 +16,29 @@ if ! command -v ffmpeg >/dev/null 2>&1; then
   exit 1
 fi
 
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_init "yt_type" "mp4"
+state_init "yt_loading" 0
+state_init "yt_spinner" 0
+
 case "$1" in
   download) ${COM}/actions/download \
     --STATE_FILE=${STATE_FILE}      \
     --destination=${DESTINATION}    \
     --type=${yt_type}               \
-    --LOADING_KEY=${__loading} ;;
+    --LOADING_KEY=yt_loading        ;;
 
   toggle) ${COM}/actions/toggle  \
      --STATE_FILE=${STATE_FILE}  \
-     --KEY=${__type}             \
-     --value=${yt_type}  ;;
+     --KEY=yt_type               \
+     --value=${yt_type}          ;;
   *) ;;
 esac
 
 if (( yt_loading == 1 )); then
-  spinner_icons=(      )
+  spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   idx=$(( ( yt_spinner + 1 ) % ${#spinner_icons[@]} ))
-  sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
+  state_update "yt_spinner" "$idx"
   echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]} Downloading 󰦗</fc>"
   exit 0
 fi

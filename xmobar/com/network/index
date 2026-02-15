@@ -1,59 +1,63 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+COM="${HOME}/.config/xmobar/com/network"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
-COM="${HOME}/.config/xmobar/com/network"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+source "${HOME}/.config/xmobar/scripts/cache"
 
-__enabled="network_enabled"
-__loading="network_loading"
-__spinner="network_spinner"
-__traffic="network_traffic"
-grep -q "^$__enabled=" "$STATE_FILE" || ( echo "$__enabled=1" >> "$STATE_FILE" && network_enabled=1 )
-grep -q "^$__loading=" "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && network_loading=0 )
-grep -q "^$__spinner=" "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && network_spinner=0 )
-grep -q "^$__traffic=" "$STATE_FILE" || ( echo "$__traffic=0" >> "$STATE_FILE" && network_traffic=0 )
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_init "network_enabled" 1
+state_init "network_loading" 0
+state_init "network_spinner" 0
+state_init "network_traffic" 0
 
 interface=wlan0
 lan_interface=eth0
 wifi_name_length=150
 
-for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
-  if [ ! -d "/sys/class/net/$iface/wireless" ] && [[ $iface != lo ]]; then
-    lan_interface=$iface
-    break
-  fi
-done
+# Cache ip link output for 2 seconds and find interfaces in single pass
+ip_output=$(cache_cmd "ip_link" 2 ip -o link show)
 
-if ip link show ${lan_interface} | grep -q 'state UP'; then
-  echo "LAN<fc=${COLOR_MUTE}> 󰜥 </fc> 󰈀"
-  exit 0
-fi
-
-for iface in $(ip -o link show | awk -F': ' '{print $2}'); do
-  if [ -d "/sys/class/net/$iface/wireless" ]; then
-    interface=$iface
-    break
+# Find lan and wireless interfaces in one pass
+# Skip virtual interfaces (docker, veth, tun, tap, virbr, etc.)
+while IFS=': ' read -r _ iface _; do
+  # Skip loopback and virtual interfaces
+  if [[ $iface != "lo" ]] && [[ $iface != docker* ]] && [[ $iface != veth* ]] && \
+     [[ $iface != br-* ]] && [[ $iface != tun* ]] && [[ $iface != tap* ]] && \
+     [[ $iface != virbr* ]]; then
+    if [ ! -d "/sys/class/net/$iface/wireless" ]; then
+      # Check if this is a physical ethernet interface with carrier
+      if [ -f "/sys/class/net/$iface/carrier" ]; then
+        carrier=$(cat "/sys/class/net/$iface/carrier" 2>/dev/null || echo 0)
+        if [[ $carrier == "1" ]]; then
+          lan_interface=$iface
+          # Found physical LAN with active connection
+          echo "LAN<fc=${COLOR_MUTE}> 󰜥 </fc> 󰈀"
+          exit 0
+        fi
+      fi
+    else
+      interface=$iface
+    fi
   fi
-done
+done <<< "$ip_output"
 
 case "$1" in
   connect) ${COM}/actions/connect \
     --interface=${interface}      \
     --STATE_FILE=${STATE_FILE}    \
-    --KEY=${__loading} ;;
+    --KEY=network_loading ;;
 
   toggle) ${COM}/actions/toggle \
     --interface=${interface}    \
     --STATE_FILE=${STATE_FILE}  \
-    --KEY=${__enabled}          \
+    --KEY=network_enabled       \
     --value=${network_enabled} ;;
 
   traffic) ${COM}/actions/traffic \
     --STATE_FILE=${STATE_FILE}    \
-    --KEY=${__traffic}            \
+    --KEY=network_traffic         \
     --value=${network_traffic} ;;
   *) ;;
 esac
@@ -63,7 +67,8 @@ if (( network_enabled == 0 )); then
   exit 0
 fi
 
-ssid=$(wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
+# Cache wpa_cli status for 2 seconds
+ssid=$(cache_cmd "wpa_cli_${interface}" 2 wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
 
 if [ ${#ssid} -gt ${wifi_name_length} ]; then
   ssid="${ssid:0:$((wifi_name_length-3))}<fc=${COLOR_MUTE}>󰇘</fc>"
@@ -82,10 +87,10 @@ for i in "${!signal_thresholds[@]}"; do
 done
 
 if (( network_loading == 1 )); then
-  spinner_icons=(      )
-  idx=$(( ( $network_spinner + 1 ) % ${#spinner_icons[@]} ))
-  sed -i "s/^$__spinner=.*/$__spinner=${idx}/" "$STATE_FILE"
-  echo "${spinner_icons[$idx]} Searching... 󱛇"
+  spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  idx=$(( ( network_spinner + 1 ) % ${#spinner_icons[@]} ))
+  state_update "network_spinner" "${idx}"
+  echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]} Searching... 󱛇</fc>"
   exit 0
 fi
 

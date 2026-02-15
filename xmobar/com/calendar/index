@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
-
 COM="${HOME}/.config/xmobar/com/calendar"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
-__toggle="calendar_toggle"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
-grep -q "^$__toggle=" "$STATE_FILE" || ( echo "$__toggle=0" >> "$STATE_FILE" && calendar_toggle=0 )
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_init "calendar_toggle" 0
 
 if ! command -v yad >/dev/null 2>&1; then
   echo "Warning: yad is not installed or not in PATH."
@@ -17,7 +14,7 @@ case "$1" in
   toggle) ${COM}/actions/toggle \
     --value=${calendar_toggle}  \
     --STATE_FILE=${STATE_FILE}  \
-    --KEY=${__toggle} ;;
+    --KEY=calendar_toggle ;;
   show_calendar) ${COM}/actions/show_calendar;;
   *) ;;
 esac

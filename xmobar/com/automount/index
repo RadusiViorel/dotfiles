@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+COM="${HOME}/.config/xmobar/com/automount"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
+
+source "${HOME}/.config/xmobar/scripts/page/index" 2
+
+CONFIG_FILE="${HOME}/.config/_scripts/startup/automount/automount.conf"
+
+case "$1" in
+  toggle) ${COM}/actions/toggle ;;
+esac
+
+count=$(grep -c "^NEW=yes$" "$CONFIG_FILE" 2>/dev/null)
+
+color=$(  [[ count -gt 0 ]] && echo ${COLOR_WARNING} || echo ${COLOR_WHITE} )
+counter=$([[ count -gt 0 ]] && echo " ${count}" || echo "" )
+
+echo "<fc=${color}>󱛟$counter</fc>"

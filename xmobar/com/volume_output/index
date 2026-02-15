@@ -1,27 +1,18 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/page/index" 1
-
 COM="${HOME}/.config/xmobar/com/volume_output"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
+source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 ICON_SPEAKER="󰓃"
 ICON_JACK_HEADPHONES="󱡬 󰋋"
 ICON_USB_HEADPHONES="  󰋋"
 ICON_WIRELESS_HEADPHONES=" 󰋋"
-
-# ------------------------------
-
 default_sink="@DEFAULT_AUDIO_SINK@"
-
-get_volume() {
-  wpctl get-volume "${default_sink}" | awk '{printf "%.0f\n", $2 * 100}'
-}
 
 get_sink_icon() {
   INFO="$(wpctl inspect ${default_sink})"
-
 
   case "$INFO" in
     *'device.api = "bluez5"'*) echo "${ICON_WIRELESS_HEADPHONES}" ;;

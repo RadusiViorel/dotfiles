@@ -10,13 +10,22 @@ for arg in "$@"; do
   esac
 done
 
-sed -i "s/^$KEY=.*/$KEY=1/" "$STATE_FILE"
+# Enable network display when connecting
+# (If user clicked connect, they want to see network info)
+sed -i "s/^network_enabled=.*/network_enabled=1/" "$STATE_FILE"
+
+# Set loading state BEFORE scan so spinner shows during WiFi scan
+sed -i "s/^$KEY=.*/network_loading=1/" "$STATE_FILE"
 
 # ---------------------------
 # 0. Trigger scan explicitly
 # ---------------------------
 wpa_cli -i "$interface" scan >/dev/null
 sleep 2
+
+# Clear loading state before showing rofi
+# (Rofi blocks, user doesn't need to see spinner while selecting)
+sed -i "s/^network_loading=.*/network_loading=0/" "$STATE_FILE"
 
 # ---------------------------
 # 1. Build KNOWN SSID LIST
@@ -72,7 +81,29 @@ nid=$(wpa_cli -i "$interface" list_networks \
 if [ -n "$nid" ]; then
   wpa_cli -i "$interface" enable_network "$nid" >/dev/null
   wpa_cli -i "$interface" select_network "$nid" >/dev/null
-  sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
+  
+  # Set loading state and monitor connection in background
+  sed -i "s/^$KEY=.*/$KEY=1/" "$STATE_FILE"
+  
+  # Monitor connection in background (same as new network)
+  (
+    # Wait up to 10 seconds for successful connection
+    for i in {1..10}; do
+      STATUS=$(wpa_cli -i "$interface" status | grep wpa_state | cut -d= -f2)
+      if [ "$STATUS" = "COMPLETED" ]; then
+        wpa_cli -i "$interface" save_config >/dev/null
+        notify-send "WiFi" "Connected to $ssid"
+        sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
+        exit 0
+      fi
+      sleep 1
+    done
+    
+    # Connection failed
+    notify-send "WiFi" "󱛅 ${ssid} connection timeout"
+    sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
+  ) &
+  
   exit 0
 fi
 
@@ -90,21 +121,27 @@ wpa_cli -i "$interface" set_network "$nid" psk "\"$password\"" >/dev/null
 # Enable and save
 wpa_cli -i "$interface" enable_network "$nid" >/dev/null
 
-# Wait up to 10 seconds for successful connection
-for i in {1..10}; do
-  STATUS=$(wpa_cli -i "$interface" status | grep wpa_state | cut -d= -f2)
-  if [ "$STATUS" = "COMPLETED" ]; then
-    # SUCCESS → save config permanently
-    wpa_cli -i "$interface" save_config >/dev/null
-    wpa_cli -i "$interface" select_network "$nid" >/dev/null
-    notify-send "WiFi" "Connected to $ssid"
-    sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
-    exit 0
-  fi
-  sleep 1
-done
+# Set loading state and monitor connection in background
+sed -i "s/^$KEY=.*/$KEY=1/" "$STATE_FILE"
 
-notify-send "WiFi" "󱛅 ${ssid} error"
-wpa_cli -i "$interface" remove_network "$nid" >/dev/null
+# Monitor connection in background
+(
+  # Wait up to 10 seconds for successful connection
+  for i in {1..10}; do
+    STATUS=$(wpa_cli -i "$interface" status | grep wpa_state | cut -d= -f2)
+    if [ "$STATUS" = "COMPLETED" ]; then
+      # SUCCESS → save config permanently
+      wpa_cli -i "$interface" save_config >/dev/null
+      wpa_cli -i "$interface" select_network "$nid" >/dev/null
+      notify-send "WiFi" "Connected to $ssid"
+      sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
+      exit 0
+    fi
+    sleep 1
+  done
 
-sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
+  # Connection failed
+  notify-send "WiFi" "󱛅 ${ssid} error"
+  wpa_cli -i "$interface" remove_network "$nid" >/dev/null
+  sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
+) &

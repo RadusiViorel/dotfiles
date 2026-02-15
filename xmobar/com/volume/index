@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-source "${HOME}/.config/xmobar/scripts/vars"
+COM="${HOME}/.config/xmobar/com/volume"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
-COM="${HOME}/.config/xmobar/com/volume"
+source "${HOME}/.config/xmobar/scripts/cache"
 
 STEP=3
 MAX_VOLUME=125
 ICON_MUTED=""
-
-# ------------------------------
-
 default_sink="@DEFAULT_AUDIO_SINK@"
 
 get_volume() {
@@ -46,8 +44,9 @@ case "$1" in
   *) ;;
 esac
 
-if ! pgrep -x wireplumber >/dev/null; then
-  echo "<fc=${COLOR_DANGER}>  󰖁</fc>"
+# Cache pgrep check for 3 seconds (service state doesn't change frequently)
+if ! cache_cmd "wireplumber_check" 3 pgrep -x wireplumber >/dev/null 2>&1; then
+  echo "<fc=${COLOR_DANGER}>  󰖁</fc>"
   exit 0
 fi
 

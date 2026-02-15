@@ -1,32 +1,9 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+COM="${HOME}/.config/xmobar/com/screenshot"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
 DESTINATION="$HOME/screenshots"
-
-COM="${HOME}/.config/xmobar/com/screenshot"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
-
-__edit="screenshot_edit"
-grep -q "^$__edit=" "$STATE_FILE" || ( echo "$__edit=0"  >> "$STATE_FILE" && screenshot_edit=0 )
-
-case "$1" in
-  take) ${COM}/actions/take      \
-    --DESTINATION=${DESTINATION} \
-    --edit=${screenshot_edit} ;;
-
-  toggle) ${COM}/actions/toggle  \
-    --STATE_FILE=${STATE_FILE}   \
-    --KEY=${__edit}              \
-    --value=${screenshot_edit} ;;
-
-  clear) ${COM}/actions/clear \
-    --DESTINATION=${DESTINATION} ;;
-  *) ;;
-esac
-
-source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 if ! command -v scrot >/dev/null 2>&1; then
   echo "Warning: scrot is not installed or not in PATH."
@@ -47,6 +24,26 @@ if ! command -v xclip >/dev/null 2>&1; then
   echo "Warning: xclip is not installed or not in PATH."
   exit 1
 fi
+
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_init "screenshot_edit" 0
+
+case "$1" in
+  take) ${COM}/actions/take      \
+    --DESTINATION=${DESTINATION} \
+    --edit=${screenshot_edit} ;;
+
+  toggle) ${COM}/actions/toggle  \
+    --STATE_FILE=${STATE_FILE}   \
+    --KEY=screenshot_edit        \
+    --value=${screenshot_edit} ;;
+
+  clear) ${COM}/actions/clear \
+    --DESTINATION=${DESTINATION} ;;
+  *) ;;
+esac
+
+source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 color=$([[ $screenshot_edit -eq 0 ]] && echo "${COLOR_WHITE}" || echo "${COLOR_WARNING}")
 echo "<fc=${color}>󰹑</fc>"

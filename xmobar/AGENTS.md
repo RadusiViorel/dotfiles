@@ -286,9 +286,9 @@ fi
 **Loading Spinners:**
 ```bash
 if (( loading == 1 )); then
-  spinner_icons=(      )
+  spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   idx=$(( ( spinner + 1 ) % ${#spinner_icons[@]} ))
-  sed -i "s/^$__spinner=.*/$__spinner=${idx}/" "$STATE_FILE"
+  state_update "spinner" "${idx}"
   echo "${spinner_icons[$idx]} Loading..."
   exit 0
 fi

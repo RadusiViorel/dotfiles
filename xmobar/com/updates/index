@@ -1,33 +1,29 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
-
 COM="${HOME}/.config/xmobar/com/updates"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
 now=$(date +%s)
 WARNING_COUNT=15
 CACHE_TTL=3600 #one hour
 
-__timestamp="updates_timestamp"
-__count="updates_count"
-grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(($now - 3601 ))" >> "$STATE_FILE" && updates_timestamp=$(($now - 3601 )) )
-grep -q "^$__count="     "$STATE_FILE" || ( echo "$__count=0"     >> "$STATE_FILE" && updates_count=0 )
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_init "updates_timestamp" $((now - 3601))
+state_init "updates_count" 0
 
-# Refresh cache if older than 1 minute
+# Refresh cache if older than CACHE_TTL
 if (( now - updates_timestamp >= CACHE_TTL )); then
   package_list=$(xbps-install -nuM)
   count="$(printf "%s\n" "$package_list" | grep -cve '^\s*$')"
-  sed -i "s/^$__timestamp=.*/$__timestamp=$now/" "$STATE_FILE"
-  sed -i "s/^$__count=.*/$__count=$count/" "$STATE_FILE"
+  state_update "updates_timestamp" "$now"
+  state_update "updates_count" "$count"
 fi
 
 case "$1" in
   show) ${COM}/actions/show        \
     --package_list=${package_list} \
     --STATE_FILE=${STATE_FILE}     \
-    --COUNT_KEY=${__count} ;;
+    --COUNT_KEY=updates_count ;;
   view_log) ${COM}/actions/view_log ;;
   *) ;;
 esac

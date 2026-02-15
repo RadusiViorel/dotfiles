@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
+COM="${HOME}/.config/xmobar/com/rofi_theme"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 case "$1" in

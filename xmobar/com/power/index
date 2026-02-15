@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
 COM="${HOME}/.config/xmobar/com/power"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
 case "$1" in
   open) "${COM}/actions/show" ;;

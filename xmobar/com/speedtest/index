@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+COM="${HOME}/.config/xmobar/com/speedtest"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 if ! command -v speedtest >/dev/null 2>&1; then
@@ -9,23 +9,15 @@ if ! command -v speedtest >/dev/null 2>&1; then
   exit 1
 fi
 
-COM="${HOME}/.config/xmobar/com/speedtest"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
-
 now=$(date +%s)
 
-__isp="speedtest_isp"
-__up="speedtest_up"
-__down="speedtest_down"
-__timestamp="speedtest_timestamp"
-__loading="speedtest_loading"
-__spinner="speedtest_spinner"
-grep -q "^$__isp="       "$STATE_FILE" || ( echo "$__isp=UNKNOWN" >> "$STATE_FILE" && speedtest_isp="UNKNOWN" )
-grep -q "^$__up="        "$STATE_FILE" || ( echo "$__up=0" >> "$STATE_FILE" && speedtest_up=0 )
-grep -q "^$__down="      "$STATE_FILE" || ( echo "$__down=0" >> "$STATE_FILE" && speedtest_down=0 )
-grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(($now - 3601 ))" >> "$STATE_FILE" && speedtest_timestamp=$(($now - 3601 ))  )
-grep -q "^$__loading="   "$STATE_FILE" || ( echo "$__loading=0" >> "$STATE_FILE" && speedtest_loading=0 )
-grep -q "^$__spinner"    "$STATE_FILE" || ( echo "$__spinner=0" >> "$STATE_FILE" && speedtest_spinner=0 )
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_init "speedtest_isp" "UNKNOWN"
+state_init "speedtest_up" 0
+state_init "speedtest_down" 0
+state_init "speedtest_timestamp" $((now - 3601))
+state_init "speedtest_loading" 0
+state_init "speedtest_spinner" 0
 
 case "$1" in
   show) ${COM}/actions/show \
@@ -36,18 +28,18 @@ case "$1" in
 
   run) ${COM}/actions/run          \
     --STATE_FILE=${STATE_FILE}     \
-    --ISP_KEY=${__isp}             \
-    --UP_KEY=${__up}               \
-    --DOWN_KEY=${__down}           \
-    --TIMESTAMP_KEY=${__timestamp} \
-    --LOADING_KEY=${__loading} ;;
+    --ISP_KEY=speedtest_isp        \
+    --UP_KEY=speedtest_up          \
+    --DOWN_KEY=speedtest_down      \
+    --TIMESTAMP_KEY=speedtest_timestamp \
+    --LOADING_KEY=speedtest_loading ;;
   *) ;;
 esac
 
 if (( speedtest_loading == 1 )); then
-  spinner_icons=(      )
+  spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   idx=$(( ( speedtest_spinner + 1 ) % ${#spinner_icons[@]} ))
-  sed -i "s/^$__spinner=.*/$__spinner=$idx/" "$STATE_FILE"
+  state_update "speedtest_spinner" "$idx"
   echo "<fc=${COLOR_INFO}>${spinner_icons[$idx]} Testing 󰓅</fc>"
   exit 0
 fi

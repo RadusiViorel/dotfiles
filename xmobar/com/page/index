@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
-
 COM="${HOME}/.config/xmobar/com/page"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+[[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
-__number="page_number"
-grep -q "^$__number=" "$STATE_FILE" || ( echo "$__number=1" >> "$STATE_FILE" && page_number=1 )
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_init "page_number" 1
 
 case "$1" in
   toggle) ${COM}/actions/toggle \
     --value=${page_number}      \
     --STATE_FILE=${STATE_FILE}  \
-    --KEY=${__number} ;;
+    --KEY=page_number ;;
   *) ;;
 esac
 

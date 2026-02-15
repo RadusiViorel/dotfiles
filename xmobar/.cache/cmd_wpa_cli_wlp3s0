@@ -1,0 +1,14 @@
+bssid=76:b9:6f:23:b7:e8
+freq=2437
+ssid=AndroidAPx
+id=25
+mode=station
+wifi_generation=4
+pairwise_cipher=CCMP
+group_cipher=CCMP
+key_mgmt=WPA2-PSK
+wpa_state=COMPLETED
+ip_address=192.168.138.47
+p2p_device_address=4c:1d:96:e7:6e:dd
+address=4c:1d:96:e7:6e:db
+uuid=3e69d06a-6905-5ef6-9a3e-93a18fadd3ae

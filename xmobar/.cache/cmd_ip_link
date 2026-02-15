@@ -1,0 +1,14 @@
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UP mode DEFAULT group default qlen 1000\    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp0s25: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc pfifo_fast state DOWN mode DEFAULT group default qlen 1000\    link/ether 28:d2:44:32:15:ea brd ff:ff:ff:ff:ff:ff
+4: wlp3s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DORMANT group default qlen 1000\    link/ether 4c:1d:96:e7:6e:db brd ff:ff:ff:ff:ff:ff
+5: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN mode DEFAULT group default \    link/ether d6:38:b0:ea:eb:58 brd ff:ff:ff:ff:ff:ff
+6: br-7606a42e4040: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default \    link/ether 4a:6c:99:25:1f:2e brd ff:ff:ff:ff:ff:ff
+7: veth390fe79@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 6a:49:ea:7f:00:9f brd ff:ff:ff:ff:ff:ff link-netnsid 0
+8: veth43686c4@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 66:91:77:22:ed:7a brd ff:ff:ff:ff:ff:ff link-netnsid 1
+9: veth3e6b26d@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 4e:5d:87:1d:c6:da brd ff:ff:ff:ff:ff:ff link-netnsid 2
+10: veth979764e@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 2a:5e:f2:2c:99:6c brd ff:ff:ff:ff:ff:ff link-netnsid 3
+11: vetha7226c5@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 3e:90:4d:63:04:07 brd ff:ff:ff:ff:ff:ff link-netnsid 4
+12: veth0ecdc15@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 62:04:2b:d7:af:74 brd ff:ff:ff:ff:ff:ff link-netnsid 5
+13: veth24effbc@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 26:3c:ac:b3:ff:f9 brd ff:ff:ff:ff:ff:ff link-netnsid 6
+14: veth2112ae9@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 8a:3c:a3:14:a8:18 brd ff:ff:ff:ff:ff:ff link-netnsid 7
+15: vethe7049b4@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master br-7606a42e4040 state UP mode DEFAULT group default \    link/ether 72:d3:69:3a:e0:a5 brd ff:ff:ff:ff:ff:ff link-netnsid 8

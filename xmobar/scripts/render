@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-source "${HOME}/.config/xmobar/scripts/vars"
+
+# Vars are already exported from scripts/bar, no need to source
+# Keep this for backwards compatibility if render called directly
+if [[ -z "$COLOR_OK" ]]; then
+  source "${HOME}/.config/xmobar/scripts/vars"
+fi
 
 for arg in "$@"; do
   case $arg in

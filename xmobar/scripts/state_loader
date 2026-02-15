@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+state_init() {
+  local key="$1"
+  local default="$2"
+
+  if ! grep -q "^${key}=" "$STATE_FILE" 2>/dev/null; then
+    echo "${key}=${default}" >> "$STATE_FILE"
+    eval "${key}=\"${default}\""
+  fi
+}
+
+state_update() {
+  local key="$1"
+  local value="$2"
+
+  sed -i "s|^${key}=.*|${key}=${value}|" "$STATE_FILE"
+}
