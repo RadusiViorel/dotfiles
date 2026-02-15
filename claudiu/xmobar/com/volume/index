@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-source "${HOME}/.config/xmobar/scripts/vars"
+# Vars/state already exported from scripts/bar
+source "${HOME}/.config/xmobar/scripts/cache"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/volume"
@@ -46,8 +47,9 @@ case "$1" in
   *) ;;
 esac
 
-if ! pgrep -x wireplumber >/dev/null; then
-  echo "<fc=${COLOR_DANGER}>  󰖁</fc>"
+# Cache pgrep check for 3 seconds (service state doesn't change frequently)
+if ! cache_cmd "wireplumber_check" 3 pgrep -x wireplumber >/dev/null 2>&1; then
+  echo "<fc=${COLOR_DANGER}>  󰖁</fc>"
   exit 0
 fi
 

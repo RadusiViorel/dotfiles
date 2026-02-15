@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Slack notification monitor - stores count in dedicated file
+COUNT_FILE="${HOME}/.config/_scripts/startup/slack_notifications"
+
+# Initialize count file if missing
+[[ -f "$COUNT_FILE" ]] || echo "0" > "$COUNT_FILE"
+
+# Get current count
+slack_count=$(cat "$COUNT_FILE")
+
+# Update count function
+update_count() {
+    echo "$1" > "$COUNT_FILE"
+}
+
+# Monitor D-Bus notifications (background process)
+(
+    dbus-monitor --session "interface='org.freedesktop.Notifications',member='Notify'" 2>/dev/null | \
+    while IFS= read -r line; do
+        # Detect Slack app (case-insensitive)
+        if echo "$line" | grep -iq 'string "slack"'; then
+            ((slack_count++))
+            update_count "$slack_count"
+        fi
+    done
+) &
+
+dbus_pid=$!
+
+# Monitor active window (foreground loop)
+while true; do
+    active_class=$(xdotool getactivewindow getwindowclassname 2>/dev/null || echo "")
+    
+    # Check if Slack is active (case-insensitive) and has notifications
+    if [[ "${active_class,,}" == "slack" ]] && (( slack_count > 0 )); then
+        slack_count=0
+        update_count 0
+    fi
+    
+    sleep 2
+done
+
+# Cleanup on exit
+trap "kill $dbus_pid 2>/dev/null" EXIT

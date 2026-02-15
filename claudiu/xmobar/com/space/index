@@ -1,20 +1,28 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+# Vars/state already exported from scripts/bar
+source "${HOME}/.config/xmobar/scripts/state_loader"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/space"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
-__toggle="space_toggle"
-grep -q "^$__toggle=" "$STATE_FILE" || ( echo "$__toggle=0" >> "$STATE_FILE" && space_toggle=0 )
+# Initialize state if needed
+state_init "space_toggle" 0
+
+
+# If action is called, re-source state to get current values
+if [[ -n "$1" ]]; then
+  source "${STATE_FILE}"
+fi
 
 case "$1" in
   toggle) ${COM}/actions/toggle \
     --value=${space_toggle}     \
     --STATE_FILE=${STATE_FILE}  \
-    --KEY=${__toggle} ;;
+    --KEY=space_toggle
+    # Re-source state after action to get updated value
+    source "${STATE_FILE}" ;;
   *) ;;
 esac
 

@@ -32,33 +32,36 @@ fi
 format=$([[ $type == 'mp4' ]] && echo "-f mp4" || echo "-t mp3")
 
 sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
-TITLE=$(yt-dlp \
-  "$VIDEO_ID" \
-  $format \
-  -o "${destination}/%(title)s.%(ext)s" \
-  --quiet \
-  --no-progress \
-  --no-warnings \
-  --print after_move:title
-)
-FILENAME=$(printf "%s" "$TITLE" | rofi -dmenu -p "Filename:")
 
-if [[ -n "$FILENAME" && "$FILENAME" != "$TITLE" ]]; then
-  mv "$destination/$TITLE.${type}" "$destination/$FILENAME.${type}"
-fi
+# Run download in background
+(
+  TITLE=$(yt-dlp \
+    "$VIDEO_ID" \
+    $format \
+    -o "${destination}/%(title)s.%(ext)s" \
+    --quiet \
+    --no-progress \
+    --no-warnings \
+    --print after_move:title
+  )
+  FILENAME=$(printf "%s" "$TITLE" | rofi -dmenu -p "Filename:")
 
-CLIP=$(rofi -dmenu -p "Clip (optional: 1:23-2:10)")
-if [[ "$CLIP" =~ ^[^-]+-[^-]+$ ]]; then
-  INPUT="$destination/$FILENAME.${type}"
-  OUTPUT="$destination/${FILENAME}_${START//:/-}_${END//:/-}.${type}"
-  START="${CLIP%-*}"
-  END="${CLIP#*-}"
-  ffmpeg -ss "$START" -to "$END" -i "$INPUT" -c copy "$OUTPUT"
+  if [[ -n "$FILENAME" && "$FILENAME" != "$TITLE" ]]; then
+    mv "$destination/$TITLE.${type}" "$destination/$FILENAME.${type}"
+  fi
 
-  rm "${INPUT}"
-  mv "${OUTPUT}" "${INPUT}"
-fi
+  CLIP=$(rofi -dmenu -p "Clip (optional: 1:23-2:10)")
+  if [[ "$CLIP" =~ ^[^-]+-[^-]+$ ]]; then
+    INPUT="$destination/$FILENAME.${type}"
+    OUTPUT="$destination/${FILENAME}_${START//:/-}_${END//:/-}.${type}"
+    START="${CLIP%-*}"
+    END="${CLIP#*-}"
+    ffmpeg -ss "$START" -to "$END" -i "$INPUT" -c copy "$OUTPUT"
 
-sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+    rm "${INPUT}"
+    mv "${OUTPUT}" "${INPUT}"
+  fi
 
-notify-send "Finished: ${FILENAME}.${type}"
+  sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+  notify-send "Finished: ${FILENAME}.${type}"
+) &

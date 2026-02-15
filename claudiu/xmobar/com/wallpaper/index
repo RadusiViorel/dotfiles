@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+# Vars/state already exported from scripts/bar
+source "${HOME}/.config/xmobar/scripts/state_loader"
 
 wallpapers_folder="${HOME}/wallpapers"
 
@@ -13,10 +13,15 @@ if ! command -v nsxiv >/dev/null 2>&1; then
   exit 1
 fi
 
-__lock="wallpaper_lock"
-__image="wallpaper_image"
-grep -q "^$__lock"  "$STATE_FILE" || ( echo "$__lock=0" >> "$STATE_FILE" && wallpaper_lock=0)
-grep -q "^$__image" "$STATE_FILE" || ( echo "$__image=" >> "$STATE_FILE" && wallpaper_image="")
+# Initialize state keys if needed
+state_init "wallpaper_lock" 0
+state_init "wallpaper_image" ""
+
+
+# If action is called, re-source state to get current values
+if [[ -n "$1" ]]; then
+  source "${STATE_FILE}"
+fi
 
 case "$1" in
     picker) ${COM}/actions/picker \
@@ -24,14 +29,18 @@ case "$1" in
 
     lock_image) ${COM}/actions/lock_image \
       --STATE_FILE=${STATE_FILE}          \
-      --LOCK_KEY=${__lock}                \
-      --value=${wallpaper_lock} ;;
+      --LOCK_KEY=wallpaper_lock           \
+      --value=${wallpaper_lock}
+      # Re-source state after action to get updated value
+      source "${STATE_FILE}" ;;
 
     change) ${COM}/actions/change         \
       --STATE_FILE=${STATE_FILE}          \
-      --IMAGE_KEY=${__image}              \
+      --IMAGE_KEY=wallpaper_image         \
       --selected_image=${wallpaper_image} \
-      --is_locked=${wallpaper_lock} ;;
+      --is_locked=${wallpaper_lock}
+      # Re-source state after action to get updated value
+      source "${STATE_FILE}" ;;
     *) ;;
 esac
 

@@ -1,0 +1,75 @@
+Update Session Log
+Timestamp: 2026-02-11 18:45:19
+Packages Updated: 0
+0
+Size required on disk:          31MB
+Size to download:               12MB
+
+Packages:
+----------------------------------------
+No packages updated
+
+Full Update Output:
+========================================
+[*] Updating repository `https://voidlinux.mirror.garr.it/current/x86_64-repodata' ...
+x86_64-repodata: [2087KB 0%] 126MB/s ETA: 00m00s
+x86_64-repodata: 2087KB [avg rate: 64GB/s]
+3 packages will be downloaded:
+
+  libpng-1.6.55_1 
+  libpng-devel-1.6.55_1 
+  libz3-4.15.7_1 
+3 packages will be updated:
+
+  libpng (1.6.54_1 -> 1.6.55_1) 
+  libpng-devel (1.6.54_1 -> 1.6.55_1) 
+  libz3 (4.15.5_1 -> 4.15.7_1) 
+
+Size to download:               12MB
+Size required on disk:          31MB
+Space available on disk:       257GB
+
+Do you want to continue? [Y/n] 
+[*] Downloading packages
+libpng-1.6.55_1.x86_64.xbps.sig2: [512B 100%] 26MB/s ETA: 00m00s
+libpng-1.6.55_1.x86_64.xbps.sig2: 512B [avg rate: 26MB/s]
+libpng-1.6.55_1.x86_64.xbps: [114KB 3%] 85MB/s ETA: 00m00s
+libpng-1.6.55_1.x86_64.xbps: 114KB [avg rate: 2420MB/s]
+libpng-1.6.55_1: verifying RSA signature...
+libpng-devel-1.6.55_1.x86_64.xbps.sig2: [512B 100%] 27MB/s ETA: 00m00s
+libpng-devel-1.6.55_1.x86_64.xbps.sig2: 512B [avg rate: 27MB/s]
+libpng-devel-1.6.55_1.x86_64.xbps: [225KB 1%] 45MB/s ETA: 00m00s
+libpng-devel-1.6.55_1.x86_64.xbps: 225KB [avg rate: 2552MB/s]
+libpng-devel-1.6.55_1: verifying RSA signature...
+libz3-4.15.7_1.x86_64.xbps.sig2: [512B 100%] 20MB/s ETA: 00m00s
+libz3-4.15.7_1.x86_64.xbps.sig2: 512B [avg rate: 20MB/s]
+libz3-4.15.7_1.x86_64.xbps: [11MB 0%] 83MB/s ETA: 00m00s
+libz3-4.15.7_1.x86_64.xbps: 11MB [avg rate: 237GB/s]
+libz3-4.15.7_1: verifying RSA signature...
+
+[*] Collecting package files
+libpng-1.6.55_1: collecting files...
+libpng-1.6.54_1: collecting files...
+libpng-devel-1.6.55_1: collecting files...
+libpng-devel-1.6.54_1: collecting files...
+libz3-4.15.7_1: collecting files...
+libz3-4.15.5_1: collecting files...
+
+[*] Unpacking packages
+libpng-1.6.54_1: updating to 1.6.55_1 ...
+libpng-1.6.55_1: unpacking ...
+libpng-1.6.55_1: removed obsolete entry: ./usr/lib/libpng16.so.16.54.0
+[1A[Klibpng-devel-1.6.54_1: updating to 1.6.55_1 ...
+libpng-devel-1.6.55_1: unpacking ...
+libz3-4.15.5_1: updating to 4.15.7_1 ...
+libz3-4.15.7_1: unpacking ...
+
+[*] Configuring unpacked packages
+libpng-1.6.55_1: configuring ...
+libpng-1.6.55_1: updated successfully.
+libpng-devel-1.6.55_1: configuring ...
+libpng-devel-1.6.55_1: updated successfully.
+libz3-4.15.7_1: configuring ...
+libz3-4.15.7_1: updated successfully.
+
+3 downloaded, 0 installed, 3 updated, 3 configured, 0 removed, 0 on hold.

@@ -10,6 +10,10 @@ for arg in "$@"; do
   esac
 done
 
+# Always regenerate package list to ensure it's current
+# (package_list parameter might be empty if cache was valid)
+package_list=$(xbps-install -nuM)
+
 # Capture package list before update
 TEMP_DIR="/tmp/xmobar_updates_$$"
 mkdir -p "$TEMP_DIR"

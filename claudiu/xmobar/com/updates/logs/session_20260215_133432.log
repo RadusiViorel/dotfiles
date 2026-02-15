@@ -1,0 +1,62 @@
+Update Session Log
+Timestamp: 2026-02-15 13:34:32
+Packages Updated: 2
+Size required on disk:         106KB
+Size to download:               40KB
+
+Packages:
+----------------------------------------
+llhttp-9.3.1_1 update x86_64 https://voidlinux.mirror.garr.it/current 68681 24800
+signon-kwallet-extension-25.12.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 39520 14716
+
+Full Update Output:
+========================================
+[*] Updating repository `https://voidlinux.mirror.garr.it/current/x86_64-repodata' ...
+x86_64-repodata: [2089KB 0%] 178MB/s ETA: 00m00s
+x86_64-repodata: 2089KB [avg rate: 91GB/s]
+2 packages will be downloaded:
+
+  llhttp-9.3.1_1 
+  signon-kwallet-extension-25.12.2_1 
+2 packages will be updated:
+
+  llhttp (9.3.0_1 -> 9.3.1_1) 
+  signon-kwallet-extension (25.08.3_1 -> 25.12.2_1) 
+
+Size to download:               40KB
+Size required on disk:         106KB
+Space available on disk:       254GB
+
+Do you want to continue? [Y/n] 
+[*] Downloading packages
+llhttp-9.3.1_1.x86_64.xbps.sig2: [512B 100%] 5814KB/s ETA: 00m00s
+llhttp-9.3.1_1.x86_64.xbps.sig2: 512B [avg rate: 5814KB/s]
+llhttp-9.3.1_1.x86_64.xbps: [24KB 16%] 33MB/s ETA: 00m00s
+llhttp-9.3.1_1.x86_64.xbps: 24KB [avg rate: 200MB/s]
+llhttp-9.3.1_1: verifying RSA signature...
+signon-kwallet-extension-25.12.2_1.x86_64.xbps.sig2: [512B 100%] 9091KB/s ETA: 00m00s
+signon-kwallet-extension-25.12.2_1.x86_64.xbps.sig2: 512B [avg rate: 9091KB/s]
+signon-kwallet-extension-25.12.2_1.x86_64.xbps: [14KB 27%] 32MB/s ETA: 00m00s
+signon-kwallet-extension-25.12.2_1.x86_64.xbps: 14KB [avg rate: 113MB/s]
+signon-kwallet-extension-25.12.2_1: verifying RSA signature...
+
+[*] Collecting package files
+llhttp-9.3.1_1: collecting files...
+llhttp-9.3.0_1: collecting files...
+signon-kwallet-extension-25.12.2_1: collecting files...
+signon-kwallet-extension-25.08.3_1: collecting files...
+
+[*] Unpacking packages
+llhttp-9.3.0_1: updating to 9.3.1_1 ...
+llhttp-9.3.1_1: unpacking ...
+llhttp-9.3.1_1: removed obsolete entry: ./usr/lib/libllhttp.so.9.3.0
+[1A[Ksignon-kwallet-extension-25.08.3_1: updating to 25.12.2_1 ...
+signon-kwallet-extension-25.12.2_1: unpacking ...
+
+[*] Configuring unpacked packages
+llhttp-9.3.1_1: configuring ...
+llhttp-9.3.1_1: updated successfully.
+signon-kwallet-extension-25.12.2_1: configuring ...
+signon-kwallet-extension-25.12.2_1: updated successfully.
+
+2 downloaded, 0 installed, 2 updated, 2 configured, 0 removed, 0 on hold.

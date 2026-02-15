@@ -1,0 +1,88 @@
+Update Session Log
+Timestamp: 2026-02-12 10:12:12
+Packages Updated: 0
+0
+Size required on disk:        1682KB
+Size to download:              558KB
+
+Packages:
+----------------------------------------
+No packages updated
+
+Full Update Output:
+========================================
+[*] Updating repository `https://voidlinux.mirror.garr.it/current/x86_64-repodata' ...
+x86_64-repodata: [2088KB 0%] 93MB/s ETA: 00m00s
+x86_64-repodata: 2088KB [avg rate: 47GB/s]
+4 packages will be downloaded:
+
+  lcms2-2.18_1 
+  lcms2-devel-2.18_1 
+  libconfig-1.8.2_1 
+  libinput-1.30.1_1 
+4 packages will be updated:
+
+  lcms2 (2.17_1 -> 2.18_1) 
+  lcms2-devel (2.17_1 -> 2.18_1) 
+  libconfig (1.8.1_1 -> 1.8.2_1) 
+  libinput (1.28.1_1 -> 1.30.1_1) 
+
+Size to download:              558KB
+Size required on disk:        1682KB
+Space available on disk:       257GB
+
+Do you want to continue? [Y/n] 
+[*] Downloading packages
+lcms2-2.18_1.x86_64.xbps.sig2: [512B 100%] 20MB/s ETA: 00m00s
+lcms2-2.18_1.x86_64.xbps.sig2: 512B [avg rate: 20MB/s]
+lcms2-2.18_1.x86_64.xbps: [178KB 2%] 45MB/s ETA: 00m00s
+lcms2-2.18_1.x86_64.xbps: 178KB [avg rate: 2020MB/s]
+lcms2-2.18_1: verifying RSA signature...
+lcms2-devel-2.18_1.x86_64.xbps.sig2: [512B 100%] 13MB/s ETA: 00m00s
+lcms2-devel-2.18_1.x86_64.xbps.sig2: 512B [avg rate: 13MB/s]
+lcms2-devel-2.18_1.x86_64.xbps: [27KB 15%] 100MB/s ETA: 00m00s
+lcms2-devel-2.18_1.x86_64.xbps: 27KB [avg rate: 666MB/s]
+lcms2-devel-2.18_1: verifying RSA signature...
+libconfig-1.8.2_1.x86_64.xbps.sig2: [512B 100%] 41MB/s ETA: 00m00s
+libconfig-1.8.2_1.x86_64.xbps.sig2: 512B [avg rate: 41MB/s]
+libconfig-1.8.2_1.x86_64.xbps: [26KB 15%] 103MB/s ETA: 00m00s
+libconfig-1.8.2_1.x86_64.xbps: 26KB [avg rate: 666MB/s]
+libconfig-1.8.2_1: verifying RSA signature...
+libinput-1.30.1_1.x86_64.xbps.sig2: [512B 100%] 14MB/s ETA: 00m00s
+libinput-1.30.1_1.x86_64.xbps.sig2: 512B [avg rate: 14MB/s]
+libinput-1.30.1_1.x86_64.xbps: [326KB 1%] 145MB/s ETA: 00m00s
+libinput-1.30.1_1.x86_64.xbps: 326KB [avg rate: 12GB/s]
+libinput-1.30.1_1: verifying RSA signature...
+
+[*] Collecting package files
+lcms2-2.18_1: collecting files...
+lcms2-2.17_1: collecting files...
+lcms2-devel-2.18_1: collecting files...
+lcms2-devel-2.17_1: collecting files...
+libconfig-1.8.2_1: collecting files...
+libconfig-1.8.1_1: collecting files...
+libinput-1.30.1_1: collecting files...
+libinput-1.28.1_1: collecting files...
+
+[*] Unpacking packages
+lcms2-2.17_1: updating to 2.18_1 ...
+lcms2-2.18_1: unpacking ...
+lcms2-2.18_1: removed obsolete entry: ./usr/lib/liblcms2.so.2.0.17
+[1A[Klcms2-devel-2.17_1: updating to 2.18_1 ...
+lcms2-devel-2.18_1: unpacking ...
+libconfig-1.8.1_1: updating to 1.8.2_1 ...
+libconfig-1.8.2_1: unpacking ...
+libinput-1.28.1_1: updating to 1.30.1_1 ...
+libinput-1.30.1_1: unpacking ...
+
+[*] Configuring unpacked packages
+lcms2-2.18_1: configuring ...
+lcms2-2.18_1: updated successfully.
+lcms2-devel-2.18_1: configuring ...
+lcms2-devel-2.18_1: updated successfully.
+libconfig-1.8.2_1: configuring ...
+libconfig-1.8.2_1: updated successfully.
+libinput-1.30.1_1: configuring ...
+libinput-1.30.1_1: updated successfully.
+
+4 downloaded, 0 installed, 4 updated, 4 configured, 0 removed, 0 on hold.

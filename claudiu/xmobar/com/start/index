@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
+# Vars/state already exported from scripts/bar
 
 # Emits a bright HEX color that changes slowly over the day
 # Designed for dark backgrounds (no dark tones)
@@ -10,14 +10,12 @@ now=$(date +%s)
 midnight=$(date -d "$(date +%F) 00:00:00" +%s)
 t=$((now - midnight))
 
-# normalize to 0..2π over 24h
-pi=3.141592653589793
-phase=$(awk -v t="$t" -v pi="$pi" 'BEGIN { print (t / 86400) * 2 * pi }')
-
-# sine-based RGB, phase-shifted
-r=$(awk -v p="$phase" 'BEGIN { printf "%d", 180 + 60 * sin(p) }')
-g=$(awk -v p="$phase" 'BEGIN { printf "%d", 180 + 60 * sin(p + 2.094) }')
-b=$(awk -v p="$phase" 'BEGIN { printf "%d", 180 + 60 * sin(p + 4.188) }')
+# Consolidate all awk calls into single invocation for better performance
+read r g b < <(awk -v t="$t" 'BEGIN {
+  pi = 3.141592653589793
+  phase = (t / 86400) * 2 * pi
+  printf "%d %d %d", 180 + 60 * sin(phase), 180 + 60 * sin(phase + 2.094), 180 + 60 * sin(phase + 4.188)
+}')
 
 # clamp (safety, keeps it bright)
 clamp() {

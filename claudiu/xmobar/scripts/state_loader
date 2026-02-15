@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Optimized state loader for components
+# Only use this if component needs to initialize NEW state keys
+# Most components can rely on vars exported from scripts/bar
+
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+
+# state_init <variable_name> <default_value>
+# Initializes state key if it doesn't exist
+state_init() {
+  local key="$1"
+  local default="$2"
+
+  if ! grep -q "^${key}=" "$STATE_FILE" 2>/dev/null; then
+    echo "${key}=${default}" >> "$STATE_FILE"
+    eval "${key}=\"${default}\""  # Set in current environment
+  fi
+}
+
+# state_update <variable_name> <new_value>
+# Updates state key value
+state_update() {
+  local key="$1"
+  local value="$2"
+
+  sed -i "s|^${key}=.*|${key}=${value}|" "$STATE_FILE"
+}

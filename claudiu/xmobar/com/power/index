@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
+# Vars/state already exported from scripts/bar
 COM="${HOME}/.config/xmobar/com/power"
 
 case "$1" in

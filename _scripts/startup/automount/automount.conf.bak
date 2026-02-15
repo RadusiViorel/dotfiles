@@ -1,0 +1,96 @@
+# Auto-mount Configuration
+# This file is auto-updated when new devices are discovered
+#
+# Format:
+#   [UUID]
+#   DEVICE=/dev/sdXN     # Current device path (updated each scan)
+#   GROUP=pc-name        # Group/PC name (e.g., desktop, laptop, __new)
+#   LABEL=mount-name     # Directory name in /devices/{GROUP}/
+#   MOUNT=yes|no         # Whether to auto-mount
+#   FSTYPE=ext4          # Filesystem type
+#   NEW=yes|no           # If 'yes', uses GROUP=__new
+#
+# New devices are discovered with NEW=yes and GROUP=__new, mounting to /devices/__new/{auto-label}
+# Edit GROUP and LABEL to organize by PC, then set NEW=no to finalize
+# To disable a device: Set MOUNT=no
+
+
+[7EB4E172B4E12D79]
+DEVICE=/dev/sda1
+GROUP=__new
+LABEL=home
+MOUNT=yes
+FSTYPE=ntfs
+NEW=yes
+
+[884e4691-4638-41e9-a972-fbf2a43433da]
+DEVICE=/dev/sdc1
+GROUP=__new
+LABEL=auto-sdc1
+MOUNT=yes
+FSTYPE=ext4
+NEW=yes
+
+[a0769c4f-88d4-4145-9f1c-e9086c9130fa]
+DEVICE=/dev/nvme0n1p3
+GROUP=__new
+LABEL=auto-nvme0n1p3
+MOUNT=yes
+FSTYPE=btrfs
+NEW=yes
+
+[ba491969-f71e-4536-b97b-bf574e11dbe7]
+DEVICE=/dev/sda2
+GROUP=__new
+LABEL=auto-sda2
+MOUNT=yes
+FSTYPE=btrfs
+NEW=yes
+
+[1902-3ADD]
+DEVICE=/dev/sda1
+GROUP=__new
+LABEL=auto-sda1
+MOUNT=yes
+FSTYPE=vfat
+NEW=yes
+
+[C42F-3D16]
+DEVICE=/dev/nvme0n1p1
+GROUP=__new
+LABEL=auto-nvme0n1p1
+MOUNT=yes
+FSTYPE=vfat
+NEW=yes
+
+[c60631a7-717c-4757-b8b3-5f2fbd33b6b0]
+DEVICE=/dev/sdb4
+GROUP=__new
+LABEL=auto-sdb4
+MOUNT=yes
+FSTYPE=btrfs
+NEW=yes
+
+[d263e0b2-7e50-4d98-b007-078cd4cc63c4]
+DEVICE=/dev/nvme0n1p5
+GROUP=default
+LABEL=personal-files
+MOUNT=yes
+FSTYPE=ext4
+NEW=no
+
+[a90ed8a1-3b61-4625-b95d-9e82737bd4d9]
+DEVICE=/dev/sda3
+GROUP=__new
+LABEL=auto-sda3
+MOUNT=yes
+FSTYPE=btrfs
+NEW=yes
+
+[d27f65fe-ccb9-467a-ab98-41b552edd1d1]
+DEVICE=/dev/nvme0n1p2
+GROUP=__new
+LABEL=auto-nvme0n1p2
+MOUNT=yes
+FSTYPE=btrfs
+NEW=yes

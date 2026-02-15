@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+# Vars/state already exported from scripts/bar
+source "${HOME}/.config/xmobar/scripts/state_loader"
 
 DESTINATION="$HOME/screenshots"
 
 COM="${HOME}/.config/xmobar/com/screenshot"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
-__edit="screenshot_edit"
-grep -q "^$__edit=" "$STATE_FILE" || ( echo "$__edit=0"  >> "$STATE_FILE" && screenshot_edit=0 )
+# Initialize state if needed
+state_init "screenshot_edit" 0
+
+
+# If action is called, re-source state to get current values
+if [[ -n "$1" ]]; then
+  source "${STATE_FILE}"
+fi
 
 case "$1" in
   take) ${COM}/actions/take      \
@@ -18,8 +24,10 @@ case "$1" in
 
   toggle) ${COM}/actions/toggle  \
     --STATE_FILE=${STATE_FILE}   \
-    --KEY=${__edit}              \
-    --value=${screenshot_edit} ;;
+    --KEY=screenshot_edit        \
+    --value=${screenshot_edit}
+    # Re-source state after action to get updated value
+    source "${STATE_FILE}" ;;
 
   clear) ${COM}/actions/clear \
     --DESTINATION=${DESTINATION} ;;

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-source "${HOME}/.config/xmobar/scripts/vars"
+# Vars/state already exported from scripts/bar
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/volume_output"

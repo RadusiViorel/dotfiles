@@ -1,19 +1,27 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+# Vars/state already exported from scripts/bar
+source "${HOME}/.config/xmobar/scripts/state_loader"
 
 COM="${HOME}/.config/xmobar/com/page"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
-__number="page_number"
-grep -q "^$__number=" "$STATE_FILE" || ( echo "$__number=1" >> "$STATE_FILE" && page_number=1 )
+# Initialize state if needed
+state_init "page_number" 1
+
+
+# If action is called, re-source state to get current values
+if [[ -n "$1" ]]; then
+  source "${STATE_FILE}"
+fi
 
 case "$1" in
   toggle) ${COM}/actions/toggle \
     --value=${page_number}      \
     --STATE_FILE=${STATE_FILE}  \
-    --KEY=${__number} ;;
+    --KEY=page_number
+    # Re-source state after action to get updated value
+    source "${STATE_FILE}" ;;
   *) ;;
 esac
 

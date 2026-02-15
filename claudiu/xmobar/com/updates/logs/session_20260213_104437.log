@@ -1,0 +1,95 @@
+Update Session Log
+Timestamp: 2026-02-13 10:44:37
+Packages Updated: 4
+Size required on disk:          24MB
+Size to download:             9937KB
+
+Packages:
+----------------------------------------
+libgcrypt-1.12.0_1 update x86_64 https://voidlinux.mirror.garr.it/current 1832368 691994
+libgpg-error-1.58_1 update x86_64 https://voidlinux.mirror.garr.it/current 967874 270539
+libmagick-7.1.2.13_1 update x86_64 https://voidlinux.mirror.garr.it/current 9646493 2838982
+libmagick-devel-7.1.2.13_1 update x86_64 https://voidlinux.mirror.garr.it/current 13214962 6371633
+
+Full Update Output:
+========================================
+[*] Updating repository `https://voidlinux.mirror.garr.it/current/x86_64-repodata' ...
+x86_64-repodata: [2089KB 0%] 186MB/s ETA: 00m00s
+x86_64-repodata: 2089KB [avg rate: 95GB/s]
+4 packages will be downloaded:
+
+  libgcrypt-1.12.0_1 
+  libgpg-error-1.58_1 
+  libmagick-7.1.2.13_1 
+  libmagick-devel-7.1.2.13_1 
+4 packages will be updated:
+
+  libgcrypt (1.11.1_1 -> 1.12.0_1) 
+  libgpg-error (1.55_1 -> 1.58_1) 
+  libmagick (7.1.2.7_1 -> 7.1.2.13_1) 
+  libmagick-devel (7.1.2.7_1 -> 7.1.2.13_1) 
+
+Size to download:             9937KB
+Size required on disk:          24MB
+Space available on disk:       255GB
+
+Do you want to continue? [Y/n] 
+[*] Downloading packages
+libgcrypt-1.12.0_1.x86_64.xbps.sig2: [512B 100%] 23MB/s ETA: 00m00s
+libgcrypt-1.12.0_1.x86_64.xbps.sig2: 512B [avg rate: 23MB/s]
+libgcrypt-1.12.0_1.x86_64.xbps: [676KB 0%] 58MB/s ETA: 00m00s
+libgcrypt-1.12.0_1.x86_64.xbps: [676KB 14%] 909KB/s ETA: 00m06s
+libgcrypt-1.12.0_1.x86_64.xbps: 676KB [avg rate: 6402KB/s]
+libgcrypt-1.12.0_1: verifying RSA signature...
+libgpg-error-1.58_1.x86_64.xbps.sig2: [512B 100%] 49MB/s ETA: 00m00s
+libgpg-error-1.58_1.x86_64.xbps.sig2: 512B [avg rate: 49MB/s]
+libgpg-error-1.58_1.x86_64.xbps: [264KB 1%] 81MB/s ETA: 00m00s
+libgpg-error-1.58_1.x86_64.xbps: 264KB [avg rate: 5375MB/s]
+libgpg-error-1.58_1: verifying RSA signature...
+libmagick-7.1.2.13_1.x86_64.xbps.sig2: [512B 100%] 10MB/s ETA: 00m00s
+libmagick-7.1.2.13_1.x86_64.xbps.sig2: 512B [avg rate: 10MB/s]
+libmagick-7.1.2.13_1.x86_64.xbps: [2772KB 0%] 85MB/s ETA: 00m00s
+libmagick-7.1.2.13_1.x86_64.xbps: 2772KB [avg rate: 57GB/s]
+libmagick-7.1.2.13_1: verifying RSA signature...
+libmagick-devel-7.1.2.13_1.x86_64.xbps.sig2: [512B 100%] 17MB/s ETA: 00m00s
+libmagick-devel-7.1.2.13_1.x86_64.xbps.sig2: 512B [avg rate: 17MB/s]
+libmagick-devel-7.1.2.13_1.x86_64.xbps: [6222KB 0%] 83MB/s ETA: 00m00s
+libmagick-devel-7.1.2.13_1.x86_64.xbps: [6222KB 45%] 19MB/s ETA: 00m01s
+libmagick-devel-7.1.2.13_1.x86_64.xbps: 6222KB [avg rate: 41MB/s]
+Unregistering info file: /usr/share/info/gpgrt.info... done.
+Registering info file: /usr/share/info/gpgrt.info... done.
+libmagick-devel-7.1.2.13_1: verifying RSA signature...
+
+[*] Collecting package files
+libgcrypt-1.12.0_1: collecting files...
+libgcrypt-1.11.1_1: collecting files...
+libgpg-error-1.58_1: collecting files...
+libgpg-error-1.55_1: collecting files...
+libmagick-7.1.2.13_1: collecting files...
+libmagick-7.1.2.7_1: collecting files...
+libmagick-devel-7.1.2.13_1: collecting files...
+libmagick-devel-7.1.2.7_1: collecting files...
+
+[*] Unpacking packages
+libgcrypt-1.11.1_1: updating to 1.12.0_1 ...
+libgcrypt-1.12.0_1: unpacking ...
+libgcrypt-1.12.0_1: removed obsolete entry: ./usr/lib/libgcrypt.so.20.5.1
+[1A[Klibgpg-error-1.55_1: updating to 1.58_1 ...
+libgpg-error-1.58_1: unpacking ...
+libgpg-error-1.58_1: removed obsolete entry: ./usr/lib/libgpg-error.so.0.39.3
+[1A[Klibmagick-7.1.2.7_1: updating to 7.1.2.13_1 ...
+libmagick-7.1.2.13_1: unpacking ...
+libmagick-devel-7.1.2.7_1: updating to 7.1.2.13_1 ...
+libmagick-devel-7.1.2.13_1: unpacking ...
+
+[*] Configuring unpacked packages
+libgcrypt-1.12.0_1: configuring ...
+libgcrypt-1.12.0_1: updated successfully.
+libgpg-error-1.58_1: configuring ...
+libgpg-error-1.58_1: updated successfully.
+libmagick-7.1.2.13_1: configuring ...
+libmagick-7.1.2.13_1: updated successfully.
+libmagick-devel-7.1.2.13_1: configuring ...
+libmagick-devel-7.1.2.13_1: updated successfully.
+
+4 downloaded, 0 installed, 4 updated, 4 configured, 0 removed, 0 on hold.

@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+# Vars/state already exported from scripts/bar
+source "${HOME}/.config/xmobar/scripts/cache"
+source "${HOME}/.config/xmobar/scripts/state_loader"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/bluetooth"
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 
-__index_device="bluetooth_index_device"
-grep -q "^$__index_device=" "$STATE_FILE" || ( echo "$__index_device=-1" >> "$STATE_FILE" && bluetooth_index_device=-1 )
+# Initialize state if needed
+state_init "bluetooth_index_device" -1
+
+# If action is called, re-source state to get current values
+if [[ -n "$1" ]]; then
+  source "${STATE_FILE}"
+fi
 
 if ! command -v bluetoothctl >/dev/null 2>&1; then
   echo "Warning: bluetoothctl is not installed or not in PATH."
@@ -37,7 +43,7 @@ mapfile -t connectedDevices < <(
 
 
 if [ ${#connectedDevices[@]} -eq 0 ]; then
-  sed -i "s/^$__index_device=.*/$__index_device=-1/" "$STATE_FILE"
+  state_update "bluetooth_index_device" -1
 fi
 
 case "$1" in
@@ -48,19 +54,25 @@ case "$1" in
 
   reset) ${COM}/actions/reset  \
     --STATE_FILE=${STATE_FILE} \
-    --KEY=${__index_device} ;;
+    --KEY=bluetooth_index_device
+    # Re-source state after action to get updated value
+    source "${STATE_FILE}" ;;
 
   cycle_up) ${COM}/actions/cycle_up          \
     --STATE_FILE=${STATE_FILE}               \
-    --KEY=${__index_device}                  \
+    --KEY=bluetooth_index_device             \
     --currentIndex=${bluetooth_index_device} \
-    --count=${#connectedDevices[@]} ;;
+    --count=${#connectedDevices[@]}
+    # Re-source state after action to get updated value
+    source "${STATE_FILE}" ;;
 
   cycle_down) ${COM}/actions/cycle_up        \
     --STATE_FILE=${STATE_FILE}               \
-    --KEY=${__index_device}                  \
+    --KEY=bluetooth_index_device             \
     --currentIndex=${bluetooth_index_device} \
-    --count=${#connectedDevices[@]} ;;
+    --count=${#connectedDevices[@]}
+    # Re-source state after action to get updated value
+    source "${STATE_FILE}" ;;
   *) ;;
 esac
 

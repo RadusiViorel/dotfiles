@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
+# Vars/state already exported from scripts/bar
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 case "$1" in

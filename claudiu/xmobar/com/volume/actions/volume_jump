@@ -25,8 +25,8 @@ fi
 
 if   (( volume < 25  )); then
   wpctl set-volume "${sink}" 25%
-elif (( volume < 50  )); then wpctl set-volume "${sink}" 50%  ; echo 25  > "${HOME}/.config/xob/volume/value"
-elif (( volume < 75  )); then wpctl set-volume "${sink}" 75%  ; echo 50  > "${HOME}/.config/xob/volume/value"
-elif (( volume < 100 )); then wpctl set-volume "${sink}" 100% ; echo 75  > "${HOME}/.config/xob/volume/value"
-else                          wpctl set-volume "${sink}" 25%  ; echo 100 > "${HOME}/.config/xob/volume/value"
+elif (( volume < 50  )); then wpctl set-volume "${sink}" 50%  ; echo 50  > "${HOME}/.config/xob/volume/value"
+elif (( volume < 75  )); then wpctl set-volume "${sink}" 75%  ; echo 75  > "${HOME}/.config/xob/volume/value"
+elif (( volume < 100 )); then wpctl set-volume "${sink}" 100% ; echo 100 > "${HOME}/.config/xob/volume/value"
+else                          wpctl set-volume "${sink}" 25%  ; echo 25  > "${HOME}/.config/xob/volume/value"
 fi

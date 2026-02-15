@@ -14,12 +14,17 @@ done
 
 sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
 
+# Start openvpn
 doas /usr/sbin/openvpn --config "$CONF_FILE" --daemon --writepid $PID_FILE >/dev/null 2>&1
 
-# Wait for tun0 to appear (VPN interface)
-while ! ip a | grep -q tun0; do
-  sleep 0.4
-done
-
-sed -i "s/^$TOGGLE_KEY=.*/$TOGGLE_KEY=1/" "$STATE_FILE"
-sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+# Monitor connection in background
+(
+  # Wait for tun0 to appear (VPN interface)
+  while ! ip a | grep -q tun0; do
+    sleep 0.4
+  done
+  
+  # Connection established
+  sed -i "s/^$TOGGLE_KEY=.*/$TOGGLE_KEY=1/" "$STATE_FILE"
+  sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+) &

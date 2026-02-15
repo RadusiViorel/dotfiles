@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+# Centralized loading - export all vars/state to child processes
+set -a  # Auto-export all variables
 source "${HOME}/.config/xmobar/scripts/vars"
+source "${HOME}/.config/xmobar/scripts/state"
+set +a
 
 COM="${HOME}/.config/xmobar/com"
 
@@ -23,6 +27,7 @@ components=(
   "yt_dl"
   "wallpaper"
   "screenshot"
+  "automount"
   "page"
   "calendar"
   "power"

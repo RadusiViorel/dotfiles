@@ -12,10 +12,11 @@ for arg in "$@"; do
 done
 
 sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
-sleep 1
 
-
-COM="${HOME}/.config/xmobar/com/weather"
-${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${TIMESTAMP_KEY} --VALUE_KEY=${VALUE_KEY}
-
-sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+# Run weather update in background
+(
+  sleep 1
+  COM="${HOME}/.config/xmobar/com/weather"
+  ${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${TIMESTAMP_KEY} --VALUE_KEY=${VALUE_KEY}
+  sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+) &

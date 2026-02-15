@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/vars"
-source "${HOME}/.config/xmobar/scripts/state"
+# Vars/state already exported from scripts/bar
+source "${HOME}/.config/xmobar/scripts/cache"
+source "${HOME}/.config/xmobar/scripts/state_loader"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 COM="${HOME}/.config/xmobar/com/battery"
@@ -10,24 +11,28 @@ STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 now=$(date +%s)
 CACHE_TTL=80   # seconds
 
-__level_icon="battery_level_icon"
-__show_time="battery_show_time"
-__timestamp="battery_timestamp"
-__info="battery_info"
-grep -q "^$__level_icon=" "$STATE_FILE" || ( echo "$__level_icon=0" >> "$STATE_FILE" && battery_level_icon=0 )
-grep -q "^$__show_time=" "$STATE_FILE" || ( echo "$__show_time=0" >> "$STATE_FILE" && battery_show_time=0 )
-grep -q "^$__info=" "$STATE_FILE" || ( echo "$__info=" >> "$STATE_FILE" && battery_info="" )
-grep -q "^$__timestamp=" "$STATE_FILE" || ( echo "$__timestamp=$(($now - 81 ))" >> "$STATE_FILE" && speedtest_timestamp=$(($now - 81 ))  )
+# Initialize state keys if needed
+state_init "battery_level_icon" 0
+state_init "battery_show_time" 0
+state_init "battery_info" ""
+state_init "battery_timestamp" $((now - 81))
+
+
+# If action is called, re-source state to get current values
+if [[ -n "$1" ]]; then
+  source "${STATE_FILE}"
+fi
 
 if ! command -v acpi >/dev/null 2>&1; then
   echo "Warning: acpi is not installed or not in PATH."
   exit 1
 fi
 
-# Refresh cache if older than 1 minute
+# Refresh cache if older than CACHE_TTL
 if (( now - battery_timestamp >= CACHE_TTL )); then
   battery_info="$(acpi -b 2>/dev/null)"
-  sed -i "s/^$__info=.*/$__info=\"$battery_info\"/" "$STATE_FILE"
+  state_update "battery_info" "\"$battery_info\""
+  state_update "battery_timestamp" "$now"
 fi
 
 # If acpi output does NOT contain "Battery", then exit
@@ -44,7 +49,9 @@ case "$1" in
   show_time) ${COM}/actions/show_time \
     --value=${battery_show_time}      \
     --STATE_FILE=${STATE_FILE}        \
-    --KEY=${__show_time} ;;
+    --KEY=battery_show_time
+    # Re-source state after action to get updated value
+    source "${STATE_FILE}" ;;
   *) ;;
 esac
 
@@ -71,7 +78,7 @@ if [[ "$state" == "Charging" ]]; then
   [[ ${#usable_icons[@]} -eq 0 ]] && usable_icons=("${icons[$((${#icons[@]} - 1))]}")
 
   idx=$(( (battery_level_icon + 1) % ${#usable_icons[@]} ))
-  sed -i "s/^$__level_icon=.*/$__level_icon=$idx/" "$STATE_FILE"
+  state_update "battery_level_icon" "$idx"
 
   timercolor="${COLOR_OK}"
   icon="${usable_icons[$idx]} <fc=$timercolor>${level}󰏰</fc>"
