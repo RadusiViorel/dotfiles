@@ -7,10 +7,12 @@ dependencies :
   - xmobar
   - X11
   - containers
+  - directory
+  - bytestring
 
 executables :
   xmobar:
-    main: /home/void/.config/xmobar/xmobar2.hs
+    main: /home/void/.config/xmobar/xmobar.hs
     ghc-options:
       - -threaded
       - -rtsopts

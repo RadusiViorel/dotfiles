@@ -52,6 +52,11 @@ import System.IO.Unsafe (unsafePerformIO)
 import System.Environment (lookupEnv)
 import System.Exit
 import System.IO
+import System.Directory (doesFileExist)
+import Data.Typeable (Typeable)
+import qualified Data.ByteString.Char8 as BS
+import qualified XMonad.Util.ExtensibleState as XS
+import XMonad.Core (ExtensionClass(..))
 
 --------------------------------------------------------------------------------
 -- ENVS
@@ -73,6 +78,41 @@ color_mute = getEnvDefault "XMB_COLOR_MUTE" "#666666"
 
 color_white :: String
 color_white = getEnvDefault "XMB_COLOR_WHITE" "#FFFFFF"
+
+color_danger :: String
+color_danger = "#f58989"
+
+--------------------------------------------------------------------------------
+-- Slack Notifications State
+--------------------------------------------------------------------------------
+
+newtype SlackNotifCount = SlackNotifCount Int deriving (Read, Show, Typeable)
+
+instance ExtensionClass SlackNotifCount where
+  initialValue = SlackNotifCount 0
+
+readSlackNotificationsFromFile :: IO Int
+readSlackNotificationsFromFile = do
+  let countFile = "/home/void/.config/_scripts/startup/slack_notifications"
+  exists <- doesFileExist countFile
+  if not exists
+    then return 0
+    else do
+      content <- BS.readFile countFile
+      let valueStr = BS.unpack $ BS.takeWhile (/= '\n') content
+      case reads valueStr of
+        [(n, "")] -> return n
+        _         -> return 0
+
+updateSlackNotifications :: X ()
+updateSlackNotifications = do
+  count <- io readSlackNotificationsFromFile
+  XS.put (SlackNotifCount count)
+
+getSlackNotifications :: X Int
+getSlackNotifications = do
+  SlackNotifCount count <- XS.get
+  return count
 
 --------------------------------------------------------------------------------
 -- Main
@@ -99,7 +139,7 @@ leader :: KeyMask
 leader = mod4Mask
 
 term :: String
-term = "kitty"
+term = "st"
 
 browser :: String
 browser = "google-chrome-stable"
@@ -130,7 +170,7 @@ searchEngineMap method = M.fromList $
 scratchpads :: [NamedScratchpad]
 scratchpads =
   [ NS "term"
-       "alacritty --class scratchpad -e tmux new-session -A -s scratch"
+       "st -n scratchpad -f 'FiraCode Nerd Font:pixelsize=14' -e tmux new-session -A -s scratch"
        (resource =? "scratchpad")
        (customFloating $ W.RationalRect 0.005 0.028 0.99 0.967)
   ]
@@ -172,7 +212,7 @@ pinnedApps =
   ]
 
 clickableWorkspaces :: Bool
-clickableWorkspaces = False
+clickableWorkspaces = True
 
 clickWorkspaces :: String -> String
 clickWorkspaces ws
@@ -187,16 +227,42 @@ clickWorkspaces ws
 --------------------------------------------------------------------------------
 -- Xmobar
 --------------------------------------------------------------------------------
---
-mySB :: StatusBarConfig
-mySB = statusBarProp "${HOME}/.local/bin/xmobar" (clickablePP myPP)
 
-myPP :: PP
-myPP = def
-  { ppCurrent         = xmobarColor color_ok   "" . xmobarFont 1 . clickWorkspaces
-  , ppVisible         = xmobarColor color_info "" . clickWorkspaces
-  , ppHidden          = xmobarColor color_info "" . clickWorkspaces
-  , ppHiddenNoWindows = xmobarColor color_mute ""
+-- Check if workspace is slack workspace
+isSlackWs :: String -> Bool
+isSlackWs ws = ws == ws0
+
+-- Get badge string if needed (with color)
+getBadge :: Int -> String -> String
+getBadge count ws
+  | isSlackWs ws && count > 0 = xmobarColor color_danger "" (show count)
+  | otherwise                  = ""
+
+-- Format workspace with color, font, and badge
+formatWs :: String -> Int -> (String -> String) -> String -> String
+formatWs defaultColor count fontFn ws =
+  let color = if isSlackWs ws && count > 0 then color_danger else defaultColor
+      badge = getBadge count ws
+      formatted = xmobarColor color "" (fontFn ws)
+      -- Get the workspace index for clicking
+      idx = case elemIndex ws myWorkspaces of
+              Just n | n < 9 -> n + 1
+              Just 9         -> 0
+              _              -> 1
+      clickable = if clickableWorkspaces
+                    then "<action=`xdotool key super+" ++ show idx ++ "`>" ++ formatted ++ badge ++ "</action>"
+                    else formatted ++ badge
+  in clickable
+
+mySB :: StatusBarConfig
+mySB = statusBarProp "${HOME}/.local/bin/xmobar" (getSlackNotifications >>= \count -> pure (myPP count))
+
+myPP :: Int -> PP
+myPP slackCount = def
+  { ppCurrent         = formatWs color_ok slackCount (xmobarFont 1)
+  , ppVisible         = formatWs color_info slackCount (xmobarFont 1)
+  , ppHidden          = formatWs color_info slackCount id
+  , ppHiddenNoWindows = formatWs color_mute slackCount id
   , ppWsSep           = "  "
   , ppSep             = " " ++ sep ++ " "
   , ppTitle           = xmobarColor color_white "" . shorten 60
@@ -238,6 +304,7 @@ myHandleEventHook =
   <+> swallowEventHook (
          className =? "Alacritty"
     <||> className =? "kitty"
+    <||> className =? "st-256color"
   ) (return True)
 
 myStartupHook = do
@@ -251,7 +318,8 @@ myShowWNameTheme = def
     , swn_color   = "#cdd6f4"
     }
 
-myLogHook =
+myLogHook = do
+    updateSlackNotifications
     showWNameLogHook myShowWNameTheme
 --  >> updatePointer (0.5, 0.5) (0, 0) -- bug with windowDrag
 
@@ -295,6 +363,7 @@ myManageHook =
     composeAll
       ( [ isDialog --> doFloat
         , isFullscreen --> doFullFloat
+        , className =? "eww" --> doFloat
         , className =? "float-small"  --> doRectFloat floatSmallRect
         , className =? "float-medium" --> doRectFloat floatMediumRect
         , className =? "float-large"  --> doRectFloat floatLargeRect

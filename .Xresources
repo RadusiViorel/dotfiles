@@ -1,0 +1,6 @@
+st.color0: #45475a
+st.foreground: #cdd6f4
+st.background: #1e1e2e
+st.font: FiraCode Nerd Font:pixelsize=14
+st.alpha: 0.96
+st.borderpx: 2

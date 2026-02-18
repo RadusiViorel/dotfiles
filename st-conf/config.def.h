@@ -6,16 +6,16 @@
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
 static char *fonts[] = {
-  "FiraCode Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "JetBrainsMono Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "CaskaydiaCove Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "Iosevka Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "VictorMono Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "MonaspiceNe Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "FantasqueSansM Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "Hack Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "EnvyCodeR Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
-  "Lilex Nerd Font:style=Regular:pixelsize=15:antialias=true:autohint=true",
+  "FiraCode Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "JetBrainsMono Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "CaskaydiaCove Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "Iosevka Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "VictorMono Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "MonaspiceNe Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "FantasqueSansM Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "Hack Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "EnvyCodeR Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
+  "Lilex Nerd Font:style=Regular:pixelsize=14:antialias=true:autohint=true",
 };
 static size_t currentfont = 0;
 static int borderpx = 2;
@@ -28,7 +28,7 @@ static int borderpx = 2;
  *   <0 : auto relative points size (monitor dpi)
  */
 MonitorConfig monitors_config[] = {
-	/* {"eDP-1", 0}, */
+  /* {"eDP-1", 0}, */
 };
 float winmovethreshold = 0.6;
 
@@ -247,37 +247,37 @@ static uint forcemousemod = ShiftMask;
  * Xresources preferences to load at startup
  */
 ResourcePref resources[] = {
-		{ "font",         STRING,  &fonts[0] },
-		{ "color0",       STRING,  &colorname[0] },
-		{ "color1",       STRING,  &colorname[1] },
-		{ "color2",       STRING,  &colorname[2] },
-		{ "color3",       STRING,  &colorname[3] },
-		{ "color4",       STRING,  &colorname[4] },
-		{ "color5",       STRING,  &colorname[5] },
-		{ "color6",       STRING,  &colorname[6] },
-		{ "color7",       STRING,  &colorname[7] },
-		{ "color8",       STRING,  &colorname[8] },
-		{ "color9",       STRING,  &colorname[9] },
-		{ "color10",      STRING,  &colorname[10] },
-		{ "color11",      STRING,  &colorname[11] },
-		{ "color12",      STRING,  &colorname[12] },
-		{ "color13",      STRING,  &colorname[13] },
-		{ "color14",      STRING,  &colorname[14] },
-		{ "color15",      STRING,  &colorname[15] },
-		{ "background",   STRING,  &colorname[257] },
-		{ "foreground",   STRING,  &colorname[256] },
-		{ "cursorColor",  STRING,  &colorname[258] },
-		{ "termname",     STRING,  &termname },
-		{ "shell",        STRING,  &shell },
-		{ "minlatency",   FLOAT,   &minlatency },
-		{ "maxlatency",   FLOAT,   &maxlatency },
-		{ "blinktimeout", INTEGER, &blinktimeout },
-		{ "bellvolume",   INTEGER, &bellvolume },
-		{ "tabspaces",    INTEGER, &tabspaces },
-		{ "borderpx",     INTEGER, &borderpx },
-		{ "cwscale",      FLOAT,   &cwscale },
-		{ "chscale",      FLOAT,   &chscale },
-		{ "alpha",        FLOAT,   &alpha },
+    { "font",         STRING,  &fonts[0] },
+    { "color0",       STRING,  &colorname[0] },
+    { "color1",       STRING,  &colorname[1] },
+    { "color2",       STRING,  &colorname[2] },
+    { "color3",       STRING,  &colorname[3] },
+    { "color4",       STRING,  &colorname[4] },
+    { "color5",       STRING,  &colorname[5] },
+    { "color6",       STRING,  &colorname[6] },
+    { "color7",       STRING,  &colorname[7] },
+    { "color8",       STRING,  &colorname[8] },
+    { "color9",       STRING,  &colorname[9] },
+    { "color10",      STRING,  &colorname[10] },
+    { "color11",      STRING,  &colorname[11] },
+    { "color12",      STRING,  &colorname[12] },
+    { "color13",      STRING,  &colorname[13] },
+    { "color14",      STRING,  &colorname[14] },
+    { "color15",      STRING,  &colorname[15] },
+    { "background",   STRING,  &colorname[257] },
+    { "foreground",   STRING,  &colorname[256] },
+    { "cursorColor",  STRING,  &colorname[258] },
+    { "termname",     STRING,  &termname },
+    { "shell",        STRING,  &shell },
+    { "minlatency",   FLOAT,   &minlatency },
+    { "maxlatency",   FLOAT,   &maxlatency },
+    { "blinktimeout", INTEGER, &blinktimeout },
+    { "bellvolume",   INTEGER, &bellvolume },
+    { "tabspaces",    INTEGER, &tabspaces },
+    { "borderpx",     INTEGER, &borderpx },
+    { "cwscale",      FLOAT,   &cwscale },
+    { "chscale",      FLOAT,   &chscale },
+    { "alpha",        FLOAT,   &alpha },
 };
 
 #include "autocomplete.h"
@@ -617,9 +617,9 @@ static char ascii_printable[] =
 /* clickurl */
 char *urlhandler = "xdg-open";
 char urlchars[] =
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	"abcdefghijklmnopqrstuvwxyz"
-	"0123456789-._~:/?#@!$&'*+,;=%";
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  "abcdefghijklmnopqrstuvwxyz"
+  "0123456789-._~:/?#@!$&'*+,;=%";
 char *urlprefixes[] = {"http://", "https://", "ftp://", "file://", "www.", NULL};
 
 /* Undercurl style. UNDERCURL_SPIKY, UNDERCURL_CURLY, or UNDERCURL_CAPPED */

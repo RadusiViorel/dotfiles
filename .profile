@@ -1,13 +1,13 @@
 export XDG_RUNTIME_DIR="/opt/user/$(id -u)"
 export XDG_DATA_HOME="${HOME}/.config"
+export XDG_DATA_DIRS="$HOME/.local/desktopIcons:/usr/local/share:/usr/share"
 
 export GOPATH=$HOME/opt/go
-export GHCUPPATH=$HOME/.ghcup/bin
 export LOCALBIN=$HOME/.local/bin
-export PATH=$LOCALBIN:${GOPATH}/bin/:$GHCUPPATH:$PATH
+export PATH=$LOCALBIN:${GOPATH}/bin/:$PATH
 
 export EDITOR=nvim
-export TERM=alacritty
+export TERM=st
 
 export XOB_NORMAL_FG_BRIGHTNESS="#f28f2f"
 export XOB_NORMAL_BORDER_BRIGHTNESS="#e6c15c"
@@ -28,7 +28,9 @@ export XMB_COLOR_DANGER="#f58989"
 export XMB_COLOR_ORANGE="#f28f2f"
 
 
-export POPCASH_DEVDIR="/home/radusiviorel/Desktop/sites"
+export POPCASH_DEVDIR="/opt/work"
 
 export INTELEPHENSE_LICENSE_KEY=00NOKTX8W5P0A3G
 export DISTROBOX_BACKEND=docker
+
+. "$HOME/.config/../bin/env"

@@ -2807,7 +2807,9 @@ run(void)
 	}
 	XRRSelectInput(xw.dpy, xw.win, RRCrtcChangeNotifyMask);
 
-	FcPatternGetDouble(dc.font.match->pattern, FC_SIZE, 0, &defaultrelfontsize);
+	/* Disable per-monitor DPI font scaling — font size is controlled
+	 * explicitly via pixelsize in the font string. */
+	defaultrelfontsize = 0;
 	refreshxrandr(0);
 
 	ttyfd = ttynew(opt_line, shell, opt_io, opt_cmd);
