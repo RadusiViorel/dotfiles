@@ -3205,20 +3205,20 @@ void autocomplete (const Arg *arg) {
     static int cx, cy;
 
     if (acmpl_cmdindex == ACMPL_DEACTIVATE) {
-        if (active) {
-            active = 0;
-            pclose(acmpl_exec);
-            unlink(stbuffile);
-            free(stbuffile);
-            stbuffile = NULL;
+            if (active) {
+                active = 0;
+                pclose(acmpl_exec);
+                unlink(stbuffile);
+                free(stbuffile);
+                stbuffile = NULL;
 
-            if (complen_prev) {
-                selclear();
-                complen_prev = 0;
+                if (complen_prev) {
+                    selclear();
+                    complen_prev = 0;
+                }
             }
+            return;
         }
-        return;
-    }
 
     if (acmpl_cmdindex == ACMPL_UNDO) {
         if (active) {
@@ -3231,7 +3231,7 @@ void autocomplete (const Arg *arg) {
             if (complen_prev) {
                 selclear();
                 for (size_t i = 0; i < complen_prev; i++)
-                    ttywrite((char[]) {'\b'}, 1, 1);
+                    ttywrite((char[]) {'\x7f'}, 1, 1);
                 complen_prev = 0;
                 ttywrite(target, targetlen, 0);
             }
@@ -3332,8 +3332,7 @@ acmpl_begin:
             return;
         }
 
-        if (fscanf(acmpl_exec, "%s\n", target) != 1) {
-            perror("fscanf");
+        if (fgets(target, term.col + 1, acmpl_exec) == NULL) {
             pclose(acmpl_exec);
             free(target);
             free(completion);
@@ -3342,7 +3341,10 @@ acmpl_begin:
             stbuffile = NULL;
             return;
         }
+        /* strip trailing newline */
         targetlen = strlen(target);
+        if (targetlen > 0 && target[targetlen - 1] == '\n')
+            target[--targetlen] = '\0';
     }
 
     unsigned line, beg, end;
@@ -3359,7 +3361,7 @@ acmpl_begin:
         if (complen_prev) {
             selclear();
             for (size_t i = 0; i < complen_prev; i++)
-                ttywrite((char[]) {'\b'}, 1, 1);
+                ttywrite((char[]) {'\x7f'}, 1, 1);
             complen_prev = 0;
         }
         ttywrite(target, targetlen, 0);
@@ -3370,11 +3372,11 @@ acmpl_begin:
 
     if (complen_prev == 0) {
         for (size_t i = 0; i < targetlen; i++)
-            ttywrite((char[]) {'\b'}, 1, 1);
+            ttywrite((char[]) {'\x7f'}, 1, 1);
     } else {
         selclear();
         for (size_t i = 0; i < complen_prev; i++)
-            ttywrite((char[]) {'\b'}, 1, 1);
+            ttywrite((char[]) {'\x7f'}, 1, 1);
         complen_prev = 0;
     }
 
