@@ -1,0 +1,12 @@
+# Build outputs
+st
+*.o
+config.h
+
+# Patch artifacts
+*.orig
+*.rej
+*.diff
+
+# Misc
+a.out
