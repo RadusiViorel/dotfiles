@@ -2,8 +2,13 @@ export LC_CTYPE=en_US.UTF-8
 
 # Auto-start tmux if available
 if [ -z "$TMUX" ] && command -v tmux &>/dev/null; then
-    exec tmux new-session -s "$(cat /proc/sys/kernel/random/uuid | cut -d'-' -f1)"
+    session_name="$(cat /proc/sys/kernel/random/uuid | cut -d'-' -f1)"
+    exec tmux new-session -s "$session_name"
+    # # When tmux exits, kill the session if it still exists
+    # tmux kill-session -t "$session_name" 2>/dev/null
+    # exit
 fi
+
 export COLORTERM=gnome-terminal
 
 setopt auto_cd

@@ -10790,3 +10790,23 @@ aws s3 cp  ~/Downloads/bucket/test.js         s3://popcash/test.js         --end
 : 1771592683:0;gst
 : 1771592687:0;git add --all
 : 1771592692:0;gcmt 'revert'
+: 1771592693:0;git push origin main
+: 1771592696:0;gst
+: 1771592767:0;cd db
+: 1771592770:0;cd Downloads
+: 1771592770:0;ls
+: 1771592772:0;cd bucket
+: 1771592773:0;ls
+: 1771592775:0;cd ..
+: 1771592777:0;cd  ps_update
+: 1771592777:0;ls
+: 1771592781:0;mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ac.sql
+: 1771592838:0;gst
+: 1771592845:0;sudo xbps-install -Su
+: 1771592931:0;vi ~/.tmux
+: 1771592942:0;cd ~/dotfiles/.config/tmux
+: 1771592942:0;vi
+: 1771593033:0;ls
+: 1771593044:0;vi ~/.xinitrc
+: 1771593070:0;vi
+: 1771593167:0;exit
