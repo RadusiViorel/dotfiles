@@ -11,12 +11,15 @@ for arg in "$@"; do
   esac
 done
 
-sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
+source "${HOME}/.config/xmobar/scripts/state_loader"
+state_update "$LOADING_KEY" 1
 
 # Run weather update in background
 (
   sleep 1
   COM="${HOME}/.config/xmobar/com/weather"
   ${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${TIMESTAMP_KEY} --VALUE_KEY=${VALUE_KEY}
-  sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
+
+  source "${HOME}/.config/xmobar/scripts/state_loader"
+  state_update "$LOADING_KEY" 0
 ) &

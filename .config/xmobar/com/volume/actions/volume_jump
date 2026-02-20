@@ -30,3 +30,5 @@ elif (( volume < 75  )); then wpctl set-volume "${sink}" 75%  ; echo 75  > "${HO
 elif (( volume < 100 )); then wpctl set-volume "${sink}" 100% ; echo 100 > "${HOME}/.config/xob/volume/value"
 else                          wpctl set-volume "${sink}" 25%  ; echo 25  > "${HOME}/.config/xob/volume/value"
 fi
+
+"${HOME}/.config/xmobar/scripts/refresh"

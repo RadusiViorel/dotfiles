@@ -33,7 +33,7 @@ main = xmobar defaultConfig
   , commands =
       [ Run UnsafeXMonadLog
       , cmd True  "start"   [] 10
-      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 10
+      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 11
       ]
   , sepChar = "%"
   , alignSep = "}{"

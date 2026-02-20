@@ -11,3 +11,5 @@ done
 
 wpctl set-mute "${sink}" toggle
 echo ${volume}! > "${HOME}/.config/xob/volume/value"
+
+"${HOME}/.config/xmobar/scripts/refresh"

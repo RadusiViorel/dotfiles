@@ -12,3 +12,5 @@ done
 
 new_value=$(( value % 2 + 1 ))
 sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
+
+"${HOME}/.config/xmobar/scripts/refresh"

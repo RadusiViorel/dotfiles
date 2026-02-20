@@ -9,6 +9,11 @@ state_init() {
   if ! grep -q "^${key}=" "$STATE_FILE" 2>/dev/null; then
     echo "${key}=${default}" >> "$STATE_FILE"
     eval "${key}=\"${default}\""
+  else
+    # Load existing value from state file
+    local value=$(grep "^${key}=" "$STATE_FILE" | cut -d= -f2-)
+    # Properly escape the value for eval
+    eval "${key}=${value}"
   fi
 }
 

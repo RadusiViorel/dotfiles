@@ -17,3 +17,5 @@ else
   wpctl set-volume "${sink}" ${step}%-
   echo $((volume - step)) > "${HOME}/.config/xob/volume/value"
 fi
+
+"${HOME}/.config/xmobar/scripts/refresh"

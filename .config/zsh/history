@@ -1,374 +1,3 @@
-which xmobar
-sudo reboot
-stack exec  xmobar
-xmobar
-cd ~/.config/xmonad
-vi xmonad.hs
-sudo reboot
-starts
-startx
-sudo reboot
-cd ~/.config/xmonad
-stack build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-which xmobar
-sudo reboot
-vi 
-stack build
-cd ~/.config/xmonad
-stack build
-stack installl
-stack install
-sudo reboot
-lsblk
-sudo mount /dev/sdb3 /mnt
-sudo mount /dev/sda1 /mnt
-clear
-sudo poweroff
-sudo reboot
-ls
-cd ~/.config/xmonad
-ls
-vi package.yaml
-\:q
-\:q
-exit
-clear
-vi
-cd ~/.config/xmonad
-stack  build
-stack  build
-stack  build
-fg
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack  build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-udo reboot
-sudo reboot
-cd ~/.config/xmonad
-stack build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-xmonad --recompile
-xmonad --restart
-vi
-stack build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-xmonad --restart
-xmonad --recompile
-xmonad --restart
-sudo reboot
-cd ~/.config/xmonad
-vi xmonad.hs
-xmonad --recompile
-xmonad --restart
-stack build
-stack install
-xmonad --recompile
-xmonad --restart
-sudo reboot
-vi
-sudo xbps-install -S pipx
-sudo xbps-install -S python3-pipx
-pipx install pyenv
-sudo pipx install pyenv
-pipx install pynvim
-pipx install pynvim-python
-pynvim
-which pynvim
-cd ~/.local/bin
-ls
-vi
-vi
-vi
-vi
-vi
-vi
-vi
-vi
-cd ~/.config/xmonad
-ls
-ls -tal
-vi stack.yaml
-vi stack.yaml
-rm -rf .stack-work
-stack build
-vi stack.yaml
-cd ~/.cache
-ls
-cd ~/.config/xmonad
-vi stack.yaml
-stack build
-vi stack.yaml
-stack build
-stack build
-vi stack.yaml
-stack build
-vi stack.yaml
-vi stack.yaml
-stack build
-vi stack.yaml
-cd /home/radusiviorel/.cache
-cd ~/.config/xmonad
-stack build
-ls
-vi ~/.stack
-stack path | grep work
-vi ~/.stack
-vi
-stack path | grep work
-vi
-stack path | grep work
-vi
-stack path | grep work
-stack build
-vi ~/.zshrc
-fg
-echo $XMONAD_CONFIG_DIR
-vi ~/.zshrc
-clear
-cd ~/.config/xmonad
-sta 
-stack build
-vi 
-vi
-stack build
-ls -tal
-cd ~/.cache
-ls
-cd xmonad
-ls
-echo $STACK_WORK
-vi 
-vi
-echo $STACK_WORK
-cd ~/.config/xmonad
-ls
-rm -rf stack.yaml
-ls
-rm -rf .stack-work
-stack build
-vi
-ls
-cp ~/dotfiles/xmonad
-ls
-cd ~/dotfiles/xmonad
-ls
-vi stack.yaml
-cd ~/.config/xmonad
-vi stack.yaml
-rm -rf .stack-work
-stack build
-vi stack.yaml
-vi s
-vi
-cd ~/.config/xmonad
-stack build
-vi
-vi
-stack build
-vi
-stack build
-vi
-stack build
-ls
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-sudo reboot
-cd ~/.config/xmonad
-stack install
-sudo reboot
-@web
-ls
-cd ~/dotfiles
-ls
-rm -rf xmonad
-cp -r ~/.config/xmobar .
-cp -r ~/.config/xmonad
-cp -r ~/.config/xmonad .
-ls
-ls
-gst
-.gitignore
-vi .gitignore
-gst
-gst
-git add --all
-gcmt 'changed xmonad stack'
-git push origin main
-cd ~/.config/xmonad
-vi
-stack build
-vi xmonad.hs
-stack build
-vi xmonad.hs
-stack build
-vi xmonad.hs
-stack build
-vi xmonad.hs
-stack build
-vi xmonad.hs
-vi
-vi xmonad.hs
-stack build
-vi xmonad.hs
-stack build
-vi xmonad.hs
-cd ~/.config/xmonad
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-vi
-stack build
-stack build
-vi
-stack build
-vi
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-ls -tal
-stack build
-stack build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-startx
-clear
-stack build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-startx
-sudo mount /dev/sda1 /mnt
-sudo reboot
-sudo mount /dev/sda1 /mnt
-vi
-cd ~/.config/xmonad
-stack build
-vi
-stack build
-vi
-stack build
-vi
-stack build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-startx
-cd ~/.config/xmonad
-vi xmonad.hs
-cd ~/.config/xmonad
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-sudo poweroff
-cd ~/dotfiles
-gst
-git push origin main
-sudo poweroff
-cd ~/.config/xmonad/
-ls
-cd ../xmobar
-ls
-cd com/capslock
-./index
-./index
-cd ../updates
-./index
-cd ../
-cd ../
-vi xmobar.h
-vi xmobar.hs
-sudo xbps-install -S tmux
-cd ~/.config/xmonad/
-vi xmobar.hs
-vi xmonad.hs
-cd ~/.config/xmonad/
-stack build
-stack build
-stack build
-stack build
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-sudo reboot
-gst
-cd ~
-cd dotfiles
-gst
-git diff
-gst
-git add --all
-gcmt 'layouts'
-git push origin main
-clear
-cd ~/dotfiles
-git push origin main
-vi xmonad.hs
-vi
-cd ~/.config/xmonad/
-stack build
-stack build
-stack build
-stack build
-stack install
-xmonad --restart
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-startx
-ls
-clear
-ls
-tmux install
-tmux update
-stack build
-stack build
-stack build
-stack install
-startx
-stack build
-stack install
-startx
-stack build
-stack install
-startx
-sudo reboot
-sudo mount /dev/sda1 /mnt
-@web
 cd ~/.config/xmonad/
 vi xmonad.hs
 stack build
@@ -10618,28 +10247,28 @@ cat env
 vi ~/.config/rofi/config.rasi
 sudo xbps-install -Su
 clear
-: 1771580767:0;clear
-: 1771580786:0;cd Downloads/ps_update
-: 1771580787:0;ls
-: 1771580819:0;mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ab.sql
-: 1771582519:0;cd ..
-: 1771582549:0;cd bucket
-: 1771582550:0;ls
-: 1771582576:0;ls
-: 1771582579:0;l
-: 1771582584:0;ll
-: 1771582587:0;ll
-: 1771582589:0;ls -1
-: 1771582597:0;ls -1 > file
-: 1771582598:0;vi file
-: 1771582903:0;export AWS_REQUEST_CHECKSUM_CALCULATION=when_required\
+clear
+cd Downloads/ps_update
+ls
+mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ab.sql
+cd ..
+cd bucket
+ls
+ls
+l
+ll
+ll
+ls -1
+ls -1 > file
+vi file
+export AWS_REQUEST_CHECKSUM_CALCULATION=when_required\
 export AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
-: 1771582913:0;vi file
-: 1771582925:0;aws s3 ls s3://popcash  --endpoint https://eu-west-1.mojocloud.com
-: 1771582932:0;aws s3 cp  ~/Downloads/bucket/app.js          s3://popcash/app.js          --endpoint https://eu-west-1.mojocloud.com\
+vi file
+aws s3 ls s3://popcash  --endpoint https://eu-west-1.mojocloud.com
+aws s3 cp  ~/Downloads/bucket/app.js          s3://popcash/app.js          --endpoint https://eu-west-1.mojocloud.com\
 
-: 1771583031:0;aws s3 ls s3://popcash  --endpoint https://eu-west-1.mojocloud.com
-: 1771583053:0;aws s3 cp  ~/Downloads/bucket/favicon.ico     s3://popcash/favicon.ico     --endpoint https://eu-west-1.mojocloud.com\
+aws s3 ls s3://popcash  --endpoint https://eu-west-1.mojocloud.com
+aws s3 cp  ~/Downloads/bucket/favicon.ico     s3://popcash/favicon.ico     --endpoint https://eu-west-1.mojocloud.com\
 aws s3 cp  ~/Downloads/bucket/gjtyir3nx1ll.js s3://popcash/gjtyir3nx1ll.js --endpoint https://eu-west-1.mojocloud.com\
 aws s3 cp  ~/Downloads/bucket/old_app.js      s3://popcash/old_app.js      --endpoint https://eu-west-1.mojocloud.com\
 aws s3 cp  ~/Downloads/bucket/pop.js          s3://popcash/pop.js          --endpoint https://eu-west-1.mojocloud.com\
@@ -10649,164 +10278,450 @@ aws s3 cp  ~/Downloads/bucket/show-new.js     s3://popcash/show-new.js     --end
 aws s3 cp  ~/Downloads/bucket/show.js         s3://popcash/show.js         --endpoint https://eu-west-1.mojocloud.com\
 aws s3 cp  ~/Downloads/bucket/test.js         s3://popcash/test.js         --endpoint https://eu-west-1.mojocloud.com\
 
-: 1771583081:0;vi file
-: 1771583089:0;aws s3 cp  ~/Downloads/bucket/pop_beta.js     s3://popcash/pop_beta.js     --endpoint https://eu-west-1.mojocloud.com\
+vi file
+aws s3 cp  ~/Downloads/bucket/pop_beta.js     s3://popcash/pop_beta.js     --endpoint https://eu-west-1.mojocloud.com\
 
-: 1771583097:0;aws s3 ls s3://popcash  --endpoint https://eu-west-1.mojocloud.com
-: 1771583412:0; free -m --giga | awk '/^Mem/ {print ($3)}' | cut -c-4 
-: 1771583423:0;free -L --giga | awk '{print ($6)}' 
-: 1771585285:0;sudo xbps-install -S zoxide
-: 1771585315:0;vi ~/.zshrc
-: 1771585329:0;z 
-: 1771585331:0;pwd
-: 1771585336:0;z config nvim
-: 1771585341:0;z ~/.config/nvim
-: 1771585343:0;cd /
-: 1771585344:0;z /
-: 1771585347:0;z config nvim
-: 1771585389:0;vi ~/.zshrc
-: 1771585405:0;cd config nvim
-: 1771585954:0;cd /
-: 1771586035:0;vi ~/.zshrc
-: 1771586052:0;z
-: 1771586054:0;which cd
-: 1771586060:0;clear
-: 1771586070:0;cdi
-: 1771586074:0;cdi
-: 1771588603:0;mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ac.sql 
-: 1771588948:0;rg
-: 1771588950:0;rg
-: 1771589091:0;sudo xbps-install -S fd
-: 1771589104:0;fd php 
-: 1771589825:0;xbps-install -u stow
-: 1771589843:0;xbps-install -S stow
-: 1771589847:0;sudo xbps-install -S stow
-: 1771589853:0;clear
-: 1771589856:0;stow -h
-: 1771589914:0;clear
-: 1771589918:0;clear
-: 1771590301:0;clear
-: 1771590302:0;@web
-: 1771590309:0;clear
-: 1771590388:0;clear
-: 1771590549:0;clear
-: 1771590556:0;cd ~/dotfiles
-: 1771590557:0;gst
-: 1771590568:0;gst
-: 1771590570:0;git add --all
-: 1771590577:0;gcmt 'restructured'
-: 1771590581:0;git push origin main
-: 1771590586:0;clear
-: 1771590586:0;gst
-: 1771590613:0;gst
-: 1771590619:0;stow --adopt .
-: 1771590642:0;sudo stow --adopt .
-: 1771590649:0;cd ~/.config/w
-: 1771590651:0;cd ~/.config/wal
-: 1771590651:0;ls
-: 1771590653:0;ls -tal
-: 1771590665:0;cd templates
-: 1771590665:0;ls
-: 1771590667:0;ls -tal
-: 1771590702:0;ls
-: 1771590730:0;ls
-: 1771590734:0;rm ./*
-: 1771590738:0;cd ~/dotfiles
-: 1771590741:0;stow --adopt .
-: 1771590743:0;clear
-: 1771590749:0;cd ~
-: 1771590752:0;ls
-: 1771590753:0;ls -tal
-: 1771590772:0;clear
-: 1771590774:0;cd ~/dotfiles
-: 1771590774:0;gst
-: 1771590785:0;git diff .xinitrc\
+aws s3 ls s3://popcash  --endpoint https://eu-west-1.mojocloud.com
+ free -m --giga | awk '/^Mem/ {print ($3)}' | cut -c-4 
+free -L --giga | awk '{print ($6)}' 
+sudo xbps-install -S zoxide
+vi ~/.zshrc
+z 
+pwd
+z config nvim
+z ~/.config/nvim
+cd /
+z /
+z config nvim
+vi ~/.zshrc
+cd config nvim
+cd /
+vi ~/.zshrc
+z
+which cd
+clear
+cdi
+cdi
+mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ac.sql 
+rg
+rg
+sudo xbps-install -S fd
+fd php 
+xbps-install -u stow
+xbps-install -S stow
+sudo xbps-install -S stow
+clear
+stow -h
+clear
+clear
+clear
+@web
+clear
+clear
+clear
+cd ~/dotfiles
+gst
+gst
+git add --all
+gcmt 'restructured'
+git push origin main
+clear
+gst
+gst
+stow --adopt .
+sudo stow --adopt .
+cd ~/.config/w
+cd ~/.config/wal
+ls
+ls -tal
+cd templates
+ls
+ls -tal
+ls
+ls
+rm ./*
+cd ~/dotfiles
+stow --adopt .
+clear
+cd ~
+ls
+ls -tal
+clear
+cd ~/dotfiles
+gst
+git diff .xinitrc\
 
-: 1771590799:0;gst
-: 1771590803:0;git add --all
-: 1771590806:0;gcmt 'stowed'
-: 1771590813:0;git push origin main
-: 1771590817:0;clear
-: 1771590838:0;clear
-: 1771590887:0;gst
-: 1771590896:0;git add --all
-: 1771590900:0;gst
-: 1771590901:0;git add --all
-: 1771590902:0;gst
-: 1771590906:0;gcmt 'added tmux'
-: 1771590908:0;git push origin main
-: 1771590913:0;stow --adopt .
-: 1771590931:0;cd ~/.config/tmux
-: 1771590931:0;ls
-: 1771590937:0;cd plugins/tmux-continuum
-: 1771590938:0;ls
-: 1771590939:0;ls -tal
-: 1771590949:0;cd scripts
-: 1771590950:0;ls
-: 1771590955:0;cd handle_tmux_automatic_start
-: 1771590956:0;ls
-: 1771590957:0;ls -tal
-: 1771590970:0;cd ../..
-: 1771590970:0;ls
-: 1771590975:0;pwd
-: 1771590976:0;ls
-: 1771590977:0;cd ../
-: 1771590978:0;ls
-: 1771590988:0;cd tmux-continuum/docs
-: 1771590988:0;ls
-: 1771590990:0;ls -tal
-: 1771590996:0;vi automatic_start.md
-: 1771591002:0;ls -tal
-: 1771591006:0;ls -tal
-: 1771591008:0;cd ~/.config/tmux
-: 1771591011:0;cd ~/dotfiles
-: 1771591011:0;gst
-: 1771591017:0;stow --adopt .
-: 1771591028:0;cd .config/tmux/plugins
-: 1771591029:0;ls
-: 1771591036:0;cd tmux-continuum/scripts
-: 1771591037:0;ls
-: 1771591038:0;ls -tal
-: 1771591041:0;ls
-: 1771591043:0;cd handle_tmux_automatic_start
-: 1771591044:0;ls
-: 1771591045:0;ls -tal
-: 1771591051:0;rm README.md
-: 1771591057:0;cd dot
-: 1771591068:0;stow --adopt .
-: 1771591074:0;clear
-: 1771591075:0;gst
-: 1771591087:0;gst
-: 1771591089:0;git add --all
-: 1771591110:0;gst
-: 1771591112:0;git add --all
-: 1771591114:0;gcmt 'added tmux'
-: 1771591115:0;git push origin main
-: 1771591120:0;opencode .
-: 1771591824:0;stow --adopt .
-: 1771591975:0;gst
-: 1771591977:0;git add --all
-: 1771591982:0;gcmt 'restructured'
-: 1771592683:0;gst
-: 1771592687:0;git add --all
-: 1771592692:0;gcmt 'revert'
-: 1771592693:0;git push origin main
-: 1771592696:0;gst
-: 1771592767:0;cd db
-: 1771592770:0;cd Downloads
-: 1771592770:0;ls
-: 1771592772:0;cd bucket
-: 1771592773:0;ls
-: 1771592775:0;cd ..
-: 1771592777:0;cd  ps_update
-: 1771592777:0;ls
-: 1771592781:0;mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ac.sql
-: 1771592838:0;gst
-: 1771592845:0;sudo xbps-install -Su
-: 1771592931:0;vi ~/.tmux
-: 1771592942:0;cd ~/dotfiles/.config/tmux
-: 1771592942:0;vi
-: 1771593033:0;ls
-: 1771593044:0;vi ~/.xinitrc
-: 1771593070:0;vi
-: 1771593167:0;exit
+gst
+git add --all
+gcmt 'stowed'
+git push origin main
+clear
+clear
+gst
+git add --all
+gst
+git add --all
+gst
+gcmt 'added tmux'
+git push origin main
+stow --adopt .
+cd ~/.config/tmux
+ls
+cd plugins/tmux-continuum
+ls
+ls -tal
+cd scripts
+ls
+cd handle_tmux_automatic_start
+ls
+ls -tal
+cd ../..
+ls
+pwd
+ls
+cd ../
+ls
+cd tmux-continuum/docs
+ls
+ls -tal
+vi automatic_start.md
+ls -tal
+ls -tal
+cd ~/.config/tmux
+cd ~/dotfiles
+gst
+stow --adopt .
+cd .config/tmux/plugins
+ls
+cd tmux-continuum/scripts
+ls
+ls -tal
+ls
+cd handle_tmux_automatic_start
+ls
+ls -tal
+rm README.md
+cd dot
+stow --adopt .
+clear
+gst
+gst
+git add --all
+gst
+git add --all
+gcmt 'added tmux'
+git push origin main
+opencode .
+stow --adopt .
+gst
+git add --all
+gcmt 'restructured'
+gst
+git add --all
+gcmt 'revert'
+git push origin main
+gst
+cd db
+cd Downloads
+ls
+cd bucket
+ls
+cd ..
+cd  ps_update
+ls
+mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ac.sql
+gst
+sudo xbps-install -Su
+vi ~/.tmux
+cd ~/dotfiles/.config/tmux
+vi
+ls
+vi ~/.xinitrc
+vi
+exit
+exit
+exit
+exit
+cd ~/dotfiles/
+opencode .
+vi ~/.zshrc
+st
+tmux
+tmux source ~/.config/tmux/tmux.conf
+exit
+exit
+tmux source ~/.config/tmux/tmux.conf
+vi ~/.zshrc
+exit
+exit
+exit
+exit
+cd ~/dotfiles/
+opencode .
+vi tmux.conf
+cd tmu 
+cd tmux 
+vi tmux.conf
+tmux source ~/.config/tmux/tmux.conf
+cd ~/dotfiles/
+opencode .
+opencode .
+tmux source ~/.config/tmux/tmux.conf
+exit
+opencode .
+exit
+tmux kill-server
+opencode .
+cd ~/dotfiles/
+gst
+vi  .config/tmux/tmux.conf\
+
+vi ~/.config/tmux
+ls
+vi
+gst
+stow .
+cd ~/.config/tmux/custom
+ls
+cd ../
+vi tmux.conf
+clear
+clear
+cd ~/dotfiles/.config/tmux
+vi tmux.conf
+clear
+gst
+stow --adopt .
+gst
+git add --all
+gcmt 'fix tmux new-session'
+git push origin main
+sudo reboot
+clear
+@web
+clear
+cd ps
+ls
+mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ac.sql
+htop
+exit
+@web
+cd admin-v4
+clear
+@web
+cd dotf
+vi	
+ls
+rm fake
+ls
+vi
+cd ~/.config/xmobar
+cd com
+vi volume
+vi
+cd ~/.config/xmobar/com/volume/actions
+ls
+vi volume_jump
+./volume_jump
+./volume_jump
+./volume_jump
+./volume_jump
+./volume_jump
+xdotool getmouselocation --shell | grep -q "SHIFT=1" && echo "Shift pressed"
+xdotool getmouselocation --shell | grep -q "SHIFT=1" && echo "Shift pressed"
+xdotool getmouselocation --shell
+xset q | grep -A 1 "Modifier map"
+xset q | grep -A 1 "Modifier map"
+xset q
+xset q
+showkey
+showkey
+exit
+cd ~/dotfiles
+opencode .
+cd ~/.config/xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+clear
+cd ~/.config/xmobar/com/volume
+ls
+vi index
+pwd
+cd ~/dotfiles
+gst
+stow --adopt .
+clear
+cd ~/.config/xmobar/com/volume
+cd ../screenshot
+cd ../
+cd ../scripts
+ls
+vi refresh
+pkill -USR1 -x xmobar\
+
+pkill -USR1 -x xmobar\
+
+cd xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+cd ../xmobar/scripts/
+ls
+vi refresh
+cd ~/dotfiles
+stow --adopt .
+killall -9 xmobar
+xmobar
+cd xmobar
+vi xmonad.hs
+pwd
+cd ~/xmobar
+cd ~/ xmobar
+pwd
+cd dotfiles xmobar
+cd dotfiles 
+cd .config/xmobar
+ls
+vi xmonad.hs
+pwd
+vi
+cd ~/.config/xmobar/
+vi xmonad.hs
+pwd
+vi xmobar.hs
+cd ../xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+killall -9 xmobar
+xmobar
+htop
+xmobar
+cd .config/xmobar
+ag dotfiles .
+vi `ag -l dotfiles .`
+stow --adopt .
+mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ad.sql
+cd do
+vi
+killall -9 xmobar
+xmobar
+cd ~/.config/xmobar/scripts
+./bar
+./bar
+\:q
+xmobar
+opencode .
+cd ../xmonad
+cd ~ xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+exit
+exit
+cd ~ xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+killall -9 xmobar
+xmobar
+vi
+killall -9 xmobar
+xmobar
+xmobar
+xmobar
+killall -9 xmobar
+xmobar
+exit
+xmobar
+cd ~ xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+killall -9 xmobar
+xmobar
+xmobar
+ps -A | grep speed
+htop
+exit
+: 1771606159:0;clear
+: 1771606160:0;ls
+: 1771606204:0;xmobar
+: 1771606215:0;cd ~ xmonad
+: 1771606216:0;cd co
+: 1771606218:0;cd com
+: 1771606222:0;cd ../scripts
+: 1771606223:0;./bar
+: 1771606239:0;vi bar
+: 1771606266:0;./bar
+: 1771606274:0;ps -A | grep bar
+: 1771606282:0;ps -A | grep bar
+: 1771606287:0;ps -A
+: 1771606310:0;clear
+: 1771606359:0;ps -A
+: 1771606364:0;clear
+: 1771606365:0;htop
+: 1771606487:0;clear
+: 1771606493:0;ps -A
+: 1771606502:0;./bar
+: 1771606511:0;xmobar
+: 1771606563:0;vi
+: 1771606666:0;xmobar
+: 1771606908:0;xmobar
+: 1771607048:0;ag refresh ~/.config/xmobar/com/speedtest
+: 1771607054:0;ag refresh ~/.config/xmobar/com/speedtest
+: 1771607061:0;cd ~/dotfiles
+: 1771607069:0;cd ./.config/xmobar
+: 1771607069:0;ls
+: 1771607071:0;ag refresh ~/.config/xmobar/com/speedtest
+: 1771607095:0;ag refresh ~/.config/xmobar/com/speedtest
+: 1771607102:0;ag refresh ~/.config/xmobar/com
+: 1771607109:0;cd ~/dotfiles
+: 1771607111:0;stow --adopt .
+: 1771607114:0;ag refresh ~/.config/xmobar/com
+: 1771607128:0;ag refresh ~/dotfiles/.config/xmobar
+: 1771607135:0;ag refresh ~/dotfiles/.config/xmobar/com/speedtest
+: 1771607155:0;ag refresh ~/dotfiles/.config/xmobar/com/speedtest
+: 1771607165:0;pwd
+: 1771607207:0;killall -9 xmobar
+: 1771612345:0;opencode .
+: 1771612367:0;cd ~/dotfiles
+: 1771612372:0;opencode .
+: 1771612521:103;vi
+: 1771612626:0;clear
+: 1771612659:0;cd config xmonad
+: 1771612660:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771612691:0;clear
+: 1771612704:0;cd ~/dotfiles
+: 1771612706:0;stow --adopt .
+: 1771612709:0;sudo reboot
+: 1771612796:0;htop
+: 1771612889:0;cd ~/dotfiles
+: 1771612891:0;cd .config/xmobar
+: 1771612898:0;vi xmobar.hs
+: 1771612912:0;cd ~/.config/xmonad
+: 1771612913:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771612967:0;htop
+: 1771612998:0;killall -9 xmobar
+: 1771612999:0;xmobar
+: 1771613030:0;sudo reboot
+: 1771613107:0;vi xmobar.hs
+: 1771613113:0;vi 
+: 1771613125:0;cd ~/.config/xmobar/scripts
+: 1771613130:0;cd ../../xmonad
+: 1771613131:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771613190:0;vi
+: 1771613198:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771613310:0;vi
+: 1771613331:0;cd .config xmobar
+: 1771613342:0;cd /home/void/.config/xmobar
+: 1771613345:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771613348:0;pwd
+: 1771613351:0;cd ../xmonad
+: 1771613352:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771613425:0;vi
+: 1771613572:0;hto
+: 1771613574:0;htop
+: 1771613608:0;cd dotfiles
+: 1771613611:0;gst
+: 1771613625:0;vi .gitignore
+: 1771613631:0;ls
+: 1771613634:0;ls -tla
+: 1771613638:0;vi .gitignore
+: 1771613651:0;gst
+: 1771613658:0;git add -all
+: 1771613661:0;git add --all
+: 1771613661:0;gst
+: 1771613664:0;gigst
+: 1771613666:0;git add --all
+: 1771613673:0;gcmt 'started xmobar super-cache'

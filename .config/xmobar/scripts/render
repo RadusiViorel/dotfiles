@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Vars are already exported from scripts/bar, no need to source
-# Keep this for backwards compatibility if render called directly
 if [[ -z "$COLOR_OK" ]]; then
   source "${HOME}/.config/xmobar/scripts/vars"
 fi
@@ -17,15 +15,12 @@ xmobar_actions() {
   local script="$1"
   shift
 
-  # Get the rendered text once
   local text
   text="$("$script")" || return 0
 
-  # If text is empty (or only whitespace), output nothing
   [[ -z ${text//[[:space:]]/} ]] && return 0
   sep="$([[ -z ${custom_sep//[[:space:]]/} ]] && printf '%s' "$SEP" || printf '%s' "$custom_sep")"
 
-  # Wrap text in nested <action> tags in REVERSE order
   local i
   for ((i=$#; i>0; i--)); do
     local action="${!i}"
