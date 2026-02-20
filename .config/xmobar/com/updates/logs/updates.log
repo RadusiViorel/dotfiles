@@ -109,3 +109,100 @@ Packages Updated: 0
 No packages updated
 ========================================
 
+========================================
+Update Session: 2026-02-15 18:06:27
+Packages Updated: 2
+Size required on disk:        6075KB
+Size to download:             2298KB
+----------------------------------------
+lf-r41_1 update x86_64 https://voidlinux.mirror.garr.it/current 6063027 2278445
+nghttp3-1.15.0_1 update x86_64 https://voidlinux.mirror.garr.it/current 157817 74170
+========================================
+
+========================================
+Update Session: 2026-02-16 14:43:39
+Packages Updated: 3
+Size required on disk:          55MB
+Size to download:               16MB
+----------------------------------------
+icu-devel-78.2_1 remove x86_64 https://voidlinux.mirror.garr.it/current 0 565
+libicu78-78.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 39576092 13259108
+libicu78-devel-78.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 17946952 3683842
+========================================
+
+========================================
+Update Session: 2026-02-17 10:20:04
+Packages Updated: 1
+Size required on disk:         264MB
+Size to download:               83MB
+----------------------------------------
+firefox-147.0.4_1 update x86_64 https://voidlinux.mirror.garr.it/current 277135205 86913250
+========================================
+
+========================================
+Update Session: 2026-02-17 10:20:10
+Packages Updated: 1
+----------------------------------------
+firefox-147.0.4_1 update x86_64 https://voidlinux.mirror.garr.it/current 277135205 86913250
+========================================
+
+========================================
+Update Session: 2026-02-17 15:05:36
+Packages Updated: 1
+Size required on disk:         163MB
+Size to download:              157MB
+----------------------------------------
+linux6.12-6.12.73_1 update x86_64 https://voidlinux.mirror.garr.it/current 170463594 164592850
+========================================
+
+========================================
+Update Session: 2026-02-17 19:00:48
+Packages Updated: 1
+Size required on disk:         351KB
+Size to download:               86KB
+----------------------------------------
+libutf8proc-2.11.3_1 update x86_64 https://voidlinux.mirror.garr.it/current 359429 87108
+========================================
+
+========================================
+Update Session: 2026-02-18 11:55:08
+Packages Updated: 1
+Size required on disk:         181MB
+Size to download:               46MB
+----------------------------------------
+go-1.25.7_1 update x86_64 https://voidlinux.mirror.garr.it/current 189485282 48686556
+========================================
+
+========================================
+Update Session: 2026-02-19 16:39:49
+Packages Updated: 5
+----------------------------------------
+impala-0.7.4_1 update x86_64 https://voidlinux.mirror.garr.it/current 4833381 1905585
+p11-kit-0.26.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 4904551 960208
+xterm-407_1 update x86_64 https://voidlinux.mirror.garr.it/current 1389353 479477
+zlib-1.3.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 104592 56395
+zlib-devel-1.3.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 258251 91420
+========================================
+
+========================================
+Update Session: 2026-02-19 17:36:25
+Packages Updated: 5
+----------------------------------------
+impala-0.7.4_1 update x86_64 https://voidlinux.mirror.garr.it/current 4833381 1905585
+p11-kit-0.26.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 4904551 960208
+xterm-407_1 update x86_64 https://voidlinux.mirror.garr.it/current 1389353 479477
+zlib-1.3.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 104592 56395
+zlib-devel-1.3.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 258251 91420
+========================================
+
+========================================
+Update Session: 2026-02-19 20:32:50
+Packages Updated: 5
+----------------------------------------
+impala-0.7.4_1 update x86_64 https://voidlinux.mirror.garr.it/current 4833381 1905585
+p11-kit-0.26.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 4904551 960208
+xterm-407_1 update x86_64 https://voidlinux.mirror.garr.it/current 1389353 479477
+zlib-1.3.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 104592 56395
+zlib-devel-1.3.2_1 update x86_64 https://voidlinux.mirror.garr.it/current 258251 91420
+========================================
+

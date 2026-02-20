@@ -50,4 +50,4 @@ for i in "${!thresholds[@]}"; do
   fi
 done
 
-echo "$icon $percent󰏰"
+echo "<fc=${COLOR_WHITE}>${icon} ${percent}󰏰</fc>"

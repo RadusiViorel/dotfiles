@@ -2,18 +2,32 @@
 
 COM="${HOME}/.config/xmobar/com/automount"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
-
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 CONFIG_FILE="${HOME}/.config/_scripts/startup/automount/automount.conf"
+AUTOMOUNT_SCRIPT="${HOME}/.config/_scripts/startup/automount/automount.sh"
 
+source "${HOME}/.config/xmobar/scripts/state_loader"
+
+state_init "automount_lsblk_hash" ""
+
+# Action routing
 case "$1" in
   toggle) ${COM}/actions/toggle ;;
+  rescan) ${AUTOMOUNT_SCRIPT} rescan ;;
 esac
 
+current_hash=$(lsblk -npo NAME,UUID,SIZE,FSTYPE 2>/dev/null | md5sum | cut -d' ' -f1)
+
+if [[ -n "$current_hash" && "$current_hash" != "$automount_lsblk_hash" ]]; then
+  ${AUTOMOUNT_SCRIPT} rescan >/dev/null 2>&1 &
+  state_updage "automount_lsblk_hash" $current_hash
+fi
+
+# Count NEW devices
 count=$(grep -c "^NEW=yes$" "$CONFIG_FILE" 2>/dev/null)
 
-color=$(  [[ count -gt 0 ]] && echo ${COLOR_WARNING} || echo ${COLOR_WHITE} )
-counter=$([[ count -gt 0 ]] && echo " ${count}" || echo "" )
+color=$(  [[ $count -gt 0 ]] && echo ${COLOR_WARNING} || echo ${COLOR_WHITE} )
+counter=$([[ $count -gt 0 ]] && echo " ${count}" || echo "" )
 
 echo "<fc=${color}>󱛟$counter</fc>"

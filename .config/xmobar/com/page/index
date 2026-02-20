@@ -15,4 +15,4 @@ case "$1" in
 esac
 
 icon=$([[ $page_number -eq 2 ]] && echo "󰔡" || echo "󰨙")
-echo "${icon}"
+echo "<fc=${COLOR_WHITE}>${icon}</fc>"

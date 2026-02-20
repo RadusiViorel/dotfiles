@@ -2,8 +2,7 @@ import XMonad
 import Control.Monad (when)
 
 import Graphics.X11.ExtraTypes.XF86
-import Data.List (elemIndex, isPrefixOf)
-import Data.Char (isSpace)
+import Data.List (elemIndex)
 
 import XMonad.Layout.ZoomRow
 import XMonad.Layout.Grid
@@ -60,58 +59,28 @@ import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Core (ExtensionClass(..))
 
 --------------------------------------------------------------------------------
--- COLORS (pywal)
+-- ENVS
 --------------------------------------------------------------------------------
-
--- Parse a single key from ~/.cache/wal/colors.sh.
--- Lines have the form:  color1='#rrggbb'
--- Falls back to the provided default if the file or key is missing.
-getWalColor :: String -> String -> String
-getWalColor key fallback = unsafePerformIO $ do
-  let walFile = "/home/void/.cache/wal/colors.sh"
-  exists <- doesFileExist walFile
-  if not exists
-    then return fallback
-    else do
-      contents <- readFile walFile
-      let match = [ strip v
-                  | l <- lines contents
-                  , (key ++ "=") `isPrefixOf` l
-                  , let v = drop (length key + 1) l
-                  ]
-      return $ case match of
-        (c:_) -> stripQuotes c
-        []    -> fallback
-  where
-    strip     = reverse . dropWhile isSpace . reverse . dropWhile isSpace
-    stripQuotes s = case s of
-      ('\'':rest) -> takeWhile (/= '\'') rest
-      ('"' :rest) -> takeWhile (/= '"')  rest
-      _           -> s
+getEnvDefault :: String -> String -> String
+getEnvDefault var def = unsafePerformIO $ fmap (maybe def id) (lookupEnv var)
 
 color_ok :: String
-color_ok = getWalColor "color2" "#84f098"
+color_ok = getEnvDefault "XMB_COLOR_OK" "#00FF00"
 
 color_info :: String
-color_info = getWalColor "color6" "#87c6e6"
+color_info  = getEnvDefault "XMB_COLOR_INFO" "#0000FF"
 
 color_yellow :: String
-color_yellow = getWalColor "color3" "#e6c15c"
+color_yellow  = getEnvDefault "XMB_COLOR_WARNING" "#FFFF00"
 
 color_mute :: String
-color_mute = getWalColor "color8" "#696969"
+color_mute = getEnvDefault "XMB_COLOR_MUTE" "#666666"
 
 color_white :: String
-color_white = getWalColor "color15" "#ffffff"
+color_white = getEnvDefault "XMB_COLOR_WHITE" "#FFFFFF"
 
 color_danger :: String
-color_danger = getWalColor "color9" "#f58989"
-
-color_border_normal :: String
-color_border_normal = getWalColor "color0" "#3B4252"
-
-color_border_focused :: String
-color_border_focused = getWalColor "color1" "#BF616A"
+color_danger = "#f58989"
 
 --------------------------------------------------------------------------------
 -- Slack Notifications State
@@ -317,8 +286,8 @@ myConfig = def
     { terminal           = term
     , modMask            = leader
     , borderWidth        = 1
-    , normalBorderColor  = color_border_normal
-    , focusedBorderColor = color_border_focused
+    , normalBorderColor  = "#3B4252"
+    , focusedBorderColor = "#BF616A"
     , layoutHook         = myLayouts
     , manageHook         = myManageHook
     , workspaces         = myWorkspaces
@@ -345,8 +314,8 @@ myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
     { swn_font = "xft:JetBrainsMono Nerd Font:style=Bold:size=90"
     , swn_fade    = 0.7
-    , swn_bgcolor = getWalColor "background" "#1e1e2e"
-    , swn_color   = getWalColor "foreground" "#cdd6f4"
+    , swn_bgcolor = "#1e1e2e"
+    , swn_color   = "#cdd6f4"
     }
 
 myLogHook = do

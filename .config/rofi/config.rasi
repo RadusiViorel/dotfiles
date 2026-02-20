@@ -3,4 +3,4 @@ configuration {
     drun-display-format: "{icon} {name}";
 }
 
-@theme "/home/void/.cache/wal/colors-rofi-dark.rasi"
+@theme "/home/void/.config/rofi/themes/nord.rasi"

@@ -9,4 +9,4 @@ case "$1" in
   *) ;;
 esac
 
-echo "󰔎"
+echo "<fc=${COLOR_WHITE}>󰔎</fc>"

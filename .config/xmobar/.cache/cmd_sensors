@@ -1,18 +1,18 @@
 coretemp-isa-0000
 Adapter: ISA adapter
-Package id 0:  +55.0°C  (high = +87.0°C, crit = +105.0°C)
-Core 0:        +51.0°C  (high = +87.0°C, crit = +105.0°C)
-Core 1:        +55.0°C  (high = +87.0°C, crit = +105.0°C)
-Core 2:        +54.0°C  (high = +87.0°C, crit = +105.0°C)
-Core 3:        +52.0°C  (high = +87.0°C, crit = +105.0°C)
+Package id 0:  +56.0°C  (high = +87.0°C, crit = +105.0°C)
+Core 0:        +46.0°C  (high = +87.0°C, crit = +105.0°C)
+Core 1:        +56.0°C  (high = +87.0°C, crit = +105.0°C)
+Core 2:        +51.0°C  (high = +87.0°C, crit = +105.0°C)
+Core 3:        +49.0°C  (high = +87.0°C, crit = +105.0°C)
 
 acpitz-acpi-0
 Adapter: ACPI interface
-temp1:        +53.0°C  
+temp1:        +55.0°C  
 
 BAT0-acpi-0
 Adapter: ACPI interface
-in0:          11.99 V  
+in0:          12.08 V  
 power1:        0.00 W  
 
 iwlwifi_1-virtual-0
@@ -22,7 +22,7 @@ temp1:        +38.0°C
 thinkpad-isa-0000
 Adapter: ISA adapter
 fan1:        3770 RPM
-CPU:          +53.0°C  
+CPU:          +55.0°C  
 GPU:           +0.0°C  
 temp3:         +0.0°C  
 temp4:         +0.0°C  

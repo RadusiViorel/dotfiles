@@ -7,4 +7,5 @@ for arg in "$@"; do
   esac
 done
 
-$TERM --class float-large -e ${HOME}/.config/_scripts/startup/automount/automount-tui.sh >/dev/null
+$TERM -e ${HOME}/.config/_scripts/startup/automount/automount-tui.sh >/dev/null
+# $TERM --class float-large -e ${HOME}/.config/_scripts/startup/automount/automount-tui.sh >/dev/null

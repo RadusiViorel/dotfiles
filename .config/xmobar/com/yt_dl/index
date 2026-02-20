@@ -43,5 +43,5 @@ if (( yt_loading == 1 )); then
   exit 0
 fi
 
-color=$([[ $yt_type == 'mp4' ]] && echo "${COLOR_DANGER}" || echo "${COLOR_WARNING}")
+color=$([[ $yt_type == 'mp4' ]] && echo "${COLOR_WHITE}" || echo "${COLOR_WARNING}")
 echo "<fc=${color}>󰗃</fc>"

@@ -96,8 +96,8 @@ fi
 
 if (( network_traffic == 1 )); then
   traffic="$("${COM}/scripts/traffic/traffic" --interface="$interface")"
-  echo "$ssid ${signal}󰏰 ${signal_icon} ${traffic}"
+  echo "<fc=${COLOR_WHITE}>$ssid ${signal}󰏰 ${signal_icon}</fc> ${signal_icon} ${traffic}"
   exit 0
 fi
 
-echo "$ssid ${signal}󰏰 ${signal_icon}"
+echo "<fc=${COLOR_WHITE}>$ssid ${signal}󰏰 ${signal_icon}</fc>"

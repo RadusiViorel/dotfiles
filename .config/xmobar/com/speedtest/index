@@ -44,4 +44,4 @@ if (( speedtest_loading == 1 )); then
   exit 0
 fi
 
-echo "󰾆"
+echo "<fc=${COLOR_WHITE}>󰾆</fc>"
