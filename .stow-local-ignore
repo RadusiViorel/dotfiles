@@ -1,0 +1,21 @@
+# GNU Stow ignore file
+# Comments and blank lines are allowed
+
+# Git files
+\.git
+\.gitignore
+\.gitmodules
+
+# AI documentation directory
+^/__ai
+
+# System configuration (not for home directory)
+^/etc
+
+# Xmobar cache
+\.config/xmobar/\.cache
+
+# README and documentation in root
+^/README.*
+^/LICENSE.*
+^/COPYING

@@ -1,5 +1,5 @@
-updates_timestamp=1771587662
-updates_count=1
+updates_timestamp=1771591262
+updates_count=2
 speedtest_isp="Digi Romania"
 speedtest_up=320.90
 speedtest_down=320.90
@@ -20,7 +20,7 @@ weather_timestamp=1771517053
 bluetooth_index_device=-1
 battery_level_icon=0
 battery_show_time=1
-battery_timestamp=1771590996
+battery_timestamp=1771591799
 battery_info="Battery 0: Full, 100%"
 network_loading=0
 network_spinner=4

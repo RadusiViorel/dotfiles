@@ -1,0 +1,2 @@
+# Xmobar cache directory - contains temporary command output caches
+.cache/
