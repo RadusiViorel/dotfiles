@@ -10734,3 +10734,50 @@ aws s3 cp  ~/Downloads/bucket/test.js         s3://popcash/test.js         --end
 : 1771590901:0;git add --all
 : 1771590902:0;gst
 : 1771590906:0;gcmt 'added tmux'
+: 1771590908:0;git push origin main
+: 1771590913:0;stow --adopt .
+: 1771590931:0;cd ~/.config/tmux
+: 1771590931:0;ls
+: 1771590937:0;cd plugins/tmux-continuum
+: 1771590938:0;ls
+: 1771590939:0;ls -tal
+: 1771590949:0;cd scripts
+: 1771590950:0;ls
+: 1771590955:0;cd handle_tmux_automatic_start
+: 1771590956:0;ls
+: 1771590957:0;ls -tal
+: 1771590970:0;cd ../..
+: 1771590970:0;ls
+: 1771590975:0;pwd
+: 1771590976:0;ls
+: 1771590977:0;cd ../
+: 1771590978:0;ls
+: 1771590988:0;cd tmux-continuum/docs
+: 1771590988:0;ls
+: 1771590990:0;ls -tal
+: 1771590996:0;vi automatic_start.md
+: 1771591002:0;ls -tal
+: 1771591006:0;ls -tal
+: 1771591008:0;cd ~/.config/tmux
+: 1771591011:0;cd ~/dotfiles
+: 1771591011:0;gst
+: 1771591017:0;stow --adopt .
+: 1771591028:0;cd .config/tmux/plugins
+: 1771591029:0;ls
+: 1771591036:0;cd tmux-continuum/scripts
+: 1771591037:0;ls
+: 1771591038:0;ls -tal
+: 1771591041:0;ls
+: 1771591043:0;cd handle_tmux_automatic_start
+: 1771591044:0;ls
+: 1771591045:0;ls -tal
+: 1771591051:0;rm README.md
+: 1771591057:0;cd dot
+: 1771591068:0;stow --adopt .
+: 1771591074:0;clear
+: 1771591075:0;gst
+: 1771591087:0;gst
+: 1771591089:0;git add --all
+: 1771591110:0;gst
+: 1771591112:0;git add --all
+: 1771591114:0;gcmt 'added tmux'
