@@ -1,9 +1,0 @@
-resolver: lts-24.24
-
-local-bin-path : /home/void/.local/bin
-
-packages:
-  - .
-
-extra-deps:
-  - xmobar-0.50

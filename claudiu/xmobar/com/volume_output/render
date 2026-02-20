@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-source "${HOME}/.config/xmobar/scripts/render"
-
-COM="${HOME}/.config/xmobar/com/volume_output/index"
-
-xmobar_actions "$COM" \
-  "1:info"            \
-  "3:toggle"

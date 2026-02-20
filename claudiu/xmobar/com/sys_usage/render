@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-source "${HOME}/.config/xmobar/scripts/render"
-
-COM="${HOME}/.config/xmobar/com/sys_usage/index"
-
-xmobar_actions "$COM"

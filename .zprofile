@@ -2,7 +2,6 @@ export XDG_RUNTIME_DIR="/opt/user/$(id -u)"
 export XDG_DATA_HOME="${HOME}/.config"
 export XDG_DATA_DIRS="$HOME/.local/desktopIcons:/usr/local/share:/usr/share"
 
-
 export OPENCODE=/home/void/.opencode/bin
 export GOPATH=$HOME/opt/go
 export LOCALBIN=$HOME/.local/bin
@@ -28,6 +27,7 @@ export XMB_COLOR_WARNING="#e6c15c"
 export XMB_COLOR_CRITIC="#d94141"
 export XMB_COLOR_DANGER="#f58989"
 export XMB_COLOR_ORANGE="#f28f2f"
+
 
 export POPCASH_DEVDIR="/opt/work"
 

@@ -115,3 +115,7 @@ ZSH_HIGHLIGHT_STYLES[assign]=none
 export PATH=/home/void/.opencode/bin:$PATH
 
 . "$HOME/.config/../bin/env"
+
+(cat ~/.cache/wal/sequences &)
+
+eval "$(zoxide init --cmd cd zsh)"

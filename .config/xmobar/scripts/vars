@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+SEP=""
+
+# Load pywal palette if available
+[ -f "$HOME/.cache/wal/colors.sh" ] && source "$HOME/.cache/wal/colors.sh"
+
+# Map pywal variables to semantic names, falling back to env vars, then hardcoded defaults
+COLOR_WHITE=${color15:-${XMB_COLOR_WHITE:-"#ffffff"}}
+COLOR_CRITIC=${color1:-${XMB_COLOR_CRITIC:-"#d94141"}}
+COLOR_DANGER=${color9:-${XMB_COLOR_DANGER:-"#f58989"}}
+COLOR_WARNING=${color3:-${XMB_COLOR_WARNING:-"#e6c15c"}}
+COLOR_OK=${color2:-${XMB_COLOR_OK:-"#84f098"}}
+COLOR_INFO=${color6:-${XMB_COLOR_INFO:-"#87c6e6"}}
+COLOR_ORANGE=${color11:-${XMB_COLOR_ORANGE:-"#f28f2f"}}
+COLOR_MUTE=${color8:-${XMB_COLOR_MUTE:-"#696969"}}

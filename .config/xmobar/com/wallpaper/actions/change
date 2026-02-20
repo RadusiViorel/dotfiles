@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --is_locked=*)      is_locked="${arg#*=}" ;;
+    --dir=*)            dir="${arg#*=}" ;;
+    --selected_image=*) selected_image="${arg#*=}" ;;
+    --IMAGE_KEY=*)      IMAGE_KEY="${arg#*=}" ;;
+    --STATE_FILE=*)     STATE_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+set -euo pipefail
+
+# --- Pywal theme application ---
+apply_theme() {
+  local image="$1"
+
+  # Skip if wal is not installed
+  command -v wal >/dev/null 2>&1 || return 0
+
+  # Generate palette from wallpaper (no wallpaper setter — feh already ran)
+  wal -i "$image" --backend haishoku -n -q 2>/dev/null || \
+  wal -i "$image" -n -q 2>/dev/null || return 0
+
+  # Reload Xresources (updates st colors live)
+  xrdb -merge "$HOME/.cache/wal/colors.Xresources" 2>/dev/null || true
+
+  # Reload dunst with new colors
+  if [ -f "$HOME/.cache/wal/dunstrc" ]; then
+    pkill -x dunst 2>/dev/null || true
+    dunst -conf "$HOME/.cache/wal/dunstrc" &
+  fi
+
+  # rofi: config.rasi permanently points to ~/.cache/wal/colors-rofi-dark.rasi,
+  # so no action needed — pywal already wrote the new theme above.
+
+  # xmobar: scripts/vars sources ~/.cache/wal/colors.sh on every poll cycle,
+  # so colors update live without a restart.
+}
+
+# --- Configuration ---
+FEH_OPTS="--bg-fill"                      # change to --bg-scale, --bg-center, etc.
+WALLPAPER_DIR="${dir:-$HOME/wallpapers}"  # pass dir as first arg or default
+EXTENSIONS=(jpg jpeg png gif bmp webp)    # add/remove as needed
+
+if (( is_locked == 1 )); then
+  feh $FEH_OPTS -- "${selected_image}"
+  apply_theme "${selected_image}"
+  exit 0
+fi
+
+# --- Build find command safely (handles spaces) ---
+# We'll build an array and use -print0 to be safe with filenames.
+find_cmd=(find "$WALLPAPER_DIR" -type f \( )
+for ext in "${EXTENSIONS[@]}"; do
+  find_cmd+=( -iname "*.${ext}" -o )
+done
+# remove the trailing "-o" and close the parenthesis
+unset 'find_cmd[${#find_cmd[@]}-1]'
+find_cmd+=( \) -print0 )
+
+# --- Run find and read null-delimited results into an array ---
+mapfile -d '' -t images < <("${find_cmd[@]}")
+
+# If no images found, exit with message
+if (( ${#images[@]} == 0 )); then
+  echo "No images found in '$WALLPAPER_DIR' for extensions: ${EXTENSIONS[*]}" >&2
+  exit 1
+fi
+
+# --- Pick a random image ---
+# If 'shuf' is available prefer it (safer for large arrays). Otherwise fallback to $RANDOM.
+if command -v shuf >/dev/null 2>&1; then
+  chosen=$(printf '%s\n' "${images[@]}" | shuf -n1)
+else
+  idx=$(( RANDOM % ${#images[@]} ))
+  chosen="${images[$idx]}"
+fi
+
+sed -i "s|^$IMAGE_KEY=.*|$IMAGE_KEY=$chosen|" "$STATE_FILE"
+
+# --- Apply with feh ---
+feh $FEH_OPTS -- "${chosen}"
+
+# --- Generate and apply pywal theme ---
+apply_theme "${chosen}"
+
+# For scripts that should not leave a zero exit if feh fails:
+exit 0

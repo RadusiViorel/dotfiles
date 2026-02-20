@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-source "${HOME}/.config/xmobar/scripts/render"
-
-COM="${HOME}/.config/xmobar/com/rofi_theme/index"
-
-xmobar_actions "$COM" \
-  "1:change"
