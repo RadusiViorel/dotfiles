@@ -38,4 +38,7 @@ state_update "$LOADING_KEY" 1
 
   source "${HOME}/.config/xmobar/scripts/state_loader"
   state_update "$LOADING_KEY" 0
+
+  sleep 0.5
+  "${HOME}/.config/xmobar/scripts/refresh"
 ) &

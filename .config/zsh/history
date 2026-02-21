@@ -1,256 +1,3 @@
-cd ~/.config/xmonad/
-vi xmonad.hs
-stack build
-stack build
-stack build
-[200~â€¦
-âƒ¾ƒ¼ stack build
-xmonad-config> build (exe) with ghc-9.10.3
-Preprocessing executable 'xmobar' for xmonad-config-0.1.0...
-Building executable 'xmobar' for xmonad-config-0.1.0...
-Preprocessing executable 'xmonad' for xmonad-config-0.1.0...
-Building executable 'xmonad' for xmonad-config-0.1.0...
-cd ~/.config/xmonad/
-stack build
-stack build
-stack build
-stack install
-startx
-stack install
-stack build
-cd ~/.config/xmonad/
-stack build
-vi xmonad.hs
-cd ~/.config/xmonad/
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-stack build
-startx
-sudo reboot
-vi xmonad.hs
-vi
-cd ~/.config/xmonad/
-stack build
-stack build
-stack install
-startx
-stack build
-stack install
-startx
-stack build
-stack install
-clear
-cd ~/dotfiles/xmonad
-rm xmonad.hs
-cp ~/.config/xmonad/xmonad.hs .
-ls
-cd ..
-gst
-git diff
-clear
-gst
-git add --all
-gcmt 'added dropdownterm'
-git push origin main
-sudo reboot
-vi 
-stack build
-cd ~/.config/xmonad/
-stack build
-stack install
-stack exec xmonad -- --recompile
-stack exec xmonad -- --restart
-sudo reboot
-sudo xbps-install -S docker
-sudo xbps-install -S docker
-sudo xbps-install -S docker
-docker ps
-docker compose start
-sudo xbps-install -S docker-compose
-docker compose start
-docker ps
-cd /etc/sv
-ls
-sudo ln -s /etc/sv/docker /var/service
-docker ps
-docker ps
-sudo docker ps
-sudo usermod -aG docker radusiviorel
-docker ps
-docker ps
-sudo usermod -aG docker radusiviorel
-docker ps
-exit
-docker ps
-echo $(USER)
-echo $USERID
-echo $USER
-sudo groupadd docker
-sudo usermod -aG docker radusiviorel
-sudo reboot
-docker ps
-sudo poweroff
-docker ps
-docker run --rm -it \\
--e USER_UID=$(id -u) \\
--e USER_GID=$(id -g) \\
--e DOCKER_GID=$(getent group docker | cut -d: -f3) \\
--v code_foundry:/home/byte_crafter \\
--v /var/run/docker.sock:/var/run/docker.sock \\
--v ./:/workspace \\
--h code_foundry \\
---name code_foundry \\
---detach-keys="ctrl-z,z" \\
-89iuv/dotfiles
-ls
-docker run --rm -it \\
--e USER_UID=$(id -u) \\
--e USER_GID=$(id -g) \\
--e DOCKER_GID=$(getent group docker | cut -d: -f3) \\
--v code_foundry:/home/byte_crafter \\
--v /var/run/docker.sock:/var/run/docker.sock \\
--v ./:/workspace \\
--h code_foundry \\
---name code_foundry \\
---detach-keys="ctrl-z,z" \\
-89iuv/dotfiles
-ls
-ls -al
-docker run --rm -it \\
--e USER_UID=$(id -u) \\
--e USER_GID=$(id -g) \\
--e DOCKER_GID=$(getent group docker | cut -d: -f3) \\
--v code_foundry:/home/byte_crafter \\
--v /var/run/docker.sock:/var/run/docker.sock \\
--v ./:/workspace \\
--h code_foundry \\
---name code_foundry \\
---detach-keys="ctrl-z,z" \\
-89iuv/dotfiles
-clear
-docker run --rm -it \\
--e USER_UID=$(id -u) \\
--e USER_GID=$(id -g) \\
--e DOCKER_GID=$(getent group docker | cut -d: -f3) \\
--v code_foundry:/home/byte_crafter \\
--v /var/run/docker.sock:/var/run/docker.sock \\
--v ./:/workspace \\
--h code_foundry \\
---name code_foundry \\
---detach-keys="ctrl-z,z" \\
-89iuv/dotfiles
-tmux
-tmux
-ping www.google.com
-vi ~/.config/xmobar/com/network
-tmux
-clear
-ip show list
-ip list show
-ip show
-ip
-ip list
-ip show
-ip -l show
-ip -a
-ip linkshow
-ip link show
-iw dev lwp5s0 scan
-wpa_cli -i wlp5s0 list_networks
-wpa_cli -i wlp5s0 scan
-wpa_cli -i wlp5s0 scan
-wpa_cli -i wlp5s0 scan
-wpa_cli -i wlp5s0 list_networks
-wpa_cli -i wlp5s0 list
-wpa_cli -i wlp5s0 list_sta
-wpa_cli -i wlp5s0 list_networks
-notify-send -u critical "URGENT TEST" "This is a critical notification"\
-
-cd ~/.config/
-mkdir dunst
-cd dunst
-vim dunstrc
-pkill dunst
-dunst &
-notify-send -u critical "URGENT TEST" "This is a critical notification"
-cd ../xmonad
-vi xmonad.hs
-stack build
-stack build
-stack build
-stack install
-xmonad --restart
-stack build
-stack build
-stack build
-stack build
-stack build
-stack install
-startx
-stack build
-stack build
-stack build
-stack build
-stack install
-stack build
-stack build
-stack build
-stack build
-stack build
-stack install
-stack build
-stack build
-stack build
-stack build
-stack build
-stack install
-startx
-stack build
-stack build
-stack install
-xprop
-xprop |grep WM_CLASS
-stack build
-stack build
-stack install
-stck build
-stack build
-stack build
-stack install
-sudo reboot
-wpa_cli -i wlp5s0 list_networks
-wpa_cli -i wlp5s0 scan\ 
-wpa_cli -i wlp5s0 list_network
-wpa_cli -i wlp5s0 scan
-wpa_cli -i wlp5s0 list_network
-cd ~/.config/xmobar
-vi xmobar.hs
-cd ../xmonad
-stack  build
-stack install
-pkill xmobar
-xmobar
-sudo reboot
-vi
-fc
-vi
-fc
-vi
-fc-list
 fc-list | grep rop
 fc-list | grep pro
 fc-list :file |cut -d: -f1|sort|xargs dirname|uniq\
@@ -10634,94 +10381,408 @@ xmobar
 ps -A | grep speed
 htop
 exit
-: 1771606159:0;clear
-: 1771606160:0;ls
-: 1771606204:0;xmobar
-: 1771606215:0;cd ~ xmonad
-: 1771606216:0;cd co
-: 1771606218:0;cd com
-: 1771606222:0;cd ../scripts
-: 1771606223:0;./bar
-: 1771606239:0;vi bar
-: 1771606266:0;./bar
-: 1771606274:0;ps -A | grep bar
-: 1771606282:0;ps -A | grep bar
-: 1771606287:0;ps -A
-: 1771606310:0;clear
-: 1771606359:0;ps -A
-: 1771606364:0;clear
-: 1771606365:0;htop
-: 1771606487:0;clear
-: 1771606493:0;ps -A
-: 1771606502:0;./bar
-: 1771606511:0;xmobar
-: 1771606563:0;vi
-: 1771606666:0;xmobar
-: 1771606908:0;xmobar
-: 1771607048:0;ag refresh ~/.config/xmobar/com/speedtest
-: 1771607054:0;ag refresh ~/.config/xmobar/com/speedtest
-: 1771607061:0;cd ~/dotfiles
-: 1771607069:0;cd ./.config/xmobar
-: 1771607069:0;ls
-: 1771607071:0;ag refresh ~/.config/xmobar/com/speedtest
-: 1771607095:0;ag refresh ~/.config/xmobar/com/speedtest
-: 1771607102:0;ag refresh ~/.config/xmobar/com
-: 1771607109:0;cd ~/dotfiles
-: 1771607111:0;stow --adopt .
-: 1771607114:0;ag refresh ~/.config/xmobar/com
-: 1771607128:0;ag refresh ~/dotfiles/.config/xmobar
-: 1771607135:0;ag refresh ~/dotfiles/.config/xmobar/com/speedtest
-: 1771607155:0;ag refresh ~/dotfiles/.config/xmobar/com/speedtest
-: 1771607165:0;pwd
-: 1771607207:0;killall -9 xmobar
-: 1771612345:0;opencode .
-: 1771612367:0;cd ~/dotfiles
-: 1771612372:0;opencode .
-: 1771612521:103;vi
-: 1771612626:0;clear
-: 1771612659:0;cd config xmonad
-: 1771612660:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
-: 1771612691:0;clear
-: 1771612704:0;cd ~/dotfiles
-: 1771612706:0;stow --adopt .
-: 1771612709:0;sudo reboot
-: 1771612796:0;htop
-: 1771612889:0;cd ~/dotfiles
-: 1771612891:0;cd .config/xmobar
-: 1771612898:0;vi xmobar.hs
-: 1771612912:0;cd ~/.config/xmonad
-: 1771612913:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
-: 1771612967:0;htop
-: 1771612998:0;killall -9 xmobar
-: 1771612999:0;xmobar
-: 1771613030:0;sudo reboot
-: 1771613107:0;vi xmobar.hs
-: 1771613113:0;vi 
-: 1771613125:0;cd ~/.config/xmobar/scripts
-: 1771613130:0;cd ../../xmonad
-: 1771613131:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
-: 1771613190:0;vi
-: 1771613198:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
-: 1771613310:0;vi
-: 1771613331:0;cd .config xmobar
-: 1771613342:0;cd /home/void/.config/xmobar
-: 1771613345:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
-: 1771613348:0;pwd
-: 1771613351:0;cd ../xmonad
-: 1771613352:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
-: 1771613425:0;vi
-: 1771613572:0;hto
-: 1771613574:0;htop
-: 1771613608:0;cd dotfiles
-: 1771613611:0;gst
-: 1771613625:0;vi .gitignore
-: 1771613631:0;ls
-: 1771613634:0;ls -tla
-: 1771613638:0;vi .gitignore
-: 1771613651:0;gst
-: 1771613658:0;git add -all
-: 1771613661:0;git add --all
-: 1771613661:0;gst
-: 1771613664:0;gigst
-: 1771613666:0;git add --all
-: 1771613673:0;gcmt 'started xmobar super-cache'
+clear
+ls
+xmobar
+cd ~ xmonad
+cd co
+cd com
+cd ../scripts
+./bar
+vi bar
+./bar
+ps -A | grep bar
+ps -A | grep bar
+ps -A
+clear
+ps -A
+clear
+htop
+clear
+ps -A
+./bar
+xmobar
+vi
+xmobar
+xmobar
+ag refresh ~/.config/xmobar/com/speedtest
+ag refresh ~/.config/xmobar/com/speedtest
+cd ~/dotfiles
+cd ./.config/xmobar
+ls
+ag refresh ~/.config/xmobar/com/speedtest
+ag refresh ~/.config/xmobar/com/speedtest
+ag refresh ~/.config/xmobar/com
+cd ~/dotfiles
+stow --adopt .
+ag refresh ~/.config/xmobar/com
+ag refresh ~/dotfiles/.config/xmobar
+ag refresh ~/dotfiles/.config/xmobar/com/speedtest
+ag refresh ~/dotfiles/.config/xmobar/com/speedtest
+pwd
+killall -9 xmobar
+opencode .
+cd ~/dotfiles
+opencode .
+vi
+clear
+cd config xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+clear
+cd ~/dotfiles
+stow --adopt .
+sudo reboot
+htop
+cd ~/dotfiles
+cd .config/xmobar
+vi xmobar.hs
+cd ~/.config/xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+htop
+killall -9 xmobar
+xmobar
+sudo reboot
+vi xmobar.hs
+vi 
+cd ~/.config/xmobar/scripts
+cd ../../xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+vi
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+vi
+cd .config xmobar
+cd /home/void/.config/xmobar
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+pwd
+cd ../xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+vi
+hto
+htop
+cd dotfiles
+gst
+vi .gitignore
+ls
+ls -tla
+vi .gitignore
+gst
+git add -all
+git add --all
+gst
+gigst
+git add --all
+gcmt 'started xmobar super-cache'
+git push origin main
+sudo poweroff
+cd dotfiles
+cd .config xmobar
+pwd
+vi
+cd scripts
+cd ../.cache
+ls
+stat refresh_trigger
+cd ..
+killall -9 xmobar
+xmobar
+@web
+cd admin-v4
+cd xmobar
+vi
+ls
+ls -tal
+rm ./*.md 
+ls
+vi
+htop
+xmobar
+xmobar
+ag 'mkdir -p' .
+ag 'mkdir -p' com
+ag 'mkdir -p' -Q .
+ag 'mkdir ' -Q .
+ag 'mkdir' -Q .
+ag 'mkdir' -Q ~/dotfiles/.config/xmobar
+vi /home/void/dotfiles/.config/xmobar/scripts/refresh\
+
+cd ~/Downloads/ps_update
+ls
+mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ae.sql
+ag 'mkdir' -Q ~/dotfiles/.config/xmobar
+vi /home/void/dotfiles/.config/xmobar/scripts/bar\
+
+xmobar
+ga state_set ~/dotfiles
+ag state_set ~/dotfiles
+ag state_update ~/dotfiles
+ag state_update ~/dotfiles/.config/xmobar
+opencode .
+cd dotfiles
+opencode .
+vi
+cd ~/.config/xmonad
+stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+xmobar
+ps -A | grep bar
+killall xmobar
+xmobar
+xmobar
+xmobar
+clear
+cd ~/dotfiles
+stow .
+vi .stow-local-ignore
+cd .config/xmonad
+ls
+ls -tal
+cd ~/.config
+ls -tal
+cd  xmonad
+pwd
+ls -tal
+cd ~/dotfiles/.config/xmonad
+ls
+ls -tal
+rm -rf ./.stack-work
+cd ..
+cd ..
+stow .
+vi .stow-local-ignore
+vi .stow-local-ignore
+stow .
+rm .config/xmobar/scripts/refresh_daemons
+cd .config/xmobar/scripts
+vi
+pwd
+cd ~/dotfiles
+stow .
+vi
+vi ~/.xinitrc
+ps -A | grep refresh
+ps -A | grep ref
+ps -a 
+htop
+sudo reboot
+cd ~/Downloads/ps_update
+mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_af.sql
+hotp
+htop
+cd ~/.config/xmobar/scripts
+ls
+./refresh_daemons
+./refresh_daemons calendar
+./refresh_daemons start
+./refresh_daemons stop
+ps -a | grep 29136
+vi refresh_daemons
+vi refresh_base
+cd ../com/calendar
+ls
+./refresh stop
+kill 29136
+kill -9 29136
+kill 29142
+kill 29148
+cd ../../scripts
+ls
+./refresh_daemons start
+./refresh_daemons stop
+kill 26614
+kill 26620
+kill 26626
+./refresh_daemons start
+cd ../.cache
+ls
+vi refresh_calendar.pid 
+exit
+: 1771675748:0;cd ../
+: 1771675750:0;cd scripts
+: 1771675754:0;vi refresh_base
+: 1771675830:0;cd ~/dotfiles
+: 1771675832:0;opencode .
+: 1771675962:0;cd ~/.config/xmobar/scripts
+: 1771675963:0;ls
+: 1771675967:0;./refresh_daemons stop
+: 1771675972:0;./refresh_daemons start
+: 1771675981:0;./refresh_daemons stop
+: 1771675992:0;./refresh_daemons stop
+: 1771675998:0;./refresh_daemons start
+: 1771676003:0;cd ../.cache
+: 1771676004:0;ls
+: 1771676009:0;cat refresh_calendar.pid
+: 1771676016:0;kill 2006
+: 1771676019:0;kill 2012
+: 1771676021:0;kill 2018
+: 1771676027:0;ps -a | grep bash
+: 1771676035:0;ps -a | grep refresh
+: 1771676081:0;htop
+: 1771678444:0;ls tal
+: 1771678447:0;lscpi
+: 1771678455:0;lscpi
+: 1771678461:0;lshw
+: 1771678463:0;ls
+: 1771678468:0;lspci
+: 1771678471:0;clear
+: 1771678472:0;lscpi
+: 1771678476:0;lspci
+: 1771678935:0;cd ~/dotfiles
+: 1771678941:0;cd .config/xmobar
+: 1771678942:0;vi
+: 1771679077:0;cd ~/.config/xmonad
+: 1771679078:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679105:0;vi
+: 1771679127:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679149:0;ls
+: 1771679152:0;pwd
+: 1771679153:0;pwd
+: 1771679156:0;ls
+: 1771679163:0;stack install
+: 1771679175:0;stack init
+: 1771679182:0;stack
+: 1771679188:0;stack init
+: 1771679204:0;stack install
+: 1771679233:0;ls
+: 1771679250:0;stack build 
+: 1771679265:0;mv ./.stack-work ./.stack-work.back
+: 1771679269:0;stack install
+: 1771679290:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679318:0;cd ~/.config/xmobar
+: 1771679322:0;vi xmobar.hs
+: 1771679430:0;cd ../xmonad
+: 1771679431:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679463:0;cd sc
+: 1771679466:0;./bar
+: 1771679479:0;cd ../.cache
+: 1771679479:0;ls
+: 1771679482:0;rm refresh_trigger
+: 1771679486:0;cd ../scripts
+: 1771679487:0;./bar
+: 1771679494:0;cd ../com
+: 1771679502:0;./calendar
+: 1771679504:0;./index
+: 1771679520:0;cd ../calendar
+: 1771679521:0;./index
+: 1771679524:0;cd ../power
+: 1771679525:0;./index
+: 1771679534:0;vi
+: 1771679584:0;./index
+: 1771679590:0;cd ../calendar
+: 1771679591:0;./index
+: 1771679597:0;d ../
+: 1771679598:0;cd ..
+: 1771679599:0;pwd
+: 1771679600:0;cd ..
+: 1771679600:0;cd ..
+: 1771679603:0;cd xmonad
+: 1771679604:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679617:0;vi
+: 1771679667:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679699:0;cd ../xmobar/
+: 1771679701:0;vi xmobar.hs
+: 1771679711:0;cd ../xmonad
+: 1771679712:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679772:0;vi
+: 1771679784:0;cd ../xmobar
+: 1771679784:0;vi
+: 1771679908:0;cd ../xmonad
+: 1771679909:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771679922:0;i
+: 1771679924:0;i
+: 1771679924:0;vi
+: 1771679951:0;cd ../applications
+: 1771679961:0;cd ~/.config/xmobar/com/calendar
+: 1771679962:0;./index
+: 1771679966:0;./render
+: 1771679984:0;vi render
+: 1771679999:0;vi
+: 1771680050:0;cd ~/.config/xmonad
+: 1771680051:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771680074:0;vi xmobar.hs
+: 1771680079:0;cd ../xmonad
+: 1771680091:0;vi ../xmobar/xmobar.h
+: 1771680093:0;vi ../xmobar/xmobar.hs
+: 1771680203:0;cd ../xmonad
+: 1771680204:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771680231:0;cd ../xmobar
+: 1771680233:0;cd scripts
+: 1771680234:0;./bar
+: 1771680240:0;cd ../.cache
+: 1771680241:0;ls
+: 1771680243:0;rm refresh_trigger
+: 1771680252:0;cd ../
+: 1771680254:0;vi
+: 1771680356:0;./bar
+: 1771680359:0;cd scripts
+: 1771680359:0;./bar
+: 1771680368:0;./bar
+: 1771680375:0;vi
+: 1771680488:0;cd ../../xmonad
+: 1771680489:0;stack build  && stack install && stack exec xmonad -- --recompile && stack exec xmonad -- --restart
+: 1771680543:0;./bar
+: 1771680551:0;cd ../xmobar/scripts
+: 1771680552:0;./bar
+: 1771680597:0;./bar
+: 1771680603:0;./bar
+: 1771680613:0;./bar
+: 1771680631:0;./bar
+: 1771680636:0;killall xmobar
+: 1771680637:0;xmobar
+: 1771680718:0;cd ~/dotfiles/.config/xmobar/com/start
+: 1771680718:0;ls
+: 1771680726:0;cp index render
+: 1771680728:0;ls -tal
+: 1771680729:0;vi render
+: 1771680756:0;cd ~/dotfiles
+: 1771680757:0;stow .
+: 1771680810:0;ls
+: 1771680812:0;cd xmonad
+: 1771680813:0;ls -tal
+: 1771680832:0;rm -rf ./.stack-work
+: 1771680891:0;mv ~/.config/xmobar/scripts/terminal_launcher ~/dotfiles/.config/xmobar/scripts/terminal_launcher
+: 1771680895:0;ls
+: 1771680900:0;ls -tal
+: 1771680908:0;stow .
+: 1771680910:0;cd ..
+: 1771680913:0;pwd
+: 1771680917:0;cd ~/.config/xmonad
+: 1771680920:0;cd ~/dotfiles
+: 1771680921:0;stow .
+: 1771680999:0;pwd
+: 1771681001:0;unstow .
+: 1771681010:0;stow --help
+: 1771681023:0;stow --restow
+: 1771681026:0;stow --restow .
+: 1771681043:0;opencode .
+: 1771681196:0;stow .
+: 1771681210:0;opencode .
+: 1771681285:0;stow .
+: 1771681291:0;stow --adopt .
+: 1771681295:0;stow .
+: 1771681297:0;vi
+: 1771681324:0;clear
+: 1771681328:0;sudo reboot
+: 1771681382:0;htop
+: 1771681388:0;cd ~/dotfiles
+: 1771681395:0;cd .config/xmobar/scripts
+: 1771681396:0;vi bar
+: 1771681401:0;htop
+: 1771681476:0;cd ~/Downloads/ps_update
+: 1771681484:0;mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ag.sql
+: 1771685093:0;htop
+: 1771685212:0;cd ~/dotfiles/.config/xmobar/com/power/
+: 1771685214:0;v index
+: 1771685216:0;vi index
+: 1771685354:0;opencode .
+: 1771685370:0;cd ~/dotfiles
+: 1771685371:0;opencode .
+: 1771685675:0;@web
+: 1771685678:0;cd ~/dotfiles
+: 1771685686:0;cd .config/xmobar/scripts/
+: 1771685691:0;cd ../com/automount
+: 1771685693:0;vi index
+: 1771685923:0;cd ~/dotfiles
+: 1771685925:0;stow .
+: 1771685932:0;vi
+: 1771686318:0;gst
+: 1771686320:0;git add --all
+: 1771686332:0;gcmt 'started mega optimization'

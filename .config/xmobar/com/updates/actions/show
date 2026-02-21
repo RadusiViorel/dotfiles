@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/terminal_launcher"
+
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
@@ -24,19 +26,22 @@ UPDATE_OUTPUT="$TEMP_DIR/output.txt"
 echo "$package_list" > "$PACKAGES_FILE"
 
 # Run the update and capture the full output
-$TERM --class float-medium -e bash -c "
-  echo -e 'Packages to update:\n'
-  echo '$package_list'
-  echo -e '\n========================================\n'
-  echo 'Running update...'
-  echo
-  
-  # Run update and capture output
-  sudo xbps-install -Su 2>&1 | tee '$UPDATE_OUTPUT'
-  
-  echo
-  read -p 'Press enter to exit...'
-"
+terminal_launch \
+  --title "System Updates" \
+  --class "float-medium" \
+  --command "
+    echo -e 'Packages to update:\n'
+    echo '$package_list'
+    echo -e '\n========================================\n'
+    echo 'Running update...'
+    echo
+
+    # Run update and capture output
+    sudo xbps-install -Su 2>&1 | tee '$UPDATE_OUTPUT'
+
+    echo
+    read -p 'Press enter to exit...'
+  "
 
 # Log the update session
 LOG_SCRIPT="${HOME}/.config/xmobar/com/updates/scripts/log_update"

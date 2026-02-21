@@ -26,6 +26,8 @@ sleep 2
 # Clear loading state before showing rofi
 # (Rofi blocks, user doesn't need to see spinner while selecting)
 sed -i "s/^network_loading=.*/network_loading=0/" "$STATE_FILE"
+sleep 0.5
+"${HOME}/.config/xmobar/scripts/refresh"
 
 # ---------------------------
 # 1. Build KNOWN SSID LIST
@@ -81,10 +83,10 @@ nid=$(wpa_cli -i "$interface" list_networks \
 if [ -n "$nid" ]; then
   wpa_cli -i "$interface" enable_network "$nid" >/dev/null
   wpa_cli -i "$interface" select_network "$nid" >/dev/null
-  
+
   # Set loading state and monitor connection in background
   sed -i "s/^$KEY=.*/$KEY=1/" "$STATE_FILE"
-  
+
   # Monitor connection in background (same as new network)
   (
     # Wait up to 10 seconds for successful connection
@@ -98,12 +100,12 @@ if [ -n "$nid" ]; then
       fi
       sleep 1
     done
-    
+
     # Connection failed
     notify-send "WiFi" "󱛅 ${ssid} connection timeout"
     sed -i "s/^$KEY=.*/$KEY=0/" "$STATE_FILE"
   ) &
-  
+
   exit 0
 fi
 

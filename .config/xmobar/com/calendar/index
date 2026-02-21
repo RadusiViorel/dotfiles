@@ -3,7 +3,10 @@
 COM="${HOME}/.config/xmobar/com/calendar"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
-source "${HOME}/.config/xmobar/scripts/state_loader"
+source "${HOME}/.config/xmobar/scripts/vars"
+
+STATE_FILE_LOADER="${HOME}/.config/xmobar/scripts/state_loader"
+source $STATE_FILE_LOADER
 state_init "calendar_toggle" 0
 
 if ! command -v yad >/dev/null 2>&1; then
@@ -11,9 +14,10 @@ if ! command -v yad >/dev/null 2>&1; then
 fi
 
 case "$1" in
-  toggle) ${COM}/actions/toggle \
-    --value=${calendar_toggle}  \
-    --STATE_FILE=${STATE_FILE}  \
+  toggle) ${COM}/actions/toggle               \
+    --value=${calendar_toggle}                \
+    --STATE_FILE=${STATE_FILE}                \
+    --STATE_FILE_LOADER=${STATE_FILE_LOADER}  \
     --KEY=calendar_toggle ;;
   show_calendar) ${COM}/actions/show_calendar;;
   *) ;;

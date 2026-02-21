@@ -23,6 +23,9 @@ if ! command -v bluetuith >/dev/null 2>&1; then
   echo "Warning: bluetuith is not installed or not in PATH."
 fi
 
+
+STATE_FILE_LOADER="${HOME}/.config/xmobar/scripts/state_loader"
+
 state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
 
 outputColor=${COLOR_WHITE}
@@ -44,18 +47,21 @@ case "$1" in
   toggle) ${COM}/actions/toggle \
     --state=${state} ;;
 
-  reset) ${COM}/actions/reset  \
-    --STATE_FILE=${STATE_FILE} \
+  reset) ${COM}/actions/reset                \
+    --STATE_FILE=${STATE_FILE}               \
+    --STATE_FILE_LOADER=${STATE_FILE_LOADER} \
     --KEY=bluetooth_index_device ;;
 
   cycle_up) ${COM}/actions/cycle_up          \
     --STATE_FILE=${STATE_FILE}               \
+    --STATE_FILE_LOADER=${STATE_FILE_LOADER} \
     --KEY=bluetooth_index_device             \
     --currentIndex=${bluetooth_index_device} \
     --count=${#connectedDevices[@]} ;;
 
   cycle_down) ${COM}/actions/cycle_up        \
     --STATE_FILE=${STATE_FILE}               \
+    --STATE_FILE_LOADER=${STATE_FILE_LOADER} \
     --KEY=bluetooth_index_device             \
     --currentIndex=${bluetooth_index_device} \
     --count=${#connectedDevices[@]} ;;

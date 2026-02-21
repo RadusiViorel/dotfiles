@@ -9,7 +9,8 @@ source "${HOME}/.config/xmobar/scripts/cache"
 now=$(date +%s)
 CACHE_TTL=80 # seconds
 
-source "${HOME}/.config/xmobar/scripts/state_loader"
+STATE_FILE_LOADER="${HOME}/.config/xmobar/scripts/state_loader"
+source "${STATE_FILE_LOADER}"
 state_init "battery_level_icon" 0
 state_init "battery_show_time" 0
 state_init "battery_info" ""
@@ -28,6 +29,7 @@ if (( now - battery_timestamp >= CACHE_TTL )); then
   battery_info="$(acpi -b 2>/dev/null)"
   state_update "battery_info" "\"$battery_info\""
   state_update "battery_timestamp" "$now"
+  "${HOME}/.config/xmobar/scripts/refresh"
 fi
 
 state=$(echo "$battery_info" | awk -F'[,: ]+' '{print $3}')
@@ -38,9 +40,10 @@ thresholds=(10 33 66 85 95)
 icons=("󰢟" "󱊤" "󱊥" "󱊦" "󰂅")
 
 case "$1" in
-  show_time) ${COM}/actions/show_time \
-    --value=${battery_show_time}      \
-    --STATE_FILE=${STATE_FILE}        \
+  show_time) ${COM}/actions/show_time        \
+    --value=${battery_show_time}             \
+    --STATE_FILE=${STATE_FILE}               \
+    --STATE_FILE_LOADER=${STATE_FILE_LOADER} \
     --KEY=battery_show_time ;;
   *) ;;
 esac

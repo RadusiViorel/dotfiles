@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-COM="${HOME}/.config/xmobar/com"
-
 CACHE_DIR="${HOME}/.config/xmobar/.cache"
-STATE_FILE="${HOME}/.config/xmobar/scripts/state"
+mkdir -p "$CACHE_DIR"
+
 CACHE_FILE="${CACHE_DIR}/bar_output"
 TRIGGER_FILE="${CACHE_DIR}/refresh_trigger"
 
 spinner_active=0
+STATE_FILE="${HOME}/.config/xmobar/scripts/state"
 # Check for any *_loading=1 in state file
 if grep -q "^[a-z_]*_loading=1$" "$STATE_FILE"; then
   spinner_active=1
 fi
 
-# Fast path: if cache exists and is newer than trigger AND no spinner is active, just output it
+Fast path: if cache exists and is newer than trigger AND no spinner is active, just output it
 if [[ $spinner_active -eq 0 && -f "$CACHE_FILE" && -f "$TRIGGER_FILE" && "$CACHE_FILE" -nt "$TRIGGER_FILE" ]]; then
   cat "$CACHE_FILE"
   exit 0
@@ -24,11 +24,11 @@ source "${HOME}/.config/xmobar/scripts/vars"
 source "${HOME}/.config/xmobar/scripts/state"
 set +a
 
-mkdir -p "${CACHE_DIR}"
 [[ ! -f "$TRIGGER_FILE" ]] && touch "$TRIGGER_FILE"
 
+COM="${HOME}/.config/xmobar/com"
 components=(
-  "capslock"
+  #"capslock"
   "updates"
   "volume:<fc="$COLOR_MUTE">󰜥</fc>"
   "volume_output"
@@ -48,8 +48,8 @@ components=(
   "screenshot"
   "automount"
   "page"
-  "calendar"
-  "power"
+  #"calendar"
+  #"power"
 )
 
 bar=""

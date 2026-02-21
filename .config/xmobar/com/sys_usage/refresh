@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/refresh_base"
+
+handle_refresh_daemon 3 "$@"

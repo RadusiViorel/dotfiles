@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/xmobar/scripts/terminal_launcher"
+
+terminal_launch \
+  --title "Automount TUI" \
+  --command "${HOME}/.config/_scripts/startup/automount/automount-tui.sh" \
+  --class "float-large"

@@ -25,4 +25,4 @@ b=$(clamp "$b")
 
 color=$(printf "#%02x%02x%02x\n" "$r" "$g" "$b")
 
-echo "<fc=${color}></fc> ${SEP}"
+echo "<fc=${color}></fc>${SEP} "

@@ -12,8 +12,11 @@
 # System configuration (not for home directory)
 ^/etc
 
-# Xmobar cache
-\.config/xmobar/\.cache
+# Build artifacts
+\.stack-work
+
+# Xmobar
+/.config/xmobar/scripts/state
 
 # README and documentation in root
 ^/README.*

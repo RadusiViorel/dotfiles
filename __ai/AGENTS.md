@@ -343,6 +343,40 @@ chmod +x com/<component>/render
 
 ---
 
+## Documentation Guidelines
+
+### Where to Put Documentation
+
+**NEVER** create documentation files (`.md`, README, etc.) in the main codebase unless explicitly requested.
+
+**ALWAYS** put documentation in `__ai/{subject_path}`:
+
+```bash
+# Examples:
+__ai/.config/xmobar/TERMINAL_LAUNCHER.md
+__ai/.config/xmonad/KEYBINDINGS.md
+__ai/AGENTS.md  # General guidelines
+```
+
+The `__ai/` directory mirrors the repository structure and is excluded from stow operations via `.stow-local-ignore`.
+
+### When to Document
+
+- Implementation notes for complex features
+- Architecture decisions and patterns
+- Bug fixes and their explanations
+- Performance optimizations
+- Agent-specific guidelines for components
+
+### Documentation Style
+
+- Use clear, concise markdown
+- Include code examples where helpful
+- Reference specific file paths and line numbers when relevant
+- Keep implementation details separate from user-facing docs
+
+---
+
 ## Important Notes
 
 ### Xmobar Components

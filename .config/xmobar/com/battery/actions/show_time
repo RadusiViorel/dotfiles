@@ -3,12 +3,17 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --value=*)      value="${arg#*=}"   ;;
-    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
-    --KEY=*)        KEY="${arg#*=}"        ;;
-    *) echo "Unknown argument: $arg" ; exit 1 ;;
+    --value=*)             value="${arg#*=}"             ;;
+    --STATE_FILE=*)        STATE_FILE="${arg#*=}"        ;;
+    --STATE_FILE_LOADER=*) STATE_FILE_LOADER="${arg#*=}" ;;
+    --KEY=*)               KEY="${arg#*=}"               ;;
+    *) echo "Unknown argument: $arg" ; exit 1            ;;
   esac
 done
 
+source "${STATE_FILE_LOADER}"
+
 new_value=$(( ! value ))
-sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
+state_update "${KEY}" $new_value
+
+"${HOME}/.config/xmobar/scripts/refresh"

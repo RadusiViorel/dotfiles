@@ -3,14 +3,13 @@
 COM="${HOME}/.config/xmobar/com/capslock"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
-source "${HOME}/.config/xmobar/scripts/cache"
+source "${HOME}/.config/xmobar/scripts/vars"
 
 if ! command -v xset >/dev/null 2>&1; then
   echo "Warning: xset is not installed or not in PATH."
   exit 1
 fi
 
-# Cache xset output for 1 second (caps lock state doesn't change frequently)
-if cache_cmd "xset" 1 xset q | grep -q "Caps Lock: *on"; then
-  echo "<fc=${COLOR_WARNING}><fn=1>󰪛</fn> </fc>"
+if xset q | grep -q "Caps Lock: *on"; then
+  echo "<fc=${COLOR_WARNING}><fn=1>󰪛</fn> ${SEP} </fc>"
 fi

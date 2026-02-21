@@ -8,12 +8,11 @@ CONFIG_FILE="${HOME}/.config/_scripts/startup/automount/automount.conf"
 AUTOMOUNT_SCRIPT="${HOME}/.config/_scripts/startup/automount/automount.sh"
 
 source "${HOME}/.config/xmobar/scripts/state_loader"
-
 state_init "automount_lsblk_hash" ""
 
 # Action routing
 case "$1" in
-  toggle) ${COM}/actions/toggle ;;
+  show) ${COM}/actions/show ;;
   rescan) ${AUTOMOUNT_SCRIPT} rescan ;;
 esac
 
@@ -22,6 +21,7 @@ current_hash=$(lsblk -npo NAME,UUID,SIZE,FSTYPE 2>/dev/null | md5sum | cut -d' '
 if [[ -n "$current_hash" && "$current_hash" != "$automount_lsblk_hash" ]]; then
   ${AUTOMOUNT_SCRIPT} rescan >/dev/null 2>&1 &
   state_updage "automount_lsblk_hash" $current_hash
+  "${HOME}/.config/xmobar/scripts/refresh"
 fi
 
 # Count NEW devices

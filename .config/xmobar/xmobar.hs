@@ -7,7 +7,7 @@ dir="/home/void/.config/xmobar"
 
 cmd :: Bool -> String -> [String] -> Int -> Runnable
 cmd True comp args rate =
-  Run $ Com (dir <> "/com/" <> comp <> "/index") args comp rate
+  Run $ Com (dir <> "/com/" <> comp <> "/render") args comp rate
 cmd False comp  _  _  =
   Run $ Com "echo" [""] comp 100000
 
@@ -31,14 +31,22 @@ main = xmobar defaultConfig
   , allDesktops = True
   , overrideRedirect = True
   , commands =
-      [ Run UnsafeXMonadLog
-      , cmd True  "start"   [] 10
-      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 11
+      [ cmd True  "start"   [] 10
+      , Run UnsafeXMonadLog
+      , cmd True "capslock" [] 10
+      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 10
+      , cmd True "calendar"   [] 10
+      , cmd True "power"      [] 100000
       ]
   , sepChar = "%"
   , alignSep = "}{"
   , template = mconcat
-      [ " %start%%UnsafeXMonadLog% }{ "
+      [ "%start%"
+      , "%UnsafeXMonadLog%"
+      , "}{"
+      ,  "%capslock%"
       , "%bar%"
+      , "%calendar%"
+      , "%power%"
       ]
   }

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Battery refresh daemon
+# Triggers bar refresh every 10 seconds
+
+source "${HOME}/.config/xmobar/scripts/refresh_base"
+
+handle_refresh_daemon 10 "$@"

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 COM="${HOME}/.config/xmobar/com/power"
+
+source "${HOME}/.config/xmobar/scripts/vars"
+
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
 case "$1" in

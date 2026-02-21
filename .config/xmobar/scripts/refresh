@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-# Triggers xmobar bar refresh by regenerating immediately
+
 CACHE_DIR="${HOME}/.config/xmobar/.cache"
 CACHE_FILE="${CACHE_DIR}/bar_output"
 TRIGGER_FILE="${CACHE_DIR}/refresh_trigger"
-
-mkdir -p "${CACHE_DIR}"
 
 # Delete cache to force regeneration, then run bar script
 rm -f "${CACHE_FILE}"

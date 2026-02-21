@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Master script to manage all component refresh daemons
+# Called from xinitrc to start/stop all auto-refresh components
+
+COM="${HOME}/.config/xmobar/com"
+
+# List of components that have refresh daemons
+COMPONENTS=(
+  "sys_usage"
+  "battery"
+)
+
+case "$1" in
+  start)
+    echo "Starting xmobar refresh daemons..."
+    for component in "${COMPONENTS[@]}"; do
+      if [[ -x "$COM/$component/refresh" ]]; then
+        "$COM/$component/refresh" start
+      fi
+    done
+    echo "All refresh daemons started" ;;
+
+  stop)
+    echo "Stopping xmobar refresh daemons..."
+    for component in "${COMPONENTS[@]}"; do
+      if [[ -x "$COM/$component/refresh" ]]; then
+        "$COM/$component/refresh" stop
+      fi
+    done
+    echo "All refresh daemons stopped" ;;
+
+  restart)
+    echo "Restarting xmobar refresh daemons..."
+    "$0" stop
+    sleep 1
+    "$0" start ;;
+
+  status)
+    echo "Xmobar refresh daemon status:"
+    for component in "${COMPONENTS[@]}"; do
+      if [[ -x "$COM/$component/refresh" ]]; then
+        "$COM/$component/refresh" status
+      fi
+    done ;;
+
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    echo ""
+    echo "Manages refresh daemons for time-based xmobar components:"
+    for component in "${COMPONENTS[@]}"; do
+      echo "  - $component"
+    done
+    exit 1 ;;
+esac

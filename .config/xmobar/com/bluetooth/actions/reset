@@ -3,10 +3,12 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --STATE_FILE=*) STATE_FILE="${arg#*=}" ;;
-    --KEY=*) KEY="${arg#*=}" ;;
+    --STATE_FILE=*)        STATE_FILE="${arg#*=}"        ;;
+    --STATE_FILE_LOADER=*) STATE_FILE_LOADER="${arg#*=}" ;;
+    --KEY=*)               KEY="${arg#*=}" ;;
     *) echo "Unknown argument: $arg" ; exit 1 ;;
   esac
 done
 
-sed -i "s/^$KEY=.*/$KEY=-1/" "$STATE_FILE"
+source "${STATE_FILE_LOADER}"
+state_update "${KEY}" -1

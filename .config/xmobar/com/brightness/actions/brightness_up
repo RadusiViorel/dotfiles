@@ -11,3 +11,5 @@ done
 
 brightnessctl set +"${step}"% >/dev/null
 echo $percent > "${HOME}/.config/xob/brightness/value"
+
+"${HOME}/.config/xmobar/scripts/refresh"

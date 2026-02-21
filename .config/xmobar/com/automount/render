@@ -5,4 +5,4 @@ source "${HOME}/.config/xmobar/scripts/render"
 COM="${HOME}/.config/xmobar/com/automount/index"
 
 xmobar_actions "$COM" \
-  "1:toggle"
+  "1:show"

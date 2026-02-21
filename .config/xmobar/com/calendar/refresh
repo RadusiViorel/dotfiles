@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Calendar component refresh daemon
+# Triggers bar refresh every second to update the clock
+
+source "${HOME}/.config/xmobar/scripts/refresh_base"
+
+handle_refresh_daemon 1 "$@"

@@ -4,7 +4,6 @@
 # Provides TTL-based caching to reduce redundant renders and command execution
 
 CACHE_DIR="${HOME}/.config/xmobar/.cache"
-mkdir -p "$CACHE_DIR"
 
 # cache_get <component_name> <ttl_seconds>
 # Returns cached output if valid, exits with code 1 if cache miss/expired
@@ -53,5 +52,6 @@ cache_cmd() {
   local output
   output=$("$@")
   cache_set "cmd_${cache_key}" "$output"
+
   printf '%s' "$output"
 }

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/terminal_launcher"
+
 LOG_DIR="${HOME}/.config/xmobar/com/updates/logs"
 MASTER_LOG="${LOG_DIR}/updates.log"
 
@@ -10,20 +12,23 @@ if [[ ! -f "$MASTER_LOG" ]]; then
 fi
 
 # Open the log in a terminal with less
-$TERM --class float-large -e bash -c "
-  echo '=== Package Update History ==='
-  echo
-  if [[ -f '$MASTER_LOG' ]]; then
-    cat '$MASTER_LOG'
-  else
-    echo 'No updates logged yet.'
-  fi
-  echo
-  echo '=== Session Logs ==='
-  echo 'Individual session logs available in: $LOG_DIR'
-  ls -1t '$LOG_DIR'/session_*.log 2>/dev/null | head -10 | while read file; do
-    echo \"  - \$(basename \"\$file\")\"
-  done
-  echo
-  read -p 'Press enter to exit...'
-"
+terminal_launch \
+  --title "Update History" \
+  --class "float-large" \
+  --command "
+    echo '=== Package Update History ==='
+    echo
+    if [[ -f '$MASTER_LOG' ]]; then
+      cat '$MASTER_LOG'
+    else
+      echo 'No updates logged yet.'
+    fi
+    echo
+    echo '=== Session Logs ==='
+    echo 'Individual session logs available in: $LOG_DIR'
+    ls -1t '$LOG_DIR'/session_*.log 2>/dev/null | head -10 | while read file; do
+      echo \"  - \$(basename \"\$file\")\"
+    done
+    echo
+    read -p 'Press enter to exit...'
+  "

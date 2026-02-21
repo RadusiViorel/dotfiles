@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+# Universal terminal launcher function
+# Handles different terminal emulators and their class name syntax
+# Source this file in action scripts that need to open terminals
+
+# Modern terminal_launch with flag-based API
+# Usage: terminal_launch --title "Title" --command "cmd" [--hold] [--class "class"]
+# Example: terminal_launch --title "Devices" --command "lsblk" --hold
+terminal_launch() {
+  local title=""
+  local command=""
+  local hold=false
+  local class_name="xmobar_terminal"
+  
+  # Parse arguments
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --title)
+        title="$2"
+        shift 2
+        ;;
+      --command)
+        command="$2"
+        shift 2
+        ;;
+      --hold)
+        hold=true
+        shift
+        ;;
+      --class)
+        class_name="$2"
+        shift 2
+        ;;
+      *)
+        echo "Unknown option: $1"
+        return 1
+        ;;
+    esac
+  done
+  
+  # Build command wrapper for hold functionality
+  local exec_cmd="$command"
+  if [[ "$hold" == true ]]; then
+    exec_cmd="bash -c '$command; echo; echo \"Press ENTER to close...\"; read'"
+  fi
+  
+  # Detect terminal from TERM environment variable or fall back to st
+  local terminal="${TERM:-st}"
+  
+  # Handle terminal-specific syntax
+  case "$terminal" in
+    st)
+      if [[ -n "$title" ]]; then
+        st -c "$class_name" -t "$title" -e bash -c "$exec_cmd" &
+      elif [[ -n "$command" ]]; then
+        st -c "$class_name" -e bash -c "$exec_cmd" &
+      else
+        st -c "$class_name" &
+      fi
+      ;;
+      
+    alacritty)
+      if [[ -n "$title" ]]; then
+        alacritty --class "$class_name" --title "$title" -e bash -c "$exec_cmd" &
+      elif [[ -n "$command" ]]; then
+        alacritty --class "$class_name" -e bash -c "$exec_cmd" &
+      else
+        alacritty --class "$class_name" &
+      fi
+      ;;
+      
+    kitty)
+      if [[ -n "$title" ]]; then
+        kitty --class "$class_name" --title "$title" bash -c "$exec_cmd" &
+      elif [[ -n "$command" ]]; then
+        kitty --class "$class_name" bash -c "$exec_cmd" &
+      else
+        kitty --class "$class_name" &
+      fi
+      ;;
+      
+    ghostty)
+      if [[ -n "$title" ]]; then
+        ghostty --class "$class_name" --title "$title" -e bash -c "$exec_cmd" &
+      elif [[ -n "$command" ]]; then
+        ghostty --class "$class_name" -e bash -c "$exec_cmd" &
+      else
+        ghostty --class "$class_name" &
+      fi
+      ;;
+      
+    xterm)
+      if [[ -n "$title" ]]; then
+        xterm -class "$class_name" -T "$title" -e bash -c "$exec_cmd" &
+      elif [[ -n "$command" ]]; then
+        xterm -class "$class_name" -e bash -c "$exec_cmd" &
+      else
+        xterm -class "$class_name" &
+      fi
+      ;;
+      
+    *)
+      echo "Warning: Unknown terminal '$terminal', falling back to st"
+      if [[ -n "$title" ]]; then
+        st -c "$class_name" -t "$title" -e bash -c "$exec_cmd" &
+      elif [[ -n "$command" ]]; then
+        st -c "$class_name" -e bash -c "$exec_cmd" &
+      else
+        st -c "$class_name" &
+      fi
+      ;;
+  esac
+}
+
+# Legacy launch_terminal for backward compatibility
+# Usage: launch_terminal <class_name> [command]
+# Example: launch_terminal "floating_calc" "bc -l"
+launch_terminal() {
+  local class_name="$1"
+  shift
+  local command="$@"
+  
+  if [[ -n "$command" ]]; then
+    terminal_launch --class "$class_name" --command "$command"
+  else
+    terminal_launch --class "$class_name"
+  fi
+}
+
+# Alternative function that explicitly specifies the terminal
+# Usage: launch_terminal_explicit <terminal_name> <class_name> [command]
+# Example: launch_terminal_explicit "alacritty" "floating_calc" "bc -l"
+launch_terminal_explicit() {
+  local terminal="$1"
+  local class_name="$2"
+  shift 2
+  local command="$@"
+  
+  # Temporarily override TERM for this launch
+  TERM="$terminal" launch_terminal "$class_name" $command
+}
