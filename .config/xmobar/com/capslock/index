@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "xset" --exit
+
 COM="${HOME}/.config/xmobar/com/capslock"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
 source "${HOME}/.config/xmobar/scripts/vars"
 
-if ! command -v xset >/dev/null 2>&1; then
-  echo "Warning: xset is not installed or not in PATH."
-  exit 1
-fi
-
 if xset q | grep -q "Caps Lock: *on"; then
-  echo "<fc=${COLOR_WARNING}><fn=1>󰪛</fn> ${SEP} </fc>"
+  echo "<fc=${COLOR_WARNING}><fn=1>󰪛</fn></fc>"
 fi

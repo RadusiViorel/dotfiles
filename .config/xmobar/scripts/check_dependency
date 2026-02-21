@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Dependency checker helper for xmobar components
+# Usage: check_dependency <command> [--exit|--no-exit]
+# Examples:
+#   check_dependency "xset" --exit
+#   check_dependency "acpi" --no-exit
+
+check_dependency() {
+  local cmd="$1"
+  local should_exit="${2:---exit}"  # Default to --exit if not specified
+
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "Warning: $cmd is not installed or not in PATH."
+
+    if [[ "$should_exit" == "--exit" ]]; then
+      exit 1
+    fi
+
+    return 1
+  fi
+
+  return 0
+}
+
+# Allow sourcing or direct execution
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  # Called directly
+  check_dependency "$@"
+else
+  # Being sourced - function is now available
+  :
+fi

@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "speedtest"
+
 COM="${HOME}/.config/xmobar/com/speedtest"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
-
-if ! command -v speedtest >/dev/null 2>&1; then
-  echo "Warning: speedtest is not installed or not in PATH."
-  exit 1
-fi
 
 now=$(date +%s)
 

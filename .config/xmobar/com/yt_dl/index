@@ -1,20 +1,14 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "yt-dlp"
+check_dependency "ffmpeg"
+
 COM="${HOME}/.config/xmobar/com/yt_dl"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 2
 
 DESTINATION="${HOME}/youtube_dl"
-
-if ! command -v yt-dlp >/dev/null 2>&1; then
-  echo "Warning: yt-dlp is not installed or not in PATH."
-  exit 1
-fi
-
-if ! command -v ffmpeg >/dev/null 2>&1; then
-  echo "Warning: ffmpeg is not installed or not in PATH."
-  exit 1
-fi
 
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "yt_type" "mp4"

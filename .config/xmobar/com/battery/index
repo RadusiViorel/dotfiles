@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "acpi"
+
 COM="${HOME}/.config/xmobar/com/battery"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
@@ -15,11 +18,6 @@ state_init "battery_level_icon" 0
 state_init "battery_show_time" 0
 state_init "battery_info" ""
 state_init "battery_timestamp" $((now - 81))
-
-if ! command -v acpi >/dev/null 2>&1; then
-  echo "Warning: acpi is not installed or not in PATH."
-  exit 1
-fi
 
 # If acpi output does NOT contain "Battery", then exit
 echo "$battery_info" | grep -q "Battery" || exit 0

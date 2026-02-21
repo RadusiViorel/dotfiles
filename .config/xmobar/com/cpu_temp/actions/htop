@@ -7,5 +7,9 @@ for arg in "$@"; do
   esac
 done
 
+source "${HOME}/.config/xmobar/scripts/terminal_launcher"
 
-$TERM --class float-large -e htop >/dev/null
+terminal_launch \
+  --title "System Monitor" \
+  --command "htop" \
+  --class "float-large"

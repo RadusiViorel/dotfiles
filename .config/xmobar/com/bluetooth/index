@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "bluetoothctl"
+check_dependency "upower"
+check_dependency "bluetuith" --no-exit
+
 COM="${HOME}/.config/xmobar/com/bluetooth"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
@@ -8,20 +13,6 @@ source "${HOME}/.config/xmobar/scripts/cache"
 
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "bluetooth_index_device" -1
-
-if ! command -v bluetoothctl >/dev/null 2>&1; then
-  echo "Warning: bluetoothctl is not installed or not in PATH."
-  exit 1
-fi
-
-if ! command -v upower >/dev/null 2>&1; then
-  echo "Warning: upower is not installed or not in PATH."
-  exit 1
-fi
-
-if ! command -v bluetuith >/dev/null 2>&1; then
-  echo "Warning: bluetuith is not installed or not in PATH."
-fi
 
 
 STATE_FILE_LOADER="${HOME}/.config/xmobar/scripts/state_loader"

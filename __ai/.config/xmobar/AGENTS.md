@@ -155,6 +155,8 @@ xmobar_actions "$COM" \
 #!/usr/bin/env bash
 
 # Parse named parameters
+# IMPORTANT: Always include this block, even if no params are expected
+# The catch-all (*) case acts as a safety feature to fail loudly on unexpected input
 for arg in "$@"; do
   case $arg in
     --param=*) param="${arg#*=}" ;;
@@ -166,6 +168,8 @@ done
 # Update state if needed
 sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
 ```
+
+**Important:** The parameter parsing block should **NEVER** be removed from action files. Even if the action doesn't accept any parameters, the catch-all case (`*) echo "Unknown argument: $arg" ; exit 1 ;;`) serves as a safety feature that fails loudly if unexpected arguments are passed, rather than silently ignoring them.
 
 ### Formatting Standards
 

@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "brightnessctl"
+check_dependency "xob"
+
 COM="${HOME}/.config/xmobar/com/brightness"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 source "${HOME}/.config/xmobar/scripts/page/index" 1
 
-if ! command -v brightnessctl >/dev/null 2>&1; then
-  echo "Warning: brightnessctl is not installed or not in PATH."
-  exit 1
-fi
-
-if ! command -v brightnessctl >/dev/null 2>&1 || \
-   ! brightnessctl -l | grep -q "backlight"; then
+if ! brightnessctl -l | grep -q "backlight"; then
     exit 0
-fi
-
-if ! command -v xob >/dev/null 2>&1; then
-  echo "Warning: xob is not installed or not in PATH."
-  exit 1
 fi
 
 # Optional: control mode

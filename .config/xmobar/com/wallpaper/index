@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "nsxiv"
+
 COM="${HOME}/.config/xmobar/com/wallpaper"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
@@ -8,11 +11,6 @@ wallpapers_folder="${HOME}/wallpapers"
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "wallpaper_lock" 0
 state_init "wallpaper_image" ""
-
-if ! command -v nsxiv >/dev/null 2>&1; then
-  echo "Warning: nsxiv is not installed or not in PATH."
-  exit 1
-fi
 
 case "$1" in
     picker) ${COM}/actions/picker \

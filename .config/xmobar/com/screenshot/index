@@ -1,29 +1,15 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/xmobar/scripts/check_dependency"
+check_dependency "scrot"
+check_dependency "xrandr"
+check_dependency "swappy"
+check_dependency "xclip"
+
 COM="${HOME}/.config/xmobar/com/screenshot"
 [[ -n "$1" ]] && STATE_FILE="${HOME}/.config/xmobar/scripts/state" && source "${STATE_FILE}"
 
 DESTINATION="$HOME/screenshots"
-
-if ! command -v scrot >/dev/null 2>&1; then
-  echo "Warning: scrot is not installed or not in PATH."
-  exit 1
-fi
-
-if ! command -v xrandr >/dev/null 2>&1; then
-  echo "Warning: xrandr is not installed or not in PATH."
-  exit 1
-fi
-
-if ! command -v swappy >/dev/null 2>&1; then
-  echo "Warning: swappy is not installed or not in PATH."
-  exit 1
-fi
-
-if ! command -v xclip >/dev/null 2>&1; then
-  echo "Warning: xclip is not installed or not in PATH."
-  exit 1
-fi
 
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "screenshot_edit" 0

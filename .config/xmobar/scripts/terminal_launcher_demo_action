@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-# Demo action: Open a floating terminal with htop
-# This demonstrates how to use terminal_launcher in xmobar actions
-
-source "${HOME}/.config/xmobar/scripts/terminal_launcher"
-
-# Launch htop in a floating terminal window
-# The WM_CLASS will be "htop_monitor" which you can use in xmonad to float it
-launch_terminal "htop_monitor" "htop"

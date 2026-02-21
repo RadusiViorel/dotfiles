@@ -7,5 +7,9 @@ for arg in "$@"; do
   esac
 done
 
+source "${HOME}/.config/xmobar/scripts/terminal_launcher"
 
-$TERM --class float-medium -e wiremix >/dev/null
+terminal_launch \
+  --title "Audio Mixer" \
+  --command "wiremix" \
+  --class "float-medium"

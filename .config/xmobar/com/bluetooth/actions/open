@@ -7,4 +7,9 @@ for arg in "$@"; do
   esac
 done
 
-$TERM --class float-small -e bluetuith >/dev/null
+source "${HOME}/.config/xmobar/scripts/terminal_launcher"
+
+terminal_launch \
+  --title "Bluetooth Manager" \
+  --command "bluetuith" \
+  --class "float-small"
