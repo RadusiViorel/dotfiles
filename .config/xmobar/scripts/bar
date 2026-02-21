@@ -8,12 +8,13 @@ TRIGGER_FILE="${CACHE_DIR}/refresh_trigger"
 
 spinner_active=0
 STATE_FILE="${HOME}/.config/xmobar/scripts/state"
-# Check for any *_loading=1 in state file
-if grep -q "^[a-z_]*_loading=1$" "$STATE_FILE"; then
+
+# Check for any *_live=1 in state file (live states bypass cache)
+if grep -q "^[a-z_]*_live=1$" "$STATE_FILE" 2>/dev/null; then
   spinner_active=1
 fi
 
-Fast path: if cache exists and is newer than trigger AND no spinner is active, just output it
+# Fast path: if cache exists and is newer than trigger AND no live state is active, just output it
 if [[ $spinner_active -eq 0 && -f "$CACHE_FILE" && -f "$TRIGGER_FILE" && "$CACHE_FILE" -nt "$TRIGGER_FILE" ]]; then
   cat "$CACHE_FILE"
   exit 0

@@ -9,26 +9,26 @@ VPN_PID_FILE="/opt/vpn/openvpn.pid"
 
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "vpn_toggle" 0
-state_init "vpn_loading" 0
+state_init "vpn_loading_live" 0
 state_init "vpn_spinner" 0
 
 case "$1" in
   up) ${COM}/actions/up        \
     --STATE_FILE=${STATE_FILE} \
     --TOGGLE_KEY=vpn_toggle    \
-    --LOADING_KEY=vpn_loading  \
+    --LOADING_KEY=vpn_loading_live \
     --CONF_FILE=${VPN_CONF}    \
     --PID_FILE=${VPN_PID_FILE} ;;
 
   down) ${COM}/actions/down    \
     --STATE_FILE=${STATE_FILE} \
     --TOGGLE_KEY=vpn_toggle    \
-    --LOADING_KEY=vpn_loading  \
+    --LOADING_KEY=vpn_loading_live \
     --PID_FILE=${VPN_PID_FILE} ;;
   *) ;;
 esac
 
-if (( vpn_loading == 1 )); then
+if (( vpn_loading_live == 1 )); then
   spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   idx=$(( ( vpn_spinner + 1 ) % ${#spinner_icons[@]} ))
   state_update "vpn_spinner" "$idx"

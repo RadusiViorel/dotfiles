@@ -8,6 +8,8 @@ source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "space_toggle" 0
 
 case "$1" in
+  show) ${COM}/actions/show  ;;
+
   toggle) ${COM}/actions/toggle \
     --value=${space_toggle}     \
     --STATE_FILE=${STATE_FILE}  \

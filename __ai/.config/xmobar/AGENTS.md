@@ -218,7 +218,20 @@ grep -q "^$__var=" "$STATE_FILE" || ( echo "$__var=default" >> "$STATE_FILE" && 
 sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
 ```
 
-**State Keys:** Use component prefix: `battery_timestamp`, `network_enabled`, `vpn_loading`
+**State Keys:** Use component prefix: `battery_timestamp`, `network_enabled`, `vpn_loading_live`
+
+**Live State Convention (IMPORTANT):**
+State variables ending in `_live` automatically trigger bar refresh when updated. Use this for:
+- Loading states and spinners (e.g., `network_loading_live`)
+- Real-time counters and progress indicators
+- Any state requiring immediate visual updates without caching
+
+```bash
+# Loading state with auto-refresh
+state_update "component_loading_live" 1  # Triggers refresh automatically
+```
+
+See `LIVE_STATE_CONVENTION.md` for full details.
 
 ### Error Handling
 

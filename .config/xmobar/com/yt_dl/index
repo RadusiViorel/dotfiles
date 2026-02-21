@@ -12,7 +12,7 @@ DESTINATION="${HOME}/youtube_dl"
 
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "yt_type" "mp4"
-state_init "yt_loading" 0
+state_init "yt_loading_live" 0
 state_init "yt_spinner" 0
 
 case "$1" in
@@ -20,7 +20,7 @@ case "$1" in
     --STATE_FILE=${STATE_FILE}      \
     --destination=${DESTINATION}    \
     --type=${yt_type}               \
-    --LOADING_KEY=yt_loading        ;;
+    --LOADING_KEY=yt_loading_live   ;;
 
   toggle) ${COM}/actions/toggle  \
      --STATE_FILE=${STATE_FILE}  \
@@ -29,7 +29,7 @@ case "$1" in
   *) ;;
 esac
 
-if (( yt_loading == 1 )); then
+if (( yt_loading_live == 1 )); then
   spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   idx=$(( ( yt_spinner + 1 ) % ${#spinner_icons[@]} ))
   state_update "yt_spinner" "$idx"

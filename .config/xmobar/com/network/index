@@ -8,9 +8,9 @@ source "${HOME}/.config/xmobar/scripts/cache"
 
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "network_enabled" 1
-state_init "network_loading" 0
+state_init "network_loading_live" 0
 state_init "network_spinner" 0
-state_init "network_traffic" 0
+state_init "network_traffic_live" 0
 
 interface=wlan0
 lan_interface=eth0
@@ -47,7 +47,7 @@ case "$1" in
   connect) ${COM}/actions/connect \
     --interface=${interface}      \
     --STATE_FILE=${STATE_FILE}    \
-    --KEY=network_loading ;;
+    --KEY=network_loading_live ;;
 
   toggle) ${COM}/actions/toggle \
     --interface=${interface}    \
@@ -57,8 +57,8 @@ case "$1" in
 
   traffic) ${COM}/actions/traffic \
     --STATE_FILE=${STATE_FILE}    \
-    --KEY=network_traffic         \
-    --value=${network_traffic} ;;
+    --KEY=network_traffic_live    \
+    --value=${network_traffic_live} ;;
   *) ;;
 esac
 
@@ -86,7 +86,7 @@ for i in "${!signal_thresholds[@]}"; do
   fi
 done
 
-if (( network_loading == 1 )); then
+if (( network_loading_live == 1 )); then
   spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   idx=$(( ( network_spinner + 1 ) % ${#spinner_icons[@]} ))
   state_update "network_spinner" "${idx}"
@@ -94,9 +94,9 @@ if (( network_loading == 1 )); then
   exit 0
 fi
 
-if (( network_traffic == 1 )); then
+if (( network_traffic_live == 1 )); then
   traffic="$("${COM}/scripts/traffic/traffic" --interface="$interface")"
-  echo "<fc=${COLOR_WHITE}>$ssid ${signal}󰏰 ${signal_icon}</fc> ${signal_icon} ${traffic}"
+  echo "<fc=${COLOR_WHITE}>$ssid ${signal}󰏰 ${signal_icon}</fc>${traffic}"
   exit 0
 fi
 

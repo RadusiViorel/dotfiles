@@ -9,7 +9,7 @@ now=$(date +%s)
 source "${HOME}/.config/xmobar/scripts/state_loader"
 state_init "weather_value" ""
 state_init "weather_timestamp" $((now - 3601))
-state_init "weather_loading" 0
+state_init "weather_loading_live" 0
 state_init "weather_spinner" 0
 
 case "$1" in
@@ -17,11 +17,11 @@ case "$1" in
     --STATE_FILE=${STATE_FILE}        \
     --TIMESTAMP_KEY=weather_timestamp \
     --VALUE_KEY=weather_value         \
-    --LOADING_KEY=weather_loading     ;;
+    --LOADING_KEY=weather_loading_live ;;
   *) ;;
 esac
 
-if (( weather_loading == 1 )); then
+if (( weather_loading_live == 1 )); then
   spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
   idx=$(( ( weather_spinner + 1 ) % ${#spinner_icons[@]} ))
   state_update "weather_spinner" "$idx"
