@@ -3,28 +3,28 @@
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
-    --STATE_FILE=*)  STATE_FILE="${arg#*=}" ;;
-    --TOGGLE_KEY=*)  TOGGLE_KEY="${arg#*=}" ;;
-    --LOADING_KEY=*) LOADING_KEY="${arg#*=}" ;;
-    --CONF_FILE=*)   CONF_FILE="${arg#*=}" ;;
-    --PID_FILE=*)    PID_FILE="${arg#*=}" ;;
-    *) echo "Unknown argument: $arg" ; exit 1 ;;
+    --STATE_FILE=*)        STATE_FILE="${arg#*=}"        ;;
+    --STATE_FILE_LOADER=*) STATE_FILE_LOADER="${arg#*=}" ;;
+    --TOGGLE_KEY=*)        TOGGLE_KEY="${arg#*=}"        ;;
+    --LOADING_KEY=*)       LOADING_KEY="${arg#*=}"       ;;
+    --CONF_FILE=*)         CONF_FILE="${arg#*=}"         ;;
+    --PID_FILE=*)          PID_FILE="${arg#*=}"          ;;
+    *) echo "Unknown argument: $arg" ; exit 1            ;;
   esac
 done
 
-sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=1/" "$STATE_FILE"
+source $STATE_FILE_LOADER
+state_update "${LOADING_KEY}" 1
 
 # Start openvpn
 doas /usr/sbin/openvpn --config "$CONF_FILE" --daemon --writepid $PID_FILE >/dev/null 2>&1
 
-# Monitor connection in background
-(
-  # Wait for tun0 to appear (VPN interface)
-  while ! ip a | grep -q tun0; do
-    sleep 0.4
-  done
-  
-  # Connection established
-  sed -i "s/^$TOGGLE_KEY=.*/$TOGGLE_KEY=1/" "$STATE_FILE"
-  sed -i "s/^$LOADING_KEY=.*/$LOADING_KEY=0/" "$STATE_FILE"
-) &
+# Wait for tun0 to appear (VPN interface)
+while ! ip a | grep -q tun0; do
+  sleep 0.4
+done
+
+state_update "${TOGGLE_KEY}" 1
+state_update "${LOADING_KEY}" 0
+
+"${HOME}/.config/xmobar/scripts/refresh"

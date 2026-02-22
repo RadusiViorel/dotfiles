@@ -10824,3 +10824,16 @@ exit
 : 1771695287:0;gst
 : 1771695289:0;git add --all
 : 1771695300:0;gcmt 'added _live suffix'
+: 1771695302:0;git push origin main
+: 1771744711:0;cd ps_update
+: 1771744712:0;pwd
+: 1771744713:0;ls
+: 1771744724:0;mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_ai.sql
+: 1771744762:0;htop
+: 1771744797:0;cd ~/dotfiles
+: 1771744798:0;vi
+: 1771744837:0;clear
+: 1771760196:0;mysql -u popcash -p -P 3306 -h mysql-master.app-vpc.us-east-1.popcash.ltd popcash < chunk_aj.sql
+: 1771764568:0;ps -a | grep open
+: 1771764577:0;ps -a | grep open
+: 1771764928:0;exit

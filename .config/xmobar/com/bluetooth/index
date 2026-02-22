@@ -11,11 +11,9 @@ source "${HOME}/.config/xmobar/scripts/page/index" 1
 
 source "${HOME}/.config/xmobar/scripts/cache"
 
-source "${HOME}/.config/xmobar/scripts/state_loader"
-state_init "bluetooth_index_device" -1
-
-
 STATE_FILE_LOADER="${HOME}/.config/xmobar/scripts/state_loader"
+source $STATE_FILE_LOADER
+state_init "bluetooth_index_device" -1
 
 state=$(bluetoothctl show | awk '/Powered/ {print ($2=="yes"?1:0)}')
 

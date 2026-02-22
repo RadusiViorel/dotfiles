@@ -4,6 +4,7 @@ CACHE_DIR="${HOME}/.config/xmobar/.cache"
 CACHE_FILE="${CACHE_DIR}/bar_output"
 TRIGGER_FILE="${CACHE_DIR}/refresh_trigger"
 
+sleep 0.5
 # Delete cache to force regeneration, then run bar script
 rm -f "${CACHE_FILE}"
 "${HOME}/.config/xmobar/scripts/bar" > /dev/null

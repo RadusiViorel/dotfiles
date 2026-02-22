@@ -25,13 +25,13 @@ start_refresh_daemon() {
   (
     # Write PID after backgrounding to get correct PID
     trap "rm -f $pidfile" EXIT
-    
+
     while true; do
       sleep "$interval"
       "$REFRESH_SCRIPT" 2>/dev/null
     done
   ) &
-  
+
   local daemon_pid=$!
   echo "$daemon_pid" > "$pidfile"
   echo "Started refresh daemon for $component_name (interval: ${interval}s, PID: $daemon_pid)"

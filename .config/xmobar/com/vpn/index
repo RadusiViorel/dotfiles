@@ -7,23 +7,26 @@ source "${HOME}/.config/xmobar/scripts/page/index" 1
 VPN_CONF="/opt/vpn/popcash.conf"
 VPN_PID_FILE="/opt/vpn/openvpn.pid"
 
-source "${HOME}/.config/xmobar/scripts/state_loader"
+STATE_FILE_LOADER="${HOME}/.config/xmobar/scripts/state_loader"
+source $STATE_FILE_LOADER
 state_init "vpn_toggle" 0
 state_init "vpn_loading_live" 0
 state_init "vpn_spinner" 0
 
 case "$1" in
-  up) ${COM}/actions/up        \
-    --STATE_FILE=${STATE_FILE} \
-    --TOGGLE_KEY=vpn_toggle    \
-    --LOADING_KEY=vpn_loading_live \
-    --CONF_FILE=${VPN_CONF}    \
+  up) ${COM}/actions/up                      \
+    --STATE_FILE=${STATE_FILE}               \
+    --STATE_FILE_LOADER=${STATE_FILE_LOADER} \
+    --TOGGLE_KEY=vpn_toggle                  \
+    --LOADING_KEY=vpn_loading_live           \
+    --CONF_FILE=${VPN_CONF}                  \
     --PID_FILE=${VPN_PID_FILE} ;;
 
-  down) ${COM}/actions/down    \
-    --STATE_FILE=${STATE_FILE} \
-    --TOGGLE_KEY=vpn_toggle    \
-    --LOADING_KEY=vpn_loading_live \
+  down) ${COM}/actions/down                  \
+    --STATE_FILE=${STATE_FILE}               \
+    --STATE_FILE_LOADER=${STATE_FILE_LOADER} \
+    --TOGGLE_KEY=vpn_toggle                  \
+    --LOADING_KEY=vpn_loading_live           \
     --PID_FILE=${VPN_PID_FILE} ;;
   *) ;;
 esac
