@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+# no-op: polybar refreshes are driven by config.ini

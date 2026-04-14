@@ -14,6 +14,7 @@ chmod 700 "$XDG_RUNTIME_DIR"
 
 export XDG_DATA_HOME="$HOME/.config"
 
+
 # Auto-mount configured external drives
 $HOME/.config/_scripts/startup/automount/automount.sh mount &
 
@@ -23,6 +24,7 @@ $HOME/.config/xmobar/com/wallpaper/index change &
 $HOME/.config/_scripts/startup/slack_monitor &
 
 pipewire & pipewire-pulse & wireplumber &
+
 # Start dunst with pywal theme if available
 if [ -f "$HOME/.cache/wal/dunstrc" ]; then
     dunst -conf "$HOME/.cache/wal/dunstrc" &
@@ -35,4 +37,5 @@ docker compose --project-directory /opt/devenv start
 
 $HOME/.config/_scripts/startup/displays/run.sh
 
-exec $HOME/.local/bin/xmonad
+export BAR="polybar" # Bar selection: "polybar" or "xmobar"
+exec dbus-launch --exit-with-session $HOME/.local/bin/xmonad

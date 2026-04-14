@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
+check_dependency "xset" --exit
+
+[[ -n "$1" ]] && source "${STATE_FILE}"
+
+source "${BAR_COMPONENTS_DIR}/scripts/vars"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+
+if xset q | grep -q "Caps Lock: *on"; then
+  emit_tuple 1 "$COLOR_WARNING" "󰪛"
+  emit_sep
+fi

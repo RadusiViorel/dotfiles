@@ -1,0 +1,15 @@
+bssid=50:d4:f7:4c:72:e7
+freq=5180
+ssid=WiFi 5GHz
+id=62
+mode=station
+wifi_generation=5
+pairwise_cipher=CCMP
+group_cipher=TKIP
+key_mgmt=WPA2-PSK
+wpa_state=COMPLETED
+ip_address=192.168.0.171
+p2p_device_address=10:68:38:c8:f6:bf
+address=10:68:38:c8:f6:bf
+uuid=2881998a-e4f4-5ca4-935c-48a8ff791cd7
+ieee80211ac=1

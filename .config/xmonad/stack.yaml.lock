@@ -11,6 +11,13 @@ packages:
       size: 9991
   original:
     hackage: xmobar-0.50
+- completed:
+    hackage: xmonad-dbus-0.1.0.2@sha256:dd6fcbb05527c01291f99917bbcf99a072f0f61e3cd34bcfaa1e2db66aff1e65,1566
+    pantry-tree:
+      sha256: dc0693eb45f27bcfccbdfd36ab678e181a3dfec7df502ef647529616c3d32881
+      size: 366
+  original:
+    hackage: xmonad-dbus-0.1.0.2
 snapshots:
 - completed:
     sha256: 4bc8e0388916c4000645c068dff642482d6ed1b68b747c2d4d444857979963e0

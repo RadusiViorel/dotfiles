@@ -1,5 +1,9 @@
 export LC_CTYPE=en_US.UTF-8
 
+# Set correct TERM for st terminal with 256 color support
+export TERM=st-256color
+export COLORTERM=truecolor
+
 # Auto-start tmux if available
 if [ -z "$TMUX" ] && command -v tmux &>/dev/null; then
     session_name="$(cat /proc/sys/kernel/random/uuid | cut -d'-' -f1)"
@@ -8,8 +12,6 @@ if [ -z "$TMUX" ] && command -v tmux &>/dev/null; then
     # tmux kill-session -t "$session_name" 2>/dev/null
     # exit
 fi
-
-export COLORTERM=gnome-terminal
 
 setopt auto_cd
 

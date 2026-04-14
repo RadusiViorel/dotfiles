@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --STATE_FILE=*)        STATE_FILE="${arg#*=}"        ;;
+    --TOGGLE_KEY=*)        TOGGLE_KEY="${arg#*=}"        ;;
+    --LOADING_KEY=*)       LOADING_KEY="${arg#*=}"       ;;
+    --CONF_FILE=*)         CONF_FILE="${arg#*=}"         ;;
+    --PID_FILE=*)          PID_FILE="${arg#*=}"          ;;
+    *) echo "Unknown argument: $arg" ; exit 1            ;;
+  esac
+done
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+state_update "${LOADING_KEY}" 1
+
+# Drive spinner while VPN is connecting
+start_live_watcher vpn "${LOADING_KEY}"
+
+# Start openvpn
+doas /usr/sbin/openvpn --config "$CONF_FILE" --daemon --writepid $PID_FILE >/dev/null 2>&1
+
+# Wait for tun0 to appear (VPN interface)
+while ! ip a | grep -q tun0; do
+  sleep 0.4
+done
+
+state_update "${TOGGLE_KEY}" 1
+state_update "${LOADING_KEY}" 0
+
+"${REFRESH_CMD}"

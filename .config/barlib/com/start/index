@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_COMPONENTS_DIR}/scripts/vars"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+
+# seconds since midnight
+now=$(date +%s)
+midnight=$(date -d "$(date +%F) 00:00:00" +%s)
+t=$((now - midnight))
+
+read r g b < <(awk -v t="$t" 'BEGIN {
+  pi = 3.141592653589793
+  phase = (t / 86400) * 2 * pi
+  printf "%d %d %d", 180 + 60 * sin(phase), 180 + 60 * sin(phase + 2.094), 180 + 60 * sin(phase + 4.188)
+}')
+
+clamp() {
+  (( $1 < 150 )) && echo 150 && return
+  (( $1 > 255 )) && echo 255 && return
+  echo "$1"
+}
+
+r=$(clamp "$r"); g=$(clamp "$g"); b=$(clamp "$b")
+color=$(printf "#%02x%02x%02x" "$r" "$g" "$b")
+
+emit_tuple 0 "$color" ""
+emit_sep

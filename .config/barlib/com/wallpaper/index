@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
+check_dependency "nsxiv"
+
+COM="${BAR_COMPONENTS_DIR}/com/wallpaper"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+
+wallpapers_folder="${HOME}/wallpapers"
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+state_init "wallpaper_lock" 0
+state_init "wallpaper_image" ""
+
+case "$1" in
+  picker)     ${COM}/actions/picker \
+    --path=${wallpapers_folder} ;;
+  lock_image) ${COM}/actions/lock_image \
+    --STATE_FILE=${STATE_FILE}          \
+    --LOCK_KEY=wallpaper_lock           \
+    --value=${wallpaper_lock} ;;
+  change)     ${COM}/actions/change     \
+    --STATE_FILE=${STATE_FILE}          \
+    --IMAGE_KEY=wallpaper_image         \
+    --selected_image=${wallpaper_image} \
+    --is_locked=${wallpaper_lock} ;;
+  *) ;;
+esac
+
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+
+colors=("$COLOR_WHITE" "$COLOR_WARNING")
+emit_tuple 0 "${colors[$wallpaper_lock]}" "󰸉"
+emit_sep

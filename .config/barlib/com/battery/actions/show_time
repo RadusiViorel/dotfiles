@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --value=*)             value="${arg#*=}"             ;;
+    --STATE_FILE=*)        STATE_FILE="${arg#*=}"        ;;
+    --KEY=*)               KEY="${arg#*=}"               ;;
+    *) echo "Unknown argument: $arg" ; exit 1            ;;
+  esac
+done
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+
+new_value=$(( ! value ))
+state_update "${KEY}" $new_value
+
+"${REFRESH_CMD}"

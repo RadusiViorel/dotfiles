@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Wrapper called by config.ini hook-0 lines.
+# Runs a barlib component index, reads TSV tuples, emits polybar markup.
+#
+# Tuple format from index (one line per span):
+#   font<TAB>color<TAB>text
+#   font=0 → %{F#color}text%{F-}
+#   font=1 → %{F#color}%{T2}text%{T-}%{F-}
+#
+# The last tuple is always the SEP (emit_sep). It gets a space before and after.
+
+source "${HOME}/.config/polybar/scripts/env"
+
+set -a
+source "${HOME}/.config/barlib/scripts/vars"
+set +a
+
+raw="$("$@")"
+
+if [[ -z "${raw//[$'\t\n ']/}" ]]; then
+  printf '\n'
+  exit 0
+fi
+
+# Split into arrays
+fonts=(); colors=(); texts=()
+while IFS=$'\t' read -r font color text; do
+  [[ -z "$font$color$text" ]] && continue
+  fonts+=("$font")
+  colors+=("$color")
+  texts+=("$text")
+done <<< "$raw"
+
+[[ ${#fonts[@]} -eq 0 ]] && printf '\n' && exit 0
+
+last=$(( ${#fonts[@]} - 1 ))
+
+# Build content spans (all but last)
+content=""
+for (( i=0; i<last; i++ )); do
+  if [[ "${fonts[$i]}" == "1" ]]; then
+    content+="%{F${colors[$i]}}%{T2}${texts[$i]}%{T-}%{F-}"
+  else
+    content+="%{F${colors[$i]}}${texts[$i]}%{F-}"
+  fi
+done
+
+# Sep span (last tuple)
+if [[ "${fonts[$last]}" == "1" ]]; then
+  sep="%{F${colors[$last]}}%{T2}${texts[$last]}%{T-}%{F-}"
+else
+  sep="%{F${colors[$last]}}${texts[$last]}%{F-}"
+fi
+
+printf '%s %s \n' "$content" "$sep"

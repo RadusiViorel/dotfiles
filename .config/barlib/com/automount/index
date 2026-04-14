@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+COM="${BAR_COMPONENTS_DIR}/com/automount"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+
+CONFIG_FILE="${HOME}/.config/_scripts/startup/automount/automount.conf"
+AUTOMOUNT_SCRIPT="${HOME}/.config/_scripts/startup/automount/automount.sh"
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+state_init "automount_lsblk_hash" ""
+
+case "$1" in
+  show)   ${COM}/actions/show ;;
+  rescan) ${AUTOMOUNT_SCRIPT} rescan ;;
+esac
+
+current_hash=$(lsblk -npo NAME,UUID,SIZE,FSTYPE 2>/dev/null | md5sum | cut -d' ' -f1)
+
+if [[ -n "$current_hash" && "$current_hash" != "$automount_lsblk_hash" ]]; then
+  ${AUTOMOUNT_SCRIPT} rescan >/dev/null 2>&1 &
+  state_update "automount_lsblk_hash" "$current_hash"
+  "${REFRESH_CMD}"
+fi
+
+count=$(grep -c "^NEW=yes$" "$CONFIG_FILE" 2>/dev/null)
+
+color=$( [[ $count -gt 0 ]] && echo "$COLOR_WARNING" || echo "$COLOR_WHITE" )
+counter=$([[ $count -gt 0 ]] && echo " ${count}" || echo "" )
+
+emit_tuple 0 "$color" "󱛟${counter}"
+emit_sep

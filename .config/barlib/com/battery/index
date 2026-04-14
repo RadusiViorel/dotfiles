@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
+check_dependency "acpi"
+
+COM="${BAR_COMPONENTS_DIR}/com/battery"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 1
+
+source "${BAR_COMPONENTS_DIR}/scripts/cache"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+
+now=$(date +%s)
+CACHE_TTL=80
+
+state_init "battery_level_icon" 0
+state_init "battery_show_time" 0
+state_init "battery_info" ""
+state_init "battery_timestamp" $((now - 81))
+
+echo "$battery_info" | grep -q "Battery" || exit 0
+
+if (( now - battery_timestamp >= CACHE_TTL )); then
+  battery_info="$(acpi -b 2>/dev/null)"
+  state_update "battery_info" "\"$battery_info\""
+  state_update "battery_timestamp" "$now"
+  "${REFRESH_CMD}"
+fi
+
+state=$(echo "$battery_info" | awk -F'[,: ]+' '{print $3}')
+level=$(echo "$battery_info" | awk -F'[,% ]+' '{print $4}')
+time=$(echo  "$battery_info" | awk '{for(i=1;i<=NF;i++){if($i~/[0-9][0-9]:[0-9][0-9]:[0-9][0-9]/) print $i}}')
+
+thresholds=(10 33 66 85 95)
+icons=("󰢟" "󱊤" "󱊥" "󱊦" "󰂅")
+
+case "$1" in
+  show_time) ${COM}/actions/show_time        \
+    --value=${battery_show_time}             \
+    --STATE_FILE=${STATE_FILE}               \
+    --KEY=battery_show_time ;;
+  *) ;;
+esac
+
+if [[ "$state" == "Full" ]]; then
+  emit_tuple 0 "$COLOR_WHITE" ""
+  emit_sep
+  exit 0
+fi
+
+if [[ "$state" == "Not" ]]; then
+  emit_tuple 0 "$COLOR_WHITE" "!"
+  emit_sep
+  exit 0
+fi
+
+if [[ "$state" == "Charging" ]]; then
+  usable_icons=()
+  for i in "${!thresholds[@]}"; do
+    [[ "$level" -le "${thresholds[$i]}" ]] && usable_icons+=("${icons[$i]}")
+  done
+  [[ ${#usable_icons[@]} -eq 0 ]] && usable_icons=("${icons[$((${#icons[@]} - 1))]}")
+
+  idx=$(( (battery_level_icon + 1) % ${#usable_icons[@]} ))
+  state_update "battery_level_icon" "$idx"
+
+  emit_tuple 0 "$COLOR_WHITE"  "${usable_icons[$idx]}"
+  emit_tuple 0 "$COLOR_OK"     "${level}󰏰"
+  [[ $battery_show_time == 1 ]] && emit_tuple 0 "$COLOR_OK" "  $time "
+  emit_sep
+  exit 0
+fi
+
+if [[ "$state" == "Discharging" ]]; then
+  thresholds=(10 33 66)
+  icons=("󰂎" "󱊡" "󱊢" "󱊣")
+  timercolors=("$COLOR_CRITIC" "$COLOR_DANGER" "$COLOR_WARNING" "$COLOR_OK")
+
+  icon="${icons[-1]}"
+  timercolor="${timercolors[-1]}"
+  for i in "${!thresholds[@]}"; do
+    if (( level < thresholds[i] )); then
+      icon="${icons[$i]}"
+      timercolor="${timercolors[$i]}"
+      break
+    fi
+  done
+
+  emit_tuple 0 "$timercolor" "$icon  ${level}󰏰"
+  [[ $battery_show_time -eq 0 ]] && emit_tuple 0 "$timercolor" "  $time "
+else
+  emit_tuple 0 "$COLOR_WHITE" "󰂃"
+fi
+
+emit_sep

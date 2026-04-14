@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Watches the state file for *_loading_live=1 / *_live=1 flags.
+# While any live flag is set, hammers the corresponding polybar module
+# with IPC hook signals every 200ms to drive spinner animations.
+# Exits cleanly when all live flags clear.
+#
+# Called by action scripts that set a _live flag before backgrounding work.
+# Usage: live-watcher <module-name> <state-key>
+#   e.g. live-watcher vpn vpn_loading_live
+
+source "${HOME}/.config/barlib/scripts/env"
+
+module="$1"
+key="$2"
+
+if [[ -z "$module" || -z "$key" ]]; then
+  echo "Usage: live-watcher <module-name> <state-key>" >&2
+  exit 1
+fi
+
+signal_module() {
+  polybar-msg action "#${module}.hook.0" 2>/dev/null || true
+}
+
+while grep -q "^${key}=1$" "$STATE_FILE" 2>/dev/null; do
+  signal_module
+  sleep 0.2
+done
+
+# One final signal after the live flag clears so the spinner disappears
+signal_module

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+COM="${BAR_COMPONENTS_DIR}/com/power"
+
+source "${BAR_COMPONENTS_DIR}/scripts/vars"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+
+[[ -n "$1" ]] && source "${STATE_FILE}"
+
+case "$1" in
+  open) "${COM}/actions/show" ;;
+  *) ;;
+esac
+
+emit_tuple 0 "$COLOR_WHITE" "󰐥"
+emit_sep

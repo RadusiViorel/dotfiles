@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/state_loader"
+state_init "page_number" 1
+
+target_page=${1:-1}
+
+[[ $page_number -ne $target_page ]] && exit 0

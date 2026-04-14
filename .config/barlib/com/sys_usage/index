@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+COM="${BAR_COMPONENTS_DIR}/com/sys_usage"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+
+source "${BAR_COMPONENTS_DIR}/scripts/cache"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+
+cpu_idle=$(cache_cmd "top" 2 top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/")
+cpu_usage=$(awk "BEGIN {printf \"%.1f\", 100 - $cpu_idle}")
+cpu_int=${cpu_usage%.*}
+
+ram_used_mb=$(cache_cmd "free" 2 free -m | awk '/^Mem:/ {print $3}')
+ram_used_gb=$(awk "BEGIN {printf \"%.1f\", $ram_used_mb/1024}")
+
+if (( cpu_int < 30 )); then   cpu_color="$COLOR_WHITE"
+elif (( cpu_int < 60 )); then cpu_color="$COLOR_WARNING"
+elif (( cpu_int < 90 )); then cpu_color="$COLOR_DANGER"
+else                          cpu_color="$COLOR_CRITIC"
+fi
+
+ram_float=$(awk "BEGIN {print $ram_used_gb}")
+if   awk "BEGIN {exit !($ram_float < 4.0)}"; then ram_color="$COLOR_WHITE"
+elif awk "BEGIN {exit !($ram_float < 6.0)}"; then ram_color="$COLOR_WARNING"
+elif awk "BEGIN {exit !($ram_float < 10.0)}"; then ram_color="$COLOR_DANGER"
+else                                               ram_color="$COLOR_DANGER"
+fi
+
+emit_tuple 0 "$cpu_color"   "󰻠 ${cpu_int}%"
+emit_tuple 0 "$COLOR_MUTE"  " 󰜥 "
+emit_tuple 0 "$ram_color"   "󰍛 ${ram_used_gb}G"
+emit_sep

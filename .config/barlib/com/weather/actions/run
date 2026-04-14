@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --VALUE_KEY=*)     VALUE_KEY="${arg#*=}"     ;;
+    --TIMESTAMP_KEY=*) TIMESTAMP_KEY="${arg#*=}" ;;
+    --STATE_FILE=*)    STATE_FILE="${arg#*=}"    ;;
+    --LOADING_KEY=*)   LOADING_KEY="${arg#*=}"   ;;
+    *) echo "Unknown argument: $arg" ; exit 1    ;;
+  esac
+done
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+state_update "$LOADING_KEY" 1
+
+# Drive spinner while fetching
+start_live_watcher weather "${LOADING_KEY}"
+
+# Run weather update in background
+(
+  sleep 1
+  COM="${BAR_COMPONENTS_DIR}/com/weather"
+  ${COM}/scripts/runner --STATE_FILE=${STATE_FILE} --TIMESTAMP_KEY=${TIMESTAMP_KEY} --VALUE_KEY=${VALUE_KEY}
+
+  source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+  state_update "$LOADING_KEY" 0
+
+  "${REFRESH_CMD}"
+) &

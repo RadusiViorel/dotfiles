@@ -1,0 +1,32 @@
+#!/bin/bash
+
+THEME_DIR="${HOME}/.config/rofi/themes"
+CONFIG="${HOME}/.config/rofi/config.rasi"
+
+# Build list with icons
+THEME_LIST=$(for f in "${THEME_DIR}"/*.rasi; do
+    echo $(basename "$f")
+done)
+
+# Show menu
+SELECTED=$(echo -e "$THEME_LIST" | \
+    rofi -dmenu -show-icons -p "Pick Theme")
+
+[ -z "$SELECTED" ] && exit 0
+
+# Preview theme
+rofi -show drun -show-icons -theme "${THEME_DIR}/${SELECTED}"
+
+# Ask to apply
+APPLY=$(printf "Yes\nNo" | rofi -dmenu -p "Apply theme?")
+
+if [ "$APPLY" = "Yes" ]; then
+    cat > "$CONFIG" <<EOF
+configuration {
+    show-icons: true;
+    drun-display-format: "{icon} {name}";
+}
+
+@theme "${THEME_DIR}/${SELECTED}"
+EOF
+fi

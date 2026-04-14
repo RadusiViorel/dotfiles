@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Polybar bar environment
+
+export BAR_DIR="${HOME}/.config/polybar"
+export BAR_COMPONENTS_DIR="${HOME}/.config/barlib"
+export BAR_NAME="polybar"
+export REFRESH_CMD="${HOME}/.config/polybar/scripts/refresh_noop"

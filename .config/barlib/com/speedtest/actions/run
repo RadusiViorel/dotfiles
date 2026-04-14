@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --LOADING_KEY=*)   LOADING_KEY="${arg#*=}" ;;
+    --ISP_KEY=*)       ISP_KEY="${arg#*=}"     ;;
+    --UP_KEY=*)        UP_KEY="${arg#*=}"      ;;
+    --DOWN_KEY=*)      DOWN_KEY="${arg#*=}"    ;;
+    --TIMESTAMP_KEY=*) TIMESTAMP_KEY="${arg#*=}" ;;
+    --STATE_FILE=*)    STATE_FILE="${arg#*=}"  ;;
+    *) echo "Unknown argument: $arg" ; exit 1  ;;
+  esac
+done
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+state_update "$LOADING_KEY" 1
+
+# Drive spinner while running speedtest
+start_live_watcher speedtest "${LOADING_KEY}"
+
+# Run speedtest in background
+(
+  COM="${BAR_COMPONENTS_DIR}/com/speedtest"
+
+  ${COM}/scripts/runner        \
+    --STATE_FILE=${STATE_FILE} \
+    --ISP_KEY=${ISP_KEY}       \
+    --UP_KEY=${UP_KEY}         \
+    --DOWN_KEY=${DOWN_KEY}     \
+    --TIMESTAMP_KEY=${TIMESTAMP_KEY}
+
+  source "${BAR_DIR}/scripts/state"
+
+  ${COM}/actions/show        \
+    --isp="${speedtest_isp}" \
+    --down=${speedtest_down} \
+    --up=${speedtest_up}     \
+    --timestamp=${speedtest_timestamp}
+
+  source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+  state_update "$LOADING_KEY" 0
+
+  sleep 0.5
+  "${REFRESH_CMD}"
+) &

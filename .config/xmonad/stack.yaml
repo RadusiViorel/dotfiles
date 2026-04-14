@@ -7,3 +7,4 @@ packages:
 
 extra-deps:
   - xmobar-0.50
+  - xmonad-dbus-0.1.0.2

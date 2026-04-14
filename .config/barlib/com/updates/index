@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+COM="${BAR_COMPONENTS_DIR}/com/updates"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+
+now=$(date +%s)
+WARNING_COUNT=15
+CACHE_TTL=3600
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+state_init "updates_timestamp" $((now - 3601))
+state_init "updates_count" 0
+
+if (( now - updates_timestamp >= CACHE_TTL )); then
+  package_list=$(xbps-install -nuM)
+  count="$(printf "%s\n" "$package_list" | grep -cve '^\s*$')"
+  state_update "updates_timestamp" "$now"
+  state_update "updates_count" "$count"
+fi
+
+case "$1" in
+  show)     ${COM}/actions/show        \
+    --package_list=${package_list} \
+    --STATE_FILE=${STATE_FILE}     \
+    --COUNT_KEY=updates_count ;;
+  view_log) ${COM}/actions/view_log ;;
+  *) ;;
+esac
+
+(( updates_count == 0 )) && exit 0
+
+color=$([[ $updates_count -gt $WARNING_COUNT ]] && echo "$COLOR_WARNING" || echo "$COLOR_WHITE")
+emit_tuple 0 "$color" " $updates_count"
+emit_sep

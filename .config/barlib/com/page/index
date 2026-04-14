@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+COM="${BAR_COMPONENTS_DIR}/com/page"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+state_init "page_number" 1
+
+case "$1" in
+  toggle) ${COM}/actions/toggle \
+    --value=${page_number}      \
+    --STATE_FILE=${STATE_FILE}  \
+    --KEY=page_number ;;
+  *) ;;
+esac
+
+icon=$([[ $page_number -eq 2 ]] && echo "󰔡" || echo "󰨙")
+emit_tuple 0 "$COLOR_WHITE" "$icon"
+emit_sep

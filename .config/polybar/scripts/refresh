@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Signal polybar modules to re-run their hook.
+# Called directly from config.ini for page switches (needs all modules).
+# NOT called via REFRESH_CMD from action scripts (that's a no-op for polybar).
+#
+# Usage:
+#   refresh              — signals all modules
+#   refresh <module>...  — signals only the named module(s)
+
+ALL_MODULES=(
+  start
+  updates
+  volume
+  volume-output
+  brightness
+  bluetooth
+  battery
+  space
+  vpn
+  network
+  cpu-temp
+  sys-usage
+  weather
+  speedtest
+  rofi-theme
+  yt-dl
+  wallpaper
+  screenshot
+  automount
+  page
+  power
+)
+
+signal_module() {
+  polybar-msg action "#${1}.hook.0" 2>/dev/null || true
+}
+
+if [[ $# -eq 0 ]]; then
+  for mod in "${ALL_MODULES[@]}"; do
+    signal_module "$mod"
+  done
+else
+  for mod in "$@"; do
+    signal_module "$mod"
+  done
+fi

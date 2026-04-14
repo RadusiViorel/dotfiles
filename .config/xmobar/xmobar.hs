@@ -34,7 +34,7 @@ main = xmobar defaultConfig
       [ cmd True  "start"   [] 10
       , Run UnsafeXMonadLog
       , cmd True "capslock" [] 10
-      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 10
+      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 2
       , cmd True "calendar"   [] 10
       , cmd True "power"      [] 100000
       ]

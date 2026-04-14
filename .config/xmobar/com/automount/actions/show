@@ -6,3 +6,4 @@ terminal_launch \
   --title "Automount TUI" \
   --command "${HOME}/.config/_scripts/startup/automount/automount-tui.sh" \
   --class "float-large"
+  --hold

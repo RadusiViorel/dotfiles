@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
+check_dependency "yt-dlp"
+check_dependency "ffmpeg"
+
+COM="${BAR_COMPONENTS_DIR}/com/yt_dl"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+
+DESTINATION="${HOME}/youtube_dl"
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+state_init "yt_type" "mp4"
+state_init "yt_loading_live" 0
+state_init "yt_spinner" 0
+
+case "$1" in
+  download) ${COM}/actions/download \
+    --STATE_FILE=${STATE_FILE}      \
+    --destination=${DESTINATION}    \
+    --type=${yt_type}               \
+    --LOADING_KEY=yt_loading_live ;;
+  toggle)   ${COM}/actions/toggle   \
+    --STATE_FILE=${STATE_FILE}      \
+    --KEY=yt_type                   \
+    --value=${yt_type} ;;
+  *) ;;
+esac
+
+if (( yt_loading_live == 1 )); then
+  spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  idx=$(( ( yt_spinner + 1 ) % ${#spinner_icons[@]} ))
+  state_update "yt_spinner" "$idx"
+  emit_tuple 0 "$COLOR_INFO" "${spinner_icons[$idx]} Downloading 󰦗"
+  emit_sep
+  exit 0
+fi
+
+color=$([[ $yt_type == 'mp4' ]] && echo "$COLOR_WHITE" || echo "$COLOR_WARNING")
+emit_tuple 0 "$color" "󰗃"
+emit_sep

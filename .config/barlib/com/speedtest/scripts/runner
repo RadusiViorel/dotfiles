@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --ISP_KEY=*) ISP_KEY="${arg#*=}" ;;
+    --UP_KEY=*) UP_KEY="${arg#*=}" ;;
+    --DOWN_KEY=*) DOWN_KEY="${arg#*=}" ;;
+    --TIMESTAMP_KEY=*) TIMESTAMP_KEY="${arg#*=}" ;;
+    --STATE_FILE=*)    STATE_FILE="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+IFS='|' read -r isp down up ts < <(
+  speedtest-cli 2>/dev/null | awk -v now="$(date +%s)" '
+  /^Testing from/ {
+    sub(/^Testing from /,"")
+    sub(/ \(.*/, "")
+    isp=$0
+  }
+  /^Download:/ { down=sprintf("%.2f", $2) }
+  /^Upload:/   { up=sprintf("%.2f", $2) }
+  END {
+    if (down && up)
+      printf "%s|%s|%s|%d\n", isp, down, up, now
+  }'
+)
+
+sed -i "s/^$ISP_KEY=.*/$ISP_KEY=\"$isp\"/"        "$STATE_FILE"
+sed -i "s/^$UP_KEY=.*/$UP_KEY=$up/"               "$STATE_FILE"
+sed -i "s/^$DOWN_KEY=.*/$DOWN_KEY=$up/"           "$STATE_FILE"
+sed -i "s/^$TIMESTAMP_KEY=.*/$TIMESTAMP_KEY=$ts/" "$STATE_FILE"

@@ -20,7 +20,7 @@ current_hash=$(lsblk -npo NAME,UUID,SIZE,FSTYPE 2>/dev/null | md5sum | cut -d' '
 
 if [[ -n "$current_hash" && "$current_hash" != "$automount_lsblk_hash" ]]; then
   ${AUTOMOUNT_SCRIPT} rescan >/dev/null 2>&1 &
-  state_updage "automount_lsblk_hash" $current_hash
+  state_update "automount_lsblk_hash" $current_hash
   "${HOME}/.config/xmobar/scripts/refresh"
 fi
 

@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+COM="${BAR_COMPONENTS_DIR}/com/network"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 1
+
+source "${BAR_COMPONENTS_DIR}/scripts/cache"
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+state_init "network_enabled" 1
+state_init "network_loading_live" 0
+state_init "network_spinner" 0
+state_init "network_traffic_live" 0
+
+interface=wlan0
+lan_interface=eth0
+wifi_name_length=150
+
+ip_output=$(cache_cmd "ip_link" 2 ip -o link show)
+
+while IFS=': ' read -r _ iface _; do
+  if [[ $iface != "lo" ]] && [[ $iface != docker* ]] && [[ $iface != veth* ]] && \
+     [[ $iface != br-* ]] && [[ $iface != tun* ]] && [[ $iface != tap* ]] && \
+     [[ $iface != virbr* ]]; then
+    if [ ! -d "/sys/class/net/$iface/wireless" ]; then
+      if [ -f "/sys/class/net/$iface/carrier" ]; then
+        carrier=$(cat "/sys/class/net/$iface/carrier" 2>/dev/null || echo 0)
+        if [[ $carrier == "1" ]]; then
+          emit_tuple 0 "$COLOR_WHITE" "LAN"
+          emit_tuple 0 "$COLOR_MUTE"  " 󰜥 "
+          emit_tuple 0 "$COLOR_WHITE" "󰈀"
+          emit_sep
+          exit 0
+        fi
+      fi
+    else
+      interface=$iface
+    fi
+  fi
+done <<< "$ip_output"
+
+case "$1" in
+  connect) ${COM}/actions/connect \
+    --interface=${interface}      \
+    --STATE_FILE=${STATE_FILE}    \
+    --KEY=network_loading_live ;;
+  toggle)  ${COM}/actions/toggle  \
+    --interface=${interface}      \
+    --STATE_FILE=${STATE_FILE}    \
+    --KEY=network_enabled         \
+    --value=${network_enabled} ;;
+  traffic) ${COM}/actions/traffic \
+    --STATE_FILE=${STATE_FILE}    \
+    --KEY=network_traffic_live    \
+    --value=${network_traffic_live} ;;
+  *) ;;
+esac
+
+if (( network_enabled == 0 )); then
+  emit_tuple 0 "$COLOR_MUTE" "󰤮"
+  emit_sep
+  exit 0
+fi
+
+ssid=$(cache_cmd "wpa_cli_${interface}" 2 wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
+
+if [ ${#ssid} -gt ${wifi_name_length} ]; then
+  ssid="${ssid:0:$((wifi_name_length-3))}󰇘"
+fi
+
+signal_icons=( 󰤯 󰤟 󰤢 󰤥 󰤨 )
+signal_thresholds=( 15 33 50 90 )
+signal_icon="${signal_icons[-1]}"
+signal=$(awk 'NR==3 {print $3}' /proc/net/wireless | sed 's/\.//')
+
+for i in "${!signal_thresholds[@]}"; do
+  if (( signal < signal_thresholds[i] )); then
+    signal_icon="${signal_icons[$i]}"
+    break
+  fi
+done
+
+if (( network_loading_live == 1 )); then
+  spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  idx=$(( ( network_spinner + 1 ) % ${#spinner_icons[@]} ))
+  state_update "network_spinner" "${idx}"
+  emit_tuple 0 "$COLOR_INFO" "${spinner_icons[$idx]} Searching... 󱛇"
+  emit_sep
+  exit 0
+fi
+
+if (( network_traffic_live == 1 )); then
+  IFS=$'\n' read -r traffic_color traffic_text < <("${COM}/scripts/traffic/traffic" --interface="$interface")
+  emit_tuple 0 "$COLOR_WHITE"   "$ssid ${signal}󰏰 ${signal_icon}"
+  emit_tuple 0 "$traffic_color" "$traffic_text"
+  emit_sep
+  exit 0
+fi
+
+emit_tuple 0 "$COLOR_WHITE" "$ssid ${signal}󰏰 ${signal_icon}"
+emit_sep

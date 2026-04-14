@@ -58,6 +58,10 @@ import qualified Data.ByteString.Char8 as BS
 import qualified XMonad.Util.ExtensibleState as XS
 import XMonad.Core (ExtensionClass(..))
 
+import qualified XMonad.DBus as D
+import qualified DBus.Client as DC
+import Control.Exception (try, SomeException)
+
 --------------------------------------------------------------------------------
 -- ENVS
 --------------------------------------------------------------------------------
@@ -119,11 +123,22 @@ getSlackNotifications = do
 --------------------------------------------------------------------------------
 
 main :: IO ()
-main = xmonad . withSB mySB
-           $ ewmhFullscreen
-           $ ewmh
-           $ docks
-           $ myConfig
+main = do
+    mDbus <- try D.connect :: IO (Either SomeException DC.Client)
+    case mDbus of
+      Right dbus -> do
+        D.requestAccess dbus
+        xmonad . withSB mySB
+               $ ewmhFullscreen
+               $ ewmh
+               $ docks
+               $ myConfig { logHook = myLogHook' dbus }
+      Left _ ->
+        xmonad . withSB mySB
+               $ ewmhFullscreen
+               $ ewmh
+               $ docks
+               $ myConfig
 
 --------------------------------------------------------------------------------
 -- Vars
@@ -170,7 +185,7 @@ searchEngineMap method = M.fromList $
 scratchpads :: [NamedScratchpad]
 scratchpads =
   [ NS "term"
-       "st -n scratchpad -f 'FiraCode Nerd Font:pixelsize=14' -e tmux new-session -A -s scratch"
+       "st -n scratchpad -f 'FiraCode Nerd Font:pixelsize=18' -e tmux new-session -A -s scratch"
        (resource =? "scratchpad")
        (customFloating $ W.RationalRect 0.005 0.028 0.99 0.967)
   ]
@@ -187,7 +202,7 @@ ws2 = "\983727 "  -- 󰊯 browser
 ws3 = "\62764 "   --  video
 ws4 = "\xf121 "   -- code
 ws5 = "\xf03e "   -- media
-ws6 = "\xf086 "   -- chat
+ws6 = "\983702 "  -- 󰊖 gaming
 ws7 = "\60443 "   --  music
 ws8 = "\62578 "   --  databse
 ws9 = "\59245 "   --  Redis
@@ -204,6 +219,7 @@ pinnedApps =
   , ("falkon"         , ws2, True)
   , ("chromium"       , ws2, True)
   , ("Google-chrome"  , ws2, True)
+  , ("moonlight"      , ws6, False)
   , ("mpv"            , ws3, True)
   , ("vlc"            , ws3, True)
   , ("DBeaver"        , ws8, False)
@@ -322,6 +338,60 @@ myLogHook = do
     updateSlackNotifications
     showWNameLogHook myShowWNameTheme
 --  >> updatePointer (0.5, 0.5) (0, 0) -- bug with windowDrag
+
+myLogHook' :: DC.Client -> X ()
+myLogHook' dbus = do
+    myLogHook
+    dbusLogHook dbus
+
+-- Polybar markup helpers
+pbColor :: String -> String -> String
+pbColor col s = "%{F" ++ col ++ "}" ++ s ++ "%{F-}"
+
+pbFont :: Int -> String -> String
+pbFont n s = "%{T" ++ show n ++ "}" ++ s ++ "%{T-}"
+
+pbAction :: Int -> String -> String -> String
+pbAction btn cmd s = "%{A" ++ show btn ++ ":" ++ cmd ++ ":}" ++ s ++ "%{A}"
+
+-- Format a workspace for polybar output
+formatWsPB :: String -> Int -> String -> String
+formatWsPB col slackCount ws =
+    let color    = if isSlackWs ws && slackCount > 0 then color_danger else col
+        badge    = if isSlackWs ws && slackCount > 0 then pbColor color_danger (show slackCount) else ""
+        idx      = case elemIndex ws myWorkspaces of
+                     Just n | n < 9 -> n + 1
+                     Just 9         -> 0
+                     _              -> 1
+        cmd      = "xdotool key super+" ++ show idx
+        label    = pbColor color (pbFont 2 ws)
+    in pbAction 1 cmd (label ++ badge)
+
+myPolybarPP :: DC.Client -> Int -> PP
+myPolybarPP dbus slackCount = def
+    { ppCurrent         = formatWsPB color_ok   slackCount
+    , ppVisible         = formatWsPB color_info  slackCount
+    , ppHidden          = formatWsPB color_info  slackCount
+    , ppHiddenNoWindows = formatWsPB color_mute  slackCount
+    , ppWsSep           = "  "
+    , ppSep             = " " ++ sep ++ " "
+    , ppTitle           = pbColor color_white . shorten 60
+    , ppSort            = fmap (filterOutWs [scratchpadWorkspaceTag] .) getSortByIndex
+    , ppLayout          = \l -> case l of
+        "Full"   -> pbColor color_yellow "\989268" -- 󱡔
+        "Lines"  -> pbColor color_info   "\984713" -- 󰚉
+        "Tall"   -> pbColor color_info   "\62750"  -- 
+        "Grid"   -> pbColor color_info   "\987609" -- 󱇙
+        "Three"  -> pbColor color_info   "\986897" -- 󰼑
+        "Spiral" -> pbColor color_info   "\983064" -- 󰀘
+        _        -> pbColor color_info   "\984640" -- 󰙀
+    , ppOutput          = D.send dbus
+    }
+
+dbusLogHook :: DC.Client -> X ()
+dbusLogHook dbus = do
+    slackCount <- getSlackNotifications
+    dynamicLogWithPP (myPolybarPP dbus slackCount)
 
 --------------------------------------------------------------------------------
 -- Layouts

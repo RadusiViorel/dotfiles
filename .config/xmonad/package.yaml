@@ -9,6 +9,8 @@ dependencies :
   - containers
   - directory
   - bytestring
+  - xmonad-dbus
+  - dbus
 
 executables :
   xmobar:

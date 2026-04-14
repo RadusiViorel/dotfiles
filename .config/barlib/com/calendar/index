@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
+check_dependency "yad" --no-exit
+
+COM="${BAR_COMPONENTS_DIR}/com/calendar"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+
+source "${BAR_COMPONENTS_DIR}/scripts/vars"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+
+state_init "calendar_toggle" 0
+
+case "$1" in
+  toggle) ${COM}/actions/toggle              \
+    --value=${calendar_toggle}               \
+    --STATE_FILE=${STATE_FILE}               \
+    --KEY=calendar_toggle ;;
+  show_calendar) ${COM}/actions/show_calendar ;;
+  *) ;;
+esac
+
+declare -A ICONS=(
+  [00]="" [01]="" [02]="" [03]="" [04]="" [05]=""
+  [06]="" [07]="" [08]="" [09]="" [10]="" [11]=""
+  [12]="󱑊" [13]="󱐿" [14]="󱑀" [15]="󱑁" [16]="󱑂" [17]="󱑃"
+  [18]="󱑄" [19]="󱑅" [20]="󱑆" [21]="󱑇" [22]="󱑈" [23]="󱑉"
+)
+
+if [[ $calendar_toggle -eq 1 ]]; then
+  emit_tuple 0 "$COLOR_WARNING" " "
+  emit_tuple 0 "$COLOR_WARNING" "$(date +"%d-%m-%Y")"
+else
+  emit_tuple 1 "$COLOR_OK" "${ICONS[$(date +%H)]}"
+  emit_tuple 0 "$COLOR_OK" " $(date +"%H:%M:%S")"
+fi
+emit_sep

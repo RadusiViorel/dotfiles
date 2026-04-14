@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+COM="${BAR_COMPONENTS_DIR}/com/rofi_theme"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+
+case "$1" in
+  change) "${COM}/actions/change_theme" ;;
+  *) ;;
+esac
+
+emit_tuple 0 "$COLOR_WHITE" "󰔎"
+emit_sep

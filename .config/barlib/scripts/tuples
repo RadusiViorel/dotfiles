@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Tuple output helpers for bar components.
+#
+# Each component index emits one or more TSV lines to stdout:
+#   font<TAB>color<TAB>text
+#
+# font : 0 = default font, 1 = additionalFonts[0] (large icons)
+# color: hex color string e.g. #ffffff, or empty string for foreground default
+# text : the visible text/glyph (may contain spaces, must not contain tabs)
+#
+# The final tuple every component emits (unless it outputs nothing at all)
+# is the SEP glyph via emit_sep, so render knows where one component ends.
+
+source "${HOME}/.config/barlib/scripts/env"
+
+# Ensure vars are loaded (colors + SEP glyph)
+if [[ -z "$COLOR_MUTE" ]]; then
+  source "${BAR_COMPONENTS_DIR}/scripts/vars"
+fi
+
+# emit_tuple <font> <color> <text>
+# Prints one TSV tuple line to stdout.
+emit_tuple() {
+  local font="$1"
+  local color="$2"
+  local text="$3"
+  printf '%s\t%s\t%s\n' "$font" "$color" "$text"
+}
+
+# emit_sep [glyph]
+# Emits a separator tuple. Defaults to $SEP if no argument given.
+emit_sep() {
+  emit_tuple 0 "${COLOR_MUTE}" "${1:-${SEP}}"
+}

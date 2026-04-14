@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
+check_dependency "speedtest"
+
+COM="${BAR_COMPONENTS_DIR}/com/speedtest"
+[[ -n "$1" ]] && source "${STATE_FILE}"
+source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+
+now=$(date +%s)
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+state_init "speedtest_isp" "UNKNOWN"
+state_init "speedtest_up" 0
+state_init "speedtest_down" 0
+state_init "speedtest_timestamp" $((now - 3601))
+state_init "speedtest_loading_live" 0
+state_init "speedtest_spinner" 0
+
+case "$1" in
+  show) ${COM}/actions/show     \
+    --isp="${speedtest_isp}"    \
+    --down=${speedtest_down}    \
+    --up=${speedtest_up}        \
+    --timestamp=${speedtest_timestamp} ;;
+  run)  ${COM}/actions/run      \
+    --STATE_FILE=${STATE_FILE}  \
+    --ISP_KEY=speedtest_isp     \
+    --UP_KEY=speedtest_up       \
+    --DOWN_KEY=speedtest_down   \
+    --TIMESTAMP_KEY=speedtest_timestamp \
+    --LOADING_KEY=speedtest_loading_live ;;
+  *) ;;
+esac
+
+if (( speedtest_loading_live == 1 )); then
+  spinner_icons=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏)
+  idx=$(( ( speedtest_spinner + 1 ) % ${#spinner_icons[@]} ))
+  state_update "speedtest_spinner" "$idx"
+  emit_tuple 0 "$COLOR_INFO" "${spinner_icons[$idx]} Testing 󰓅"
+  emit_sep
+  exit 0
+fi
+
+emit_tuple 0 "$COLOR_WHITE" "󰾆"
+emit_sep

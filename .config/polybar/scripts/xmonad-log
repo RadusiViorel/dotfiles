@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Listens for xmonad workspace/layout/title updates over D-Bus.
+
+CACHE="${HOME}/.config/polybar/.cache/xmonad-log"
+mkdir -p "$(dirname "$CACHE")"
+
+# Output last known state immediately so the bar isn't blank on startup
+[[ -f "$CACHE" ]] && cat "$CACHE"
+
+dbus-monitor --session \
+  "type='signal',interface='org.XMonad.DBus',member='Update'" 2>/dev/null \
+| while read -r line; do
+    if [[ "$line" =~ ^[[:space:]]*string[[:space:]]+\"(.*)\"$ ]]; then
+        content="${BASH_REMATCH[1]}"
+        # skip dbus internal bus name strings like ":1.126"
+        [[ "$content" =~ ^:[0-9]+\.[0-9]+$ ]] && continue
+        echo "$content" | tee "$CACHE"
+    fi
+done

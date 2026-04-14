@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Parse named parameters
+for arg in "$@"; do
+  case $arg in
+    --STATE_FILE=*)        STATE_FILE="${arg#*=}"        ;;
+    --KEY=*)               KEY="${arg#*=}" ;;
+    *) echo "Unknown argument: $arg" ; exit 1 ;;
+  esac
+done
+
+source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
+state_update "${KEY}" -1
