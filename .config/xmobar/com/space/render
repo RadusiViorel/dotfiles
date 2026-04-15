@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/render"
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_DIR}/scripts/render"
 
-COM="${HOME}/.config/xmobar/com/space/index"
+COM="$(resolve_component "space")"
 
 xmobar_actions "$COM" \
   "1:show"            \

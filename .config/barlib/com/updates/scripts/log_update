@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Logs package updates with timestamp and details
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 
 # Parse arguments
 for arg in "$@"; do

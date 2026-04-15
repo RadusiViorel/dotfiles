@@ -3,7 +3,7 @@
 # Output caching system for bar components
 # Provides TTL-based caching to reduce redundant renders and command execution
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 CACHE_DIR="${BAR_DIR}/.cache"
 
 # cache_get <component_name> <ttl_seconds>

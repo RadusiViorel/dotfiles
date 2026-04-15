@@ -2,7 +2,7 @@
 # Base functions for component-specific refresh daemons
 # Source this file in component refresh scripts
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 REFRESH_SCRIPT="${REFRESH_CMD}"
 
 # Start a component refresh daemon

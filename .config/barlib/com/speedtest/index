@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
 check_dependency "speedtest"
 
 COM="${BAR_COMPONENTS_DIR}/com/speedtest"
 [[ -n "$1" ]] && source "${STATE_FILE}"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+page_guard 2
 
 now=$(date +%s)
 
-source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
 state_init "speedtest_isp" "UNKNOWN"
 state_init "speedtest_up" 0
 state_init "speedtest_down" 0

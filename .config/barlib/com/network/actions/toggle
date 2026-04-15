@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/barlib/scripts/init"
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
@@ -19,3 +20,5 @@ if [[ "$new_value" -eq 1 ]]; then
 else
     wpa_cli -i ${interface} disconnect >/dev/null 2>&1
 fi
+
+"${REFRESH_CMD}"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
 check_dependency "nsxiv"
 
@@ -9,8 +9,6 @@ COM="${BAR_COMPONENTS_DIR}/com/wallpaper"
 
 wallpapers_folder="${HOME}/wallpapers"
 
-source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
 state_init "wallpaper_lock" 0
 state_init "wallpaper_image" ""
 
@@ -29,7 +27,7 @@ case "$1" in
   *) ;;
 esac
 
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+page_guard 2
 
 colors=("$COLOR_WHITE" "$COLOR_WARNING")
 emit_tuple 0 "${colors[$wallpaper_lock]}" "󰸉"

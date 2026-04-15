@@ -9,5 +9,7 @@ for arg in "$@"; do
   esac
 done
 
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
 state_update "${KEY}" -1
+"${REFRESH_CMD}"

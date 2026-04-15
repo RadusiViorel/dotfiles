@@ -5,6 +5,9 @@ import Data.Monoid ((<>))
 dir :: String
 dir="/home/void/.config/xmobar"
 
+barlib :: String
+barlib="/home/void/.config/barlib"
+
 cmd :: Bool -> String -> [String] -> Int -> Runnable
 cmd True comp args rate =
   Run $ Com (dir <> "/com/" <> comp <> "/render") args comp rate
@@ -13,7 +16,7 @@ cmd False comp  _  _  =
 
 click :: String -> String -> Int -> String -> String
 click cmd action btn content =
-  "<action=`" <> dir <> "/com/" <> cmd <> "/index " <> action <> "` button=" <> show btn <> ">" <> content <> "</action>"
+  "<action=`" <> barlib <> "/com/" <> cmd <> "/index " <> action <> "` button=" <> show btn <> ">" <> content <> "</action>"
 
 main :: IO ()
 main = xmobar defaultConfig
@@ -34,7 +37,7 @@ main = xmobar defaultConfig
       [ cmd True  "start"   [] 10
       , Run UnsafeXMonadLog
       , cmd True "capslock" [] 10
-      , Run $ Com "/home/void/.config/xmobar/scripts/bar" [] "bar" 2
+      , Run $ Com (dir <> "/scripts/bar") [] "bar" 1
       , cmd True "calendar"   [] 10
       , cmd True "power"      [] 100000
       ]

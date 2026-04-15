@@ -1,33 +1,79 @@
 #!/usr/bin/env bash
+# xmobar2 render — reads TSV tuples from component index, produces xmobar markup.
+#
+# Tuple format (one per line from index stdout):
+#   font<TAB>color<TAB>text
+#
+# font=0 → <fc=color>text</fc>
+# font=1 → <fc=color><fn=1>text</fn></fc>
+#
+# The last tuple is always the SEP (emit_sep). It gets a space before and after.
+# Content tuples are concatenated with no extra spacing.
+
+source "${HOME}/.config/barlib/scripts/env"
 
 if [[ -z "$COLOR_OK" ]]; then
-  source "${HOME}/.config/xmobar/scripts/vars"
+  source "${BAR_COMPONENTS_DIR}/scripts/vars"
 fi
 
-for arg in "$@"; do
-  case $arg in
-    --sep=*) custom_sep="${arg#*=}" ;;
-    *) echo "Unknown argument: $arg" ; exit 1 ;;
-  esac
-done
+# span <font> <color> <text>
+# Builds one xmobar fc/fn span string.
+span() {
+  local font="$1" color="$2" text="$3"
+  if [[ "$font" == "1" ]]; then
+    printf '<fc=%s><fn=1>%s</fn></fc>' "$color" "$text"
+  else
+    printf '<fc=%s>%s</fc>' "$color" "$text"
+  fi
+}
 
-xmobar_actions() {
+# tuples_to_xmobar <index_script> [action_args...]
+tuples_to_xmobar() {
   local script="$1"
   shift
+  local actions=("$@")
 
-  local text
-  text="$("$script")" || return 0
+  local raw
+  raw="$("$script")" || return 0
+  [[ -z "${raw//[$'\t\n ']/}" ]] && return 0
 
-  [[ -z ${text//[[:space:]]/} ]] && return 0
-  sep="$([[ -z ${custom_sep//[[:space:]]/} ]] && printf '%s' "$SEP" || printf '%s' "$custom_sep")"
+  # Split into all tuples; last one is the sep
+  local -a fonts colors texts
+  while IFS=$'\t' read -r font color text; do
+    [[ -z "$font$color$text" ]] && continue
+    fonts+=("$font")
+    colors+=("$color")
+    texts+=("$text")
+  done <<< "$raw"
 
-  local i
-  for ((i=$#; i>0; i--)); do
-    local action="${!i}"
-    local button="${action%%:*}"
-    local args="${action#*:}"
-    text="<action=\`$script $args\` button=$button>$text</action>"
+  [[ ${#fonts[@]} -eq 0 ]] && return 0
+
+  local last=$(( ${#fonts[@]} - 1 ))
+
+  # Build content (all tuples except last)
+  local content=""
+  for (( i=0; i<last; i++ )); do
+    content+="$(span "${fonts[$i]}" "${colors[$i]}" "${texts[$i]}")"
   done
 
-  echo "${text} $sep "
+  # Sep span (last tuple)
+  local sep_span
+  sep_span="$(span "${fonts[$last]}" "${colors[$last]}" "${texts[$last]}")"
+
+  local result="${content} ${sep_span} "
+
+  # Wrap with click actions
+  local i
+  for ((i=${#actions[@]}-1; i>=0; i--)); do
+    local button="${actions[$i]%%:*}"
+    local args="${actions[$i]#*:}"
+    result="<action=\`$script $args\` button=$button>${result}</action>"
+  done
+
+  printf '%s' "$result"
+}
+
+xmobar_actions() {
+  tuples_to_xmobar "$@"
+  echo
 }

@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 COM="${BAR_COMPONENTS_DIR}/com/automount"
 [[ -n "$1" ]] && source "${STATE_FILE}"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+page_guard 2
 
 CONFIG_FILE="${HOME}/.config/_scripts/startup/automount/automount.conf"
 AUTOMOUNT_SCRIPT="${HOME}/.config/_scripts/startup/automount/automount.sh"
 
-source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
 state_init "automount_lsblk_hash" ""
 
 case "$1" in

@@ -3,7 +3,7 @@
 # Handles different terminal emulators and their class name syntax
 # Source this file in action scripts that need to open terminals
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 
 # Modern terminal_launch with flag-based API
 # Usage: terminal_launch --title "Title" --command "cmd" [--hold] [--class "class"]

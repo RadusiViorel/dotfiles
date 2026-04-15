@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
 check_dependency "sensors"
 
@@ -8,8 +8,7 @@ COM="${BAR_COMPONENTS_DIR}/com/cpu_temp"
 [[ -n "$1" ]] && source "${STATE_FILE}"
 
 source "${BAR_COMPONENTS_DIR}/scripts/cache"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+page_guard 2
 
 temp=$(cache_cmd "sensors" 3 sensors | awk '/acpitz-acpi-0/ {flag=1} flag && /temp1/ {gsub(/[+°C]/,"",$2); print $2; exit}')
 temp_int=${temp%.*}

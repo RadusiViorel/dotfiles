@@ -22,7 +22,7 @@ signal_module() {
   polybar-msg action "#${module}.hook.0" 2>/dev/null || true
 }
 
-while grep -q "^${key}=1$" "$STATE_FILE" 2>/dev/null; do
+while grep -qE "^${key}=\"?1\"?$" "$STATE_FILE" 2>/dev/null; do
   signal_module
   sleep 0.2
 done

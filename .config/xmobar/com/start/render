@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/render"
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_DIR}/scripts/render"
 
-COM="${HOME}/.config/xmobar/com/start/index"
+COM="$(resolve_component "start")"
 
 xmobar_actions "$COM"

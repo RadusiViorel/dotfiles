@@ -22,5 +22,6 @@ state_update() {
   local key="$1"
   local value="$2"
 
-  sed -i "s|^${key}=.*|${key}=${value}|" "$STATE_FILE"
+  # Always quote so spaces/special chars survive sourcing
+  sed -i "s|^${key}=.*|${key}=\"${value}\"|" "$STATE_FILE"
 }

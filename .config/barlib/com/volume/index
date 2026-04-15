@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 COM="${BAR_COMPONENTS_DIR}/com/volume"
 [[ -n "$1" ]] && source "${STATE_FILE}"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 1
+page_guard 1
 
 source "${BAR_COMPONENTS_DIR}/scripts/cache"
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
 
 STEP=3
 MAX_VOLUME=125

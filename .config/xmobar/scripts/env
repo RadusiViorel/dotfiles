@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# xmobar2 bar environment — sources by all bar-specific scripts
+
+export BAR_DIR="${HOME}/.config/xmobar"
+export BAR_COMPONENTS_DIR="${HOME}/.config/barlib"
+export BAR_NAME="xmobar"
+export REFRESH_CMD="${HOME}/.config/xmobar/scripts/refresh"

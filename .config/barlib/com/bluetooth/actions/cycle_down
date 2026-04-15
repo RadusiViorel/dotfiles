@@ -11,6 +11,8 @@ for arg in "$@"; do
   esac
 done
 
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
 val=$(( (currentIndex - 1 + ${count}) % ${count} ))
 state_update "${KEY}" $val
+"${REFRESH_CMD}"

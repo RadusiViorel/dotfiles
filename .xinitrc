@@ -37,5 +37,6 @@ docker compose --project-directory /opt/devenv start
 
 $HOME/.config/_scripts/startup/displays/run.sh
 
-export BAR="polybar" # Bar selection: "polybar" or "xmobar"
+export BAR="xmobar" # Bar selection: "polybar" or "xmobar"
+#export BAR="polybar" # Bar selection: "polybar" or "xmobar"
 exec dbus-launch --exit-with-session $HOME/.local/bin/xmonad

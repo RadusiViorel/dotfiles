@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 COM="${BAR_COMPONENTS_DIR}/com/vpn"
 [[ -n "$1" ]] && source "${STATE_FILE}"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 1
+page_guard 1
 
 VPN_CONF="/opt/vpn/popcash.conf"
 VPN_PID_FILE="/opt/vpn/openvpn.pid"
 
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
-source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
 state_init "vpn_toggle" 0
 state_init "vpn_loading_live" 0
 state_init "vpn_spinner" 0

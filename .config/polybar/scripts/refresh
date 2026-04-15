@@ -9,7 +9,6 @@
 
 ALL_MODULES=(
   start
-  updates
   volume
   volume-output
   brightness
@@ -28,7 +27,6 @@ ALL_MODULES=(
   screenshot
   automount
   page
-  power
 )
 
 signal_module() {

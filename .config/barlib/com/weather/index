@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 COM="${BAR_COMPONENTS_DIR}/com/weather"
 [[ -n "$1" ]] && source "${STATE_FILE}"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+page_guard 2
 
 now=$(date +%s)
 
-source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
 state_init "weather_value" ""
+state_init "weather_color" "$COLOR_MUTE"
 state_init "weather_timestamp" $((now - 3601))
 state_init "weather_loading_live" 0
 state_init "weather_spinner" 0
@@ -19,6 +18,7 @@ case "$1" in
     --STATE_FILE=${STATE_FILE}        \
     --TIMESTAMP_KEY=weather_timestamp \
     --VALUE_KEY=weather_value         \
+    --COLOR_KEY=weather_color         \
     --LOADING_KEY=weather_loading_live ;;
   *) ;;
 esac
@@ -32,5 +32,5 @@ if (( weather_loading_live == 1 )); then
   exit 0
 fi
 
-emit_tuple 0 "$COLOR_WHITE" "$weather_value"
+emit_tuple 0 "$weather_color" "$weather_value"
 emit_sep

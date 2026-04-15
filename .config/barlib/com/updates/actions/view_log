@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source "${HOME}/.config/barlib/scripts/terminal_launcher"
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 
 LOG_DIR="${BAR_DIR}/com/updates/logs"
 MASTER_LOG="${LOG_DIR}/updates.log"

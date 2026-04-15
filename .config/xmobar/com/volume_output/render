@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/xmobar/scripts/render"
+source "${HOME}/.config/barlib/scripts/env"
+source "${BAR_DIR}/scripts/render"
 
-COM="${HOME}/.config/xmobar/com/volume_output/index"
+COM="$(resolve_component "volume_output")"
 
 xmobar_actions "$COM" \
   "1:info"            \

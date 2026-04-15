@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-CACHE_DIR="${HOME}/.config/xmobar/.cache"
+source "${HOME}/.config/barlib/scripts/env"
+
+CACHE_DIR="${BAR_DIR}/.cache"
 CACHE_FILE="${CACHE_DIR}/bar_output"
 TRIGGER_FILE="${CACHE_DIR}/refresh_trigger"
 
 sleep 0.05
 # Delete cache to force regeneration, then run bar script
 rm -f "${CACHE_FILE}"
-"${HOME}/.config/xmobar/scripts/bar" > /dev/null
+"${BAR_DIR}/scripts/bar" > /dev/null
 
 # Touch trigger so polling xmobar knows to pick up the new cache
 touch "${TRIGGER_FILE}"

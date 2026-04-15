@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # xbps-install libspa-bluetooth -- bluetooth support for audio
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 COM="${BAR_COMPONENTS_DIR}/com/volume_output"
 [[ -n "$1" ]] && source "${STATE_FILE}"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 1
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
+page_guard 1
 
 ICON_SPEAKER="󰓃"
 ICON_JACK_HEADPHONES="󱡬 󰋋"
 ICON_USB_HEADPHONES="  󰋋"
 ICON_WIRELESS_HEADPHONES=" 󰋋"
+ICON_DEAD="󰓄"
 default_sink="@DEFAULT_AUDIO_SINK@"
 
 get_sink_icon() {
@@ -21,7 +21,7 @@ get_sink_icon() {
     *'device.bus = "usb"'*)                  echo "${ICON_USB_HEADPHONES}" ;;
     *'port.name = "analog-output-headphones"'*|\
     *'port.name = "analog-output-headset"'*) echo "${ICON_JACK_HEADPHONES}" ;;
-    '') echo "-1" ;;
+    '') echo "${ICON_DEAD}" ;;
     *)  echo "${ICON_SPEAKER}" ;;
   esac
 }
@@ -33,7 +33,7 @@ case "$1" in
 esac
 
 icon=$(get_sink_icon)
-[[ "$icon" == "-1" ]] && exit 0
+color=$([[ $icon == "${ICON_DEAD}" ]] && echo "${COLOR_DANGER}" || echo "$COLOR_INFO")
 
-emit_tuple 0 "$COLOR_INFO" "$icon"
+emit_tuple 0 "$color" "$icon"
 emit_sep

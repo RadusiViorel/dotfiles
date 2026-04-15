@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# Single init file for barlib components.
+# Replaces sourcing env + vars + state_loader + tuples + page/index separately.
+# Source this once at the top of every component index.
+#
+# Usage:
+#   source "${HOME}/.config/barlib/scripts/init"
+#   page_guard 2   # optional: exit if not on page N
+
+# ── env ──────────────────────────────────────────────────────────────────────
+export BAR_DIR="${BAR_DIR:-${HOME}/.config/xmobar}"
+export BAR_COMPONENTS_DIR="${BAR_COMPONENTS_DIR:-${HOME}/.config/barlib}"
+export BAR_NAME="${BAR_NAME:-xmobar}"
+export REFRESH_CMD="${REFRESH_CMD:-${BAR_DIR}/scripts/refresh}"
+export STATE_FILE="${STATE_FILE:-${BAR_COMPONENTS_DIR}/scripts/state}"
+
+resolve_component() {
+  local component="$1" file="${2:-index}"
+  local local_path="${BAR_DIR}/com/${component}/${file}"
+  [[ -f "$local_path" ]] && echo "$local_path" || echo "${BAR_COMPONENTS_DIR}/com/${component}/${file}"
+}
+
+start_live_watcher() {
+  local watcher="${BAR_DIR}/scripts/live-watcher"
+  [[ -x "$watcher" ]] && "$watcher" "$1" "$2" &
+}
+
+# ── vars ─────────────────────────────────────────────────────────────────────
+SEP=""
+
+[ -f "$HOME/.cache/wal/colors.sh" ] && source "$HOME/.cache/wal/colors.sh"
+
+COLOR_WHITE=${color15:-${XMB_COLOR_WHITE:-"#ffffff"}}
+COLOR_CRITIC=${color1:-${XMB_COLOR_CRITIC:-"#d94141"}}
+COLOR_DANGER=${color9:-${XMB_COLOR_DANGER:-"#f58989"}}
+COLOR_WARNING=${color3:-${XMB_COLOR_WARNING:-"#e6c15c"}}
+COLOR_OK=${color2:-${XMB_COLOR_OK:-"#84f098"}}
+COLOR_INFO=${color6:-${XMB_COLOR_INFO:-"#87c6e6"}}
+COLOR_ORANGE=${color11:-${XMB_COLOR_ORANGE:-"#f28f2f"}}
+COLOR_MUTE=${color8:-${XMB_COLOR_MUTE:-"#696969"}}
+
+# ── state_loader ─────────────────────────────────────────────────────────────
+state_init() {
+  local key="$1" default="$2"
+  if ! grep -q "^${key}=" "$STATE_FILE" 2>/dev/null; then
+    echo "${key}=${default}" >> "$STATE_FILE"
+    eval "${key}=\"${default}\""
+  else
+    local value
+    value=$(grep "^${key}=" "$STATE_FILE" | cut -d= -f2-)
+    eval "${key}=${value}"
+  fi
+}
+
+state_update() {
+  sed -i "s|^${1}=.*|${1}=\"${2}\"|" "$STATE_FILE"
+}
+
+# ── tuples ───────────────────────────────────────────────────────────────────
+emit_tuple() {
+  printf '%s\t%s\t%s\n' "$1" "$2" "$3"
+}
+
+emit_sep() {
+  emit_tuple 0 "${COLOR_MUTE}" "${1:-${SEP}}"
+}
+
+# ── page guard ───────────────────────────────────────────────────────────────
+# Usage: page_guard <target_page>
+# Exits 0 (silently) if the bar is not on the target page.
+page_guard() {
+  local target="${1:-1}"
+  state_init "page_number" 1
+  [[ $page_number -ne $target ]] && exit 0
+}

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/barlib/scripts/init"
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
@@ -12,3 +13,5 @@ done
 
 new_value=$(( ! value ))
 sed -i "s/^$KEY=.*/$KEY=$new_value/" "$STATE_FILE"
+
+"${REFRESH_CMD}"

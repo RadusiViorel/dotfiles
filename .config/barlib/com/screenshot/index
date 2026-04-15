@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
 check_dependency "scrot"
 check_dependency "xrandr"
@@ -12,8 +12,6 @@ COM="${BAR_COMPONENTS_DIR}/com/screenshot"
 
 DESTINATION="$HOME/screenshots"
 
-source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
 state_init "screenshot_edit" 0
 
 case "$1" in
@@ -29,7 +27,7 @@ case "$1" in
   *) ;;
 esac
 
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 2
+page_guard 2
 
 color=$([[ $screenshot_edit -eq 0 ]] && echo "$COLOR_WHITE" || echo "$COLOR_WARNING")
 emit_tuple 0 "$color" "󰹑"

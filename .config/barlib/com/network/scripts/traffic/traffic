@@ -9,8 +9,8 @@ for arg in "$@"; do
   esac
 done
 
-source "${HOME}/.config/barlib/scripts/env"
-source "${HOME}/.config/barlib/scripts/vars"
+source "${HOME}/.config/barlib/scripts/init"
+source "${HOME}/.config/barlib/scripts/init"
 COM="${BAR_DIR}/com/network"
 VALUE_FILE="${COM}/scripts/traffic/value"
 

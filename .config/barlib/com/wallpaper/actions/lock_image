@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+source "${HOME}/.config/barlib/scripts/init"
 # Parse named parameters
 for arg in "$@"; do
   case $arg in
@@ -15,3 +16,5 @@ new_value=$(( ! value ))
 sed -i "s/^$LOCK_KEY=.*/$LOCK_KEY=${new_value}/" "$STATE_FILE"
 
 [[ $new_value == 1 ]] && notify-send 'Image locked!'
+
+"${REFRESH_CMD}"

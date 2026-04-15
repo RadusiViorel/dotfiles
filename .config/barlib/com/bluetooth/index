@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_COMPONENTS_DIR}/scripts/check_dependency"
 check_dependency "bluetoothctl"
 check_dependency "upower"
@@ -8,11 +8,9 @@ check_dependency "bluetuith" --no-exit
 
 COM="${BAR_COMPONENTS_DIR}/com/bluetooth"
 [[ -n "$1" ]] && source "${STATE_FILE}"
-source "${BAR_COMPONENTS_DIR}/scripts/page/index" 1
+page_guard 1
 
 source "${BAR_COMPONENTS_DIR}/scripts/cache"
-source "${BAR_COMPONENTS_DIR}/scripts/tuples"
-source "${BAR_COMPONENTS_DIR}/scripts/state_loader"
 
 state_init "bluetooth_index_device" -1
 
@@ -34,21 +32,24 @@ case "$1" in
   open)      ${COM}/actions/open ;;
   toggle)    ${COM}/actions/toggle \
     --state=${state} ;;
-  reset)     ${COM}/actions/reset                \
-    --STATE_FILE=${STATE_FILE}               \
+  reset)     ${COM}/actions/reset    \
+    --STATE_FILE=${STATE_FILE}       \
     --KEY=bluetooth_index_device ;;
-  cycle_up)  ${COM}/actions/cycle_up             \
-    --STATE_FILE=${STATE_FILE}               \
-    --KEY=bluetooth_index_device             \
+  cycle_up)  ${COM}/actions/cycle_up \
+    --STATE_FILE=${STATE_FILE}       \
+    --KEY=bluetooth_index_device     \
     --currentIndex=${bluetooth_index_device} \
     --count=${#connectedDevices[@]} ;;
-  cycle_down) ${COM}/actions/cycle_up            \
-    --STATE_FILE=${STATE_FILE}               \
-    --KEY=bluetooth_index_device             \
+  cycle_down) ${COM}/actions/cycle_down \
+    --STATE_FILE=${STATE_FILE}          \
+    --KEY=bluetooth_index_device        \
     --currentIndex=${bluetooth_index_device} \
     --count=${#connectedDevices[@]} ;;
   *) ;;
 esac
+
+# Re-read state after action may have updated it
+source "${STATE_FILE}"
 
 if [[ $bluetooth_index_device -eq -1 ]]; then
   connectedCount=${#connectedDevices[@]}
@@ -79,6 +80,5 @@ fi
 icons=("󰂲" "󰂰")
 colors=("$disabledColor" "$outputColor")
 
-# icon + optional device label with its battery color
 emit_tuple 0 "${colors[$state]}" "${icons[$state]}${label}"
 emit_sep
