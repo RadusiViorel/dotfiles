@@ -12,7 +12,7 @@
 source "${HOME}/.config/polybar/scripts/env"
 
 set -a
-source "${HOME}/.config/barlib/scripts/vars"
+source "${HOME}/.config/barlib/scripts/init"
 set +a
 
 raw="$("$@")"

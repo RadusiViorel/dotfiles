@@ -8,7 +8,7 @@
 # Usage: live-watcher <module-name> <state-key>
 #   e.g. live-watcher vpn vpn_loading_live
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 
 module="$1"
 key="$2"

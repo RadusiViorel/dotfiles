@@ -10,7 +10,7 @@
 # The last tuple is always the SEP (emit_sep). It gets a space before and after.
 # Content tuples are concatenated with no extra spacing.
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 
 if [[ -z "$COLOR_OK" ]]; then
   source "${BAR_COMPONENTS_DIR}/scripts/vars"

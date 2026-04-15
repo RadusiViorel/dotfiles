@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 
 PIDFILE="${BAR_DIR}/.cache/bar-daemon.pid"
 

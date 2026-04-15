@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source "${HOME}/.config/barlib/scripts/env"
+source "${HOME}/.config/barlib/scripts/init"
 source "${BAR_DIR}/scripts/render"
 
 COM="$(resolve_component "bluetooth")"

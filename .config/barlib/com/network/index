@@ -62,6 +62,7 @@ if (( network_enabled == 0 )); then
 fi
 
 ssid=$(cache_cmd "wpa_cli_${interface}" 2 wpa_cli -i ${interface} status | awk -F= '/^ssid/ {print $2}')
+ssid=${ssid:-"…"}
 
 if [ ${#ssid} -gt ${wifi_name_length} ]; then
   ssid="${ssid:0:$((wifi_name_length-3))}󰇘"
@@ -71,6 +72,7 @@ signal_icons=( 󰤯 󰤟 󰤢 󰤥 󰤨 )
 signal_thresholds=( 15 33 50 90 )
 signal_icon="${signal_icons[-1]}"
 signal=$(awk 'NR==3 {print $3}' /proc/net/wireless | sed 's/\.//')
+signal=${signal:-0}
 
 for i in "${!signal_thresholds[@]}"; do
   if (( signal < signal_thresholds[i] )); then
