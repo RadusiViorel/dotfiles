@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# bar-daemon — persistent bar renderer for xmobar CommandReader.
+#
+# Renders all components in parallel, writes one line to stdout,
+# then blocks until SIGUSR1 signals a re-render.
+#
+# Each render uses a fresh isolated tmpdir — no shared state between renders.
+# USR1 is blocked during the critical wait-for-children phase so a render
+# is never interrupted mid-flight.
+
+source "${HOME}/.config/barlib/scripts/init"
+
+CACHE_DIR="${BAR_DIR}/.cache"
+mkdir -p "$CACHE_DIR"
+PIDFILE="${CACHE_DIR}/bar-daemon.pid"
+
+echo $$ > "$PIDFILE"
+trap 'rm -f "$PIDFILE"; exit 0' EXIT INT TERM
+
+components=(
+  "updates"
+  "volume"
+  "volume_output"
+  "brightness"
+  "bluetooth"
+  "battery"
+  "space"
+  "vpn"
+  "network"
+  "cpu_temp"
+  "sys_usage"
+  "weather"
+  "speedtest"
+  "rofi_theme"
+  "yt_dl"
+  "wallpaper"
+  "screenshot"
+  "automount"
+  "page"
+)
+
+_render_requested=0
+trap '_render_requested=1' USR1
+
+render() {
+  set -a
+  source "${BAR_COMPONENTS_DIR}/scripts/vars"
+  source "${STATE_FILE}"
+  set +a
+
+  # Isolated tmpdir per render — never collides with a concurrent render
+  local tmpdir
+  tmpdir=$(mktemp -d "${CACHE_DIR}/render_XXXXXX")
+
+  local pids=()
+  for i in "${!components[@]}"; do
+    : > "${tmpdir}/${i}"
+    "${BAR_DIR}/com/${components[$i]}/render" > "${tmpdir}/${i}" 2>/dev/null &
+    pids+=($!)
+  done
+
+  # Block USR1 while waiting for children so we can't be interrupted mid-render.
+  # Any USR1 that arrives here is held pending and delivered after we unblock.
+  trap '' USR1
+  for pid in "${pids[@]}"; do wait "$pid"; done
+  # Restore handler — pending USR1 (if any) fires now, setting _render_requested=1
+  trap '_render_requested=1' USR1
+
+  local bar=""
+  for i in "${!components[@]}"; do
+    bar+="$(< "${tmpdir}/${i}")"
+  done
+
+  rm -rf "$tmpdir"
+  printf '%s\n' "$bar"
+}
+
+# Initial render on startup
+render
+
+# Main loop
+while true; do
+  sleep 86400 &
+  wait $!   # interrupted by USR1, which sets _render_requested=1
+
+  while [[ $_render_requested -eq 1 ]]; do
+    _render_requested=0
+    render
+    # If more USR1s arrived during that render, loop and render once more
+  done
+done

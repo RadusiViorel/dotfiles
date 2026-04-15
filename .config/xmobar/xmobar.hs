@@ -37,7 +37,7 @@ main = xmobar defaultConfig
       [ cmd True  "start"   [] 10
       , Run UnsafeXMonadLog
       , cmd True "capslock" [] 10
-      , Run $ Com (dir <> "/scripts/bar") [] "bar" 1
+      , Run $ CommandReader (dir <> "/scripts/bar-daemon") "bar"
       , cmd True "calendar"   [] 10
       , cmd True "power"      [] 100000
       ]

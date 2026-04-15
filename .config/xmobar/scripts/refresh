@@ -2,14 +2,16 @@
 
 source "${HOME}/.config/barlib/scripts/env"
 
-CACHE_DIR="${BAR_DIR}/.cache"
-CACHE_FILE="${CACHE_DIR}/bar_output"
-TRIGGER_FILE="${CACHE_DIR}/refresh_trigger"
+PIDFILE="${BAR_DIR}/.cache/bar-daemon.pid"
 
-sleep 0.05
-# Delete cache to force regeneration, then run bar script
-rm -f "${CACHE_FILE}"
-"${BAR_DIR}/scripts/bar" > /dev/null
+if [[ -f "$PIDFILE" ]]; then
+  pid=$(< "$PIDFILE")
+  if kill -0 "$pid" 2>/dev/null; then
+    kill -USR1 "$pid"
+    exit 0
+  fi
+fi
 
-# Touch trigger so polling xmobar knows to pick up the new cache
-touch "${TRIGGER_FILE}"
+# Daemon not running — fall back to launching it
+# (xmobar should have started it, but just in case)
+"${BAR_DIR}/scripts/bar-daemon" &
